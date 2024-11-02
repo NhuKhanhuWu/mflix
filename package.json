@@ -1,0 +1,19 @@
+{
+  "name": "mflix",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NhuKhanhuWu/mflix.git"
+  },
+  "author": "Nhu Khanh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NhuKhanhuWu/mflix/issues"
+  },
+  "homepage": "https://github.com/NhuKhanhuWu/mflix#readme",
+  "description": ""
+}
