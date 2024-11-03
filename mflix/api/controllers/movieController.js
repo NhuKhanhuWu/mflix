@@ -11,7 +11,7 @@ exports.getAllMovie = async (req, res) => {
       .gerne()
       .filter()
       .sort();
-    let movies = await query.query;
+    const movies = await query.query;
 
     res.status(200).json({
       status: "success",
@@ -29,7 +29,6 @@ exports.getAllMovie = async (req, res) => {
 exports.getMovie = async (req, res) => {
   try {
     const movie = await Movie.findById(req.params.id);
-    console.log(req.params.id);
 
     res.status(200).json({
       status: "success",
