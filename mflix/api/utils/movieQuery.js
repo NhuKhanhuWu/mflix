@@ -24,16 +24,18 @@ class MovieQuery {
 
   gerne() {
     // CREATE FILTER ARRAY
-    const genres = this.queryString?.genres
-      .split(",")
-      .map((genre) => new RegExp(`^${genre}$`, "i"));
+    if (this.queryString.genres) {
+      const genres = this.queryString?.genres
+        .split(",")
+        .map((genre) => new RegExp(`^${genre}$`, "i"));
 
-    // FILTERING
-    this.query = this.query.find({
-      genres: {
-        $all: genres,
-      },
-    });
+      // FILTERING
+      this.query = this.query.find({
+        genres: {
+          $all: genres,
+        },
+      });
+    }
 
     return this;
   }
@@ -60,7 +62,7 @@ class MovieQuery {
   limitField() {
     // GET REQUEST FIELD;
     let fields =
-      this.queryString.fields || "imdb,plot,genres,poster,title,runtime";
+      this.queryString.fields || "imdb,plot,genres,poster,title,runtime,slug";
     fields = fields.split(",").join(" ");
 
     // EXECUTE QUERY
