@@ -2,21 +2,29 @@
 
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
+const commentSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "User name required"],
+    required: [true, "Name  required"],
   },
   email: {
     type: String,
-    required: [true, "Email required"],
-    unique: true,
+    required: [true, "Email  required"],
     match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   },
-  password: {
+  movie_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Movies",
+    required: [true, "Movie id required"],
+  },
+  text: {
     type: String,
-    required: [true, "Password required"],
+    required: [true, "Text required"],
+  },
+  date: {
+    type: Date,
+    default: Date.now,
   },
 });
 
-module.exports = mongoose.model("Users", userSchema);
+module.exports = mongoose.model("Comments", commentSchema);
