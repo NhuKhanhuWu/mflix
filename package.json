@@ -1,0 +1,10 @@
+{
+  "packageManager": "yarn@4.5.3",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "devDependencies": {
+    "@storybook/react-vite": "^8.4.5"
+  }
+}
