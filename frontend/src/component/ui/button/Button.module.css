@@ -1,0 +1,25 @@
+/** @format */
+.btn {
+  transition: all 0.3s;
+  border: solid 1px var(--red);
+  border-radius: 999px;
+  padding: 0.6rem 1.2rem;
+}
+
+.primary {
+  background-color: var(--red);
+  color: white;
+}
+
+.primary:hover {
+  background-color: transparent;
+  color: var(--red);
+}
+
+.secondary {
+  color: var(--red);
+}
+.secondary:hover {
+  background-color: var(--red);
+  color: white;
+}
