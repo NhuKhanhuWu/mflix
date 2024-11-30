@@ -1,40 +1,25 @@
-/** @format */
+import type { StorybookConfig } from "@storybook/react-vite";
 
-// import type { StorybookConfig } from "@storybook/react-vite";
+import { join, dirname } from "path";
 
-// import { join, dirname } from "path";
-
-// /**
-//  * This function is used to resolve the absolute path of a package.
-//  * It is needed in projects that use Yarn PnP or are set up within a monorepo.
-//  */
-// function getAbsolutePath(value: string): any {
-//   return dirname(require.resolve(join(value, "package.json")));
-// }
-// const config: StorybookConfig = {
-//   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
-//   addons: [
-//     getAbsolutePath("@storybook/addon-onboarding"),
-//     getAbsolutePath("@storybook/addon-essentials"),
-//     getAbsolutePath("@chromatic-com/storybook"),
-//     getAbsolutePath("@storybook/addon-interactions"),
-//   ],
-//   framework: {
-//     name: getAbsolutePath("@storybook/react-vite"),
-//     options: {},
-//   },
-// };
-// export default config;
-
-module.exports = {
-  stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
+/**
+ * This function is used to resolve the absolute path of a package.
+ * It is needed in projects that use Yarn PnP or are set up within a monorepo.
+ */
+function getAbsolutePath(value: string): any {
+  return dirname(require.resolve(join(value, "package.json")));
+}
+const config: StorybookConfig = {
+  stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
   addons: [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials",
-    "@storybook/addon-interactions",
+    getAbsolutePath("@storybook/addon-onboarding"),
+    getAbsolutePath("@storybook/addon-essentials"),
+    getAbsolutePath("@chromatic-com/storybook"),
+    getAbsolutePath("@storybook/addon-interactions"),
   ],
-  framework: "@storybook/react",
-  core: {
-    builder: "@storybook/builder-vite", // Ensure this is correctly set
+  framework: {
+    name: getAbsolutePath("@storybook/react-vite"),
+    options: {},
   },
 };
+export default config;
