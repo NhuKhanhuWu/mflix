@@ -1,0 +1,16 @@
+/** @format */
+.navLink {
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: all 0.3s;
+  font-size: 1.6rem;
+}
+
+.navLink:hover,
+.navActive {
+  color: var(--red) !important;
+}
+
+.link {
+  text-decoration: underline;
+}
