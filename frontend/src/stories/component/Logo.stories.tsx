@@ -1,6 +1,6 @@
 /** @format */
 
-import Logo from "../../component/header/Logo.tsx";
+import Logo from "../../component/navbar/Logo.tsx";
 
 export default {
   title: "Component/Logo",

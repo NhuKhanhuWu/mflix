@@ -2,13 +2,13 @@
 import style from "./Button.module.css";
 
 interface BtnProps {
-  txt: string;
+  children?: React.ReactNode;
   callback?: () => void;
   isPrimary?: boolean;
 }
 
 export const Btn: React.FC<BtnProps> = ({
-  txt,
+  children,
   callback = () => {},
   isPrimary = false,
 }) => {
@@ -16,7 +16,7 @@ export const Btn: React.FC<BtnProps> = ({
 
   return (
     <button className={`${style.btn} ${btnType}`} onClick={() => callback()}>
-      {txt}
+      {children}
     </button>
   );
 };
