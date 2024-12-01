@@ -1,3 +1,5 @@
+/** @format */
+
 import { dirname, join } from "path";
 /** @format */
 
@@ -38,12 +40,12 @@ module.exports = {
 
   framework: {
     name: getAbsolutePath("@storybook/react-vite"),
-    options: {}
+    options: {},
   },
 
   docs: {
-    autodocs: true
-  }
+    autodocs: true,
+  },
 };
 
 function getAbsolutePath(value: string): any {
