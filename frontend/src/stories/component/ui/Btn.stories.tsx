@@ -10,14 +10,14 @@ export default {
 
 export const Primary = {
   args: {
-    txt: "Primary",
+    children: "Primary",
     isPrimary: true,
   },
 };
 
 export const Secondary = {
   args: {
-    txt: "Secondary",
+    children: "Secondary",
     isPrimary: false,
   },
 };
