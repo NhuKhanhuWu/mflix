@@ -13,13 +13,14 @@ interface BannerProps {
     };
     genres: string[];
     plot: string;
+    runtime: number | null;
   } | null;
 }
 
 export const MobileBanner: React.FC<BannerProps> = ({ banner }) => {
   return (
     <div
-      className={`overflow-hidden ${styles.mobileBanner} items-end flex relative`}>
+      className={`overflow-hidden ${styles.mobileBanner} justify-end flex relative flex-col gap-2`}>
       {/* poster */}
       <img
         src={banner?.poster}
@@ -27,14 +28,20 @@ export const MobileBanner: React.FC<BannerProps> = ({ banner }) => {
         className="absolute top-0 -z-10"
       />
 
+      {/* title & plot: start */}
+      <p className="text-5xl mb-4 text font-bold text-center">
+        {banner?.title}
+      </p>
+      {/* title & plot: end */}
+
       <div
-        className={`py-10 px-8 ${styles.moblieTxt} w-full flex gap-8 justify-center items-end`}>
+        className={` ${styles.moblieTxt} w-full flex gap-8 justify-center items-end mb-6 items-center`}>
         <div>
           {/* rating: start */}
-          <div className="flex items-center gap-3 text-2xl mb-5">
-            <img className="w-12" src={imdb_icon} />{" "}
+          <div className="flex items-center gap-3 text-2xl mb-2">
+            <img className="w-10" src={imdb_icon} />{" "}
             <span>
-              <span className="font-bold text-5xl text-yellow-400 m-0">
+              <span className="font-bold text-4xl text-yellow-400 m-0">
                 {banner?.imdb.rating}
               </span>
               /10
@@ -42,21 +49,25 @@ export const MobileBanner: React.FC<BannerProps> = ({ banner }) => {
           </div>
           {/* rating: end */}
 
-          {/* gerne: start */}
-          <div className="flex gap-4">
-            {banner?.genres.slice(0, 2).map((gerne, i) => (
-              <Tag key={`gerne-${i}-${banner.id}`}>{gerne}</Tag>
-            ))}
-          </div>
-          {/* gerne: end */}
+          {/* runtime: start */}
+          {banner?.runtime && (
+            <div className="flex items-center gap-2 text-2xl">
+              <span className="material-symbols-outlined text-yellow-400">
+                schedule
+              </span>
+              {banner?.runtime} mins
+            </div>
+          )}
+          {/* runtime: end */}
         </div>
 
-        {/* title & plot: start */}
-        <div>
-          <p className="text-4xl mb-2 text font-bold">{banner?.title}</p>
-          <p>{banner?.plot.slice(0, 80)}...</p>
+        {/* gerne: start */}
+        <div className="flex gap-8">
+          {banner?.genres.slice(0, 2).map((gerne, i) => (
+            <Tag key={`gerne-${i}-${banner.id}`}>{gerne}</Tag>
+          ))}
         </div>
-        {/* title & plot: end */}
+        {/* gerne: end */}
       </div>
     </div>
   );
