@@ -1,6 +1,17 @@
 /** @format */
 
 .mobileBanner {
-  height: 30rem;
-  background-image: linear-gradient(180deg, #00000000 0%, #000000 100%);
+  height: 35rem;
+  background: linear-gradient(180deg, #00000000, #000000);
+}
+
+/* carousel animation */
+.inView {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.outView {
+  opacity: 0;
+  transform: translateY(200%);
 }

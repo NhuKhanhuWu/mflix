@@ -76,7 +76,7 @@ export function NavBarMobile({
   return (
     <>
       {/* visible navbar: start */}
-      <div className={`nav flex justify-between p-5 align-middle`}>
+      <div className={`nav flex justify-between px-5 py-5 align-middle`}>
         {visiChild}
         <MenuBtn
           isOpen={isOpen}
