@@ -7,7 +7,7 @@ import { links } from "./navData";
 import { UrlLink } from "../ui/link/Link";
 import { Btn } from "../ui/button/Btn";
 import Logo from "./Logo";
-import { InputTxt } from "../ui/input/Input";
+import { InputTxt } from "../ui/input/Input.tsx";
 
 export function NavBar() {
   // nav link (home, about,...)

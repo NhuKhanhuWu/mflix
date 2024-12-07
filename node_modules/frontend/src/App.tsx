@@ -1,10 +1,10 @@
 /** @format */
 
 import { Route, BrowserRouter, Routes } from "react-router-dom";
-import { NavBar } from "./component/navbar/NavBar.tsx";
 
 import "./App.css";
 import { Homepage } from "./pages/Homepage/Hompage.tsx";
+import { NavBar } from "./component/navbar/NavBar.tsx";
 
 function App() {
   return (
