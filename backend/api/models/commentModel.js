@@ -5,11 +5,11 @@ const mongoose = require("mongoose");
 const commentSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "Name  required"],
+    required: [true, "Name required"],
   },
   email: {
     type: String,
-    required: [true, "Email  required"],
+    required: [true, "Email required"],
     match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   },
   movie_id: {

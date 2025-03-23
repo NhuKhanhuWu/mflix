@@ -5,6 +5,10 @@ const movieController = require("../controllers/movieController");
 
 const router = express.Router();
 
+// genres routes
+router.route("/top_10_genres").get(movieController.top5Genres);
+
+// movie route
 router
   .route("/")
   .get(movieController.getAllMovie)

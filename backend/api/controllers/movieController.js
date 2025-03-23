@@ -1,10 +1,12 @@
 /** @format */
+const { default: axios } = require("axios");
 const Movie = require("../models/movieModel");
 const MovieQuery = require("../utils/movieQuery");
 
+// MOVIE
+// get movies (many movies at once, limit fields)
 exports.getAllMovie = async (req, res) => {
   try {
-    // get movie
     const query = new MovieQuery(Movie.find(), req.query)
       .paginate()
       .limitField()
@@ -26,6 +28,7 @@ exports.getAllMovie = async (req, res) => {
   }
 };
 
+// get one movie, all fieldsfields
 exports.getMovie = async (req, res) => {
   try {
     const movie = await Movie.findById(req.params.id);
@@ -42,6 +45,7 @@ exports.getMovie = async (req, res) => {
   }
 };
 
+// create new moviemovie
 exports.createMovie = async (req, res) => {
   try {
     const newMovie = await Movie.create(req.body);
@@ -58,6 +62,7 @@ exports.createMovie = async (req, res) => {
   }
 };
 
+// update movie
 exports.updateMovie = async (req, res) => {
   try {
     const movie = await Movie.findByIdAndUpdate(req.params.id, req.body, {
@@ -77,6 +82,7 @@ exports.updateMovie = async (req, res) => {
   }
 };
 
+// delete movie
 exports.deleteMovie = async (req, res) => {
   try {
     await Movie.findByIdAndDelete(req.params.id);
@@ -92,3 +98,45 @@ exports.deleteMovie = async (req, res) => {
     });
   }
 };
+// MOVIE
+
+// GENRES
+exports.top5Genres = async (req, res) => {
+  try {
+    const topGenres = await Movie.aggregate([
+      // Unwind the genres array to handle each genre individually
+      { $unwind: "$genres" },
+
+      // group by each genres
+      {
+        $group: {
+          _id: "$genres",
+          count: { $sum: 1 },
+        },
+      },
+
+      // sort by count (desc)
+      {
+        $sort: {
+          count: -1,
+        },
+      },
+
+      // limit result
+      {
+        $limit: 5,
+      },
+    ]);
+
+    res.status(200).json({
+      status: "success",
+      data: topGenres,
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err,
+    });
+  }
+};
+// GENRES
