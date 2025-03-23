@@ -10,7 +10,7 @@ class MovieQuery {
     // CREATE FILTER OBJ
     const queryObj = { ...this.queryString };
     //exclude non-filter query
-    const excludedFields = ["page", "sort", "limit", "fields"];
+    const excludedFields = ["page", "sort", "limit", "fields", "genres"];
     excludedFields.forEach((el) => delete queryObj[el]);
 
     // FILTERING
@@ -25,16 +25,23 @@ class MovieQuery {
   gerne() {
     // CREATE FILTER ARRAY
     if (this.queryString.genres) {
-      const genres = this.queryString?.genres
+      const genresList = this.queryString?.genres
         .split(",")
-        .map((genre) => new RegExp(`^${genre}$`, "i"));
+        .map((genre) => new RegExp(`\\b${genre.trim()}\\b`, "i"));
 
       // FILTERING
       this.query = this.query.find({
         genres: {
-          $all: genres,
+          $in: genresList,
         },
       });
+
+      // test
+      console.log("⭐⭐⭐⭐😭👉⭐💰");
+      console.log("Genres List:", genresList);
+      console.log("MongoDB Query:", this.query.getQuery());
+    } else {
+      console.log("No genres found in query string.");
     }
 
     return this;
@@ -48,6 +55,9 @@ class MovieQuery {
       // sort by rating
       if (sortString.includes("rating")) {
         this.query = this.query.sort({ "imdb.rating": 1 });
+      }
+      if (sortString.includes("-rating")) {
+        this.query = this.query.sort({ "imdb.rating": -1 });
       }
       // other
       else {
