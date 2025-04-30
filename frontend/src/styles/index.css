@@ -1,0 +1,41 @@
+/** @format */
+
+@import url("https://fonts.googleapis.com/css2?family=Parkinsans:wght@300..800&family=Train+One&display=swap");
+
+:root {
+  font-family: "Parkinsans", sans-serif;
+  --dark-gray: rgb(48, 48, 48);
+  --light-gray: rgb(75, 75, 75);
+  --yellow: #ffd43b;
+  --orange: #ff914d;
+  --red: rgb(223, 33, 67);
+  --gold: #e6a72d;
+  --red-purple: #722f37;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  color: white;
+  font-size: 1.4rem;
+  background-color: var(--dark-gray);
+  font-family: "Parkinsans", sans-serif;
+}
+
+a,
+a:visited {
+  color: white;
+  text-decoration: none;
+}
+
+li {
+  list-style: none;
+}
