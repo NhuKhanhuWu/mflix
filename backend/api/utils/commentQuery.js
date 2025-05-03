@@ -45,4 +45,4 @@ class CommentQuery {
   }
 }
 
-module.exports = CommentQuery;
+module.exports = { CommentQuery };

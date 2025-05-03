@@ -110,7 +110,7 @@ movieSchema.index({ year: -1 });
 
 // create slug
 movieSchema.virtual("slug").get(function () {
-  return slugify(this.title, { lower: true });
+  return slugify(this.title, { lower: true, remove: /[*+~.()'"!:@]/g });
 });
 
 const Movies = mongoose.model("Movies", movieSchema);

@@ -6,6 +6,7 @@ const AppError = require("./api/utils/appError");
 const globalErrHandler = require("./api/controllers/errorController");
 
 const movieRouter = require("./api/routes/movieRouter");
+const genresRouter = require("./api/routes/genresRoutes");
 const {
   commentByMovieRouter,
   commentByAccountRouter,
@@ -17,7 +18,7 @@ app.use(express.json());
 
 // ROUTER
 app.use("/api/v1/movies", movieRouter);
-app.use("/api/v1/genres/", movieRouter);
+app.use("/api/v1/genres/", genresRouter);
 app.use("/api/v1/movies/:movie_id/comments", commentByMovieRouter);
 app.use("/api/v1/users/:user_id/comments", commentByAccountRouter);
 

@@ -5,8 +5,8 @@ const movieController = require("../controllers/movieController");
 
 const router = express.Router();
 
-// genres routes
-router.route("/top_5_genres").get(movieController.top5Genres);
+// sort by most reviewd
+router.route("/most_rated").get(movieController.sortByMostReviewed);
 
 // movie route
 router
@@ -16,7 +16,7 @@ router
 
 router
   .route("/:id")
-  .get(movieController.getMovie)
+  .get(movieController.getMovieById)
   .patch(movieController.updateMovie)
   .delete(movieController.deleteMovie);
 

@@ -1,22 +1,32 @@
 /** @format */
+const normalizeGenre = (genre) =>
+  genre
+    .trim()
+    .toLowerCase()
+    .split(" ")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+
+const excludedFields = [
+  "page",
+  "sort",
+  "limit",
+  "fields",
+  "genres",
+  "title",
+  "match",
+];
 
 class MovieQuery {
   constructor(query, queryString) {
     this.query = query;
     this.queryString = queryString;
     this.totalResults = 0;
+    this.isSortByPopular = false;
   }
 
   filter() {
     const queryObj = { ...this.queryString };
-    const excludedFields = [
-      "page",
-      "sort",
-      "limit",
-      "fields",
-      "genres",
-      "title",
-    ];
     excludedFields.forEach((el) => delete queryObj[el]);
 
     // change filter structur => can filter more condition
@@ -30,23 +40,27 @@ class MovieQuery {
     return this;
   }
 
-  gerne() {
-    const genres = this.queryString.genres;
+  genre() {
+    const { genres, match } = this.queryString;
 
-    // check if request have genres
+    // check if request has genres
     if (!genres) return this;
 
     // CREATE FILTER ARRAY
-    const genresList = this.queryString?.genres
-      .split(",")
-      .map((genre) => new RegExp(`\\b${genre.trim()}\\b`, "i"));
+    const genresList = genres.split(",").map(normalizeGenre);
 
     // FILTERING
-    this.query = this.query.find({
-      genres: {
-        $in: genresList,
-      },
-    });
+    if (match === "all") {
+      // match all genres
+      this.query = this.query.find({
+        genres: { $all: genresList },
+      });
+    } else {
+      // match any of genres (default)
+      this.query = this.query.find({
+        genres: { $in: genresList },
+      });
+    }
 
     return this;
   }
@@ -58,9 +72,7 @@ class MovieQuery {
     if (!sortString) return this;
 
     if (sortString === "rating") {
-      this.query = this.query.sort("imdb.rating"); // Sort ascending
-    } else if (sortString === "-rating") {
-      this.query = this.query.sort("-imdb.rating"); // Sort descending
+      this.query = this.query.sort("imdb.rating"); // Sort by best rated
     } else {
       const sortBy = sortString.split(",").join(" ");
       this.query = this.query.sort(sortBy);
@@ -115,4 +127,4 @@ class MovieQuery {
   }
 }
 
-module.exports = MovieQuery;
+module.exports = { MovieQuery };

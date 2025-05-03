@@ -1,14 +1,17 @@
 /** @format */
-const { default: axios } = require("axios");
 const Movie = require("../models/movieModel");
-const MovieQuery = require("../utils/movieQuery");
+const Comment = require("../models/commentModel");
+const { MovieQuery } = require("../utils/movieQuery");
 const catchAsync = require("../utils/catchAsync");
+const { paginateAggregate } = require("../utils/paginateAggregate");
+const { default: slugify } = require("slugify");
 
 // MOVIE
 // get movies (many movies at once, limit fields)
 exports.getAllMovie = catchAsync(async (req, res) => {
+  // Otherwise, use regular Mongoose query
   const queryInstance = new MovieQuery(Movie.find(), req.query);
-  queryInstance.limitField().gerne().filter().sort().search();
+  queryInstance.limitField().search().genre().filter().sort();
   await queryInstance.paginate(); // Await the async paginate method
 
   const movies = await queryInstance.query;
@@ -21,8 +24,8 @@ exports.getAllMovie = catchAsync(async (req, res) => {
   });
 });
 
-// get one movie, all fieldsfields
-exports.getMovie = catchAsync(async (req, res) => {
+// get one movie, all fields
+exports.getMovieById = catchAsync(async (req, res) => {
   const movie = await Movie.findById(req.params.id);
 
   res.status(200).json({
@@ -65,38 +68,56 @@ exports.deleteMovie = catchAsync(async (req, res) => {
 });
 // MOVIE
 
-// GENRES
-exports.top5Genres = catchAsync(async (req, res) => {
-  const topGenres = await Movie.aggregate([
-    // Unwind the genres array to handle each genre individually
-    { $unwind: "$genres" },
+// Sort by most reviewed
+exports.sortByMostReviewed = catchAsync(async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 20;
+  // const result = await sortMostPopularMovie(page * 1, limit * 1);
 
-    // group by each genres
+  const pipeline = [
     {
       $group: {
-        _id: "$genres",
-        count: { $sum: 1 },
+        _id: "$movie_id",
+        reviewCount: { $sum: 1 },
       },
     },
-
-    // sort by count (desc)
+    { $sort: { reviewCount: -1 } },
     {
-      $sort: {
-        count: -1,
+      $lookup: {
+        from: "movies",
+        localField: "_id",
+        foreignField: "_id",
+        as: "movie",
       },
     },
-
-    // limit result
+    { $unwind: "$movie" },
     {
-      $limit: 5,
+      $project: {
+        _id: 0,
+        // reviewCount: 1,
+        imdb: "$movie.imdb",
+        plot: "$movie.plot",
+        genres: "$movie.genres",
+        poster: "$movie.poster",
+        title: "$movie.title",
+        runtime: "$movie.runtime",
+        slug: "$movie.slug",
+      },
     },
-  ]);
+  ];
+
+  const result = await paginateAggregate(Comment, pipeline, page, limit);
+
+  result.data = result.data.map((movie) => ({
+    ...movie,
+    slug: slugify(movie.title, {
+      lower: true,
+      remove: /[*+~.()'"!:@]/g,
+    }),
+  }));
 
   res.status(200).json({
     status: "success",
-    totalResult: topGenres.length,
-    amount: topGenres.length,
-    data: topGenres,
+    ...result,
   });
 });
-// GENRES

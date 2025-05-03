@@ -1,5 +1,5 @@
 /** @format */
-const CommentQuery = require("../utils/commentQuery");
+const { CommentQuery } = require("../utils/commentQuery");
 const Comment = require("../models/commentModel");
 const User = require("../models/userModel");
 const Movie = require("../models/movieModel");
@@ -86,7 +86,10 @@ exports.createComment = catchAsync(async (req, res) => {
 // update comment
 exports.updateComment = catchAsync(async (req, res) => {
   // Validate movie_id and account_id
-  const validation = await validateMovieAndUser(movie_id, account_id);
+  const validation = await validateMovieAndUser(
+    req.query.movie_id,
+    req.query.account_id
+  );
   if (!validation.valid) {
     return res.status(400).json({
       status: "fail",
@@ -111,7 +114,10 @@ exports.updateComment = catchAsync(async (req, res) => {
 
 exports.deleteComment = catchAsync(async (req, res) => {
   // Validate movie_id and account_id
-  const validation = await validateMovieAndUser(movie_id, account_id);
+  const validation = await validateMovieAndUser(
+    req.query.movie_id,
+    req.query.account_id
+  );
   if (!validation.valid) {
     return res.status(400).json({
       status: "fail",
