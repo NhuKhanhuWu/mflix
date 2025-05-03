@@ -1,14 +1,19 @@
 /** @format */
 
-@import url("https://fonts.googleapis.com/css2?family=Parkinsans:wght@300..800&family=Train+One&display=swap");
+@import "tailwindcss";
 
 :root {
-  font-family: "Parkinsans", sans-serif;
-  --dark-gray: rgb(48, 48, 48);
-  --light-gray: rgb(75, 75, 75);
+  --color-gray-600: rgb(134, 134, 134);
+  --color-gray-700: rgb(101, 101, 101);
+  --color-gray-800: rgb(75, 75, 75);
+  --color-gray-900: rgb(48, 48, 48);
   --yellow: #ffd43b;
   --orange: #ff914d;
-  --red: rgb(223, 33, 67);
+  --color-red-500: #ec7a8e;
+  --color-red-600: #e9647b;
+  --color-red-700: #e54d69;
+  --color-red-800: #e23756;
+  --color-red-900: #df2143;
   --gold: #e6a72d;
   --red-purple: #722f37;
 }
@@ -18,24 +23,18 @@ html {
 }
 
 * {
-  margin: 0;
-  padding: 0;
+  /* margin: 0;
+  padding: 0; */
   box-sizing: border-box;
 }
 
 body {
   color: white;
   font-size: 1.4rem;
-  background-color: var(--dark-gray);
+  background-color: var(--color-gray-900);
   font-family: "Parkinsans", sans-serif;
 }
 
-a,
-a:visited {
-  color: white;
-  text-decoration: none;
-}
-
-li {
-  list-style: none;
+.carousel > div {
+  flex: 1 0 100%;
 }
