@@ -10,7 +10,7 @@ export interface MovieFilterProps {
 export interface FilterFormProps {
   title?: string;
   genres?: string[];
-  match: "any" | "all";
+  match?: "any" | "all";
   imdbScore?: string;
   runtime?:
     | "runtime[lt]=90"
