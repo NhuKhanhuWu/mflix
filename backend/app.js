@@ -2,6 +2,8 @@
 
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
+
 const AppError = require("./api/utils/appError");
 const globalErrHandler = require("./api/controllers/errorController");
 
@@ -16,11 +18,19 @@ const app = express();
 app.use(cors({ origin: "http://localhost:5173" })); // allow frontend request
 app.use(express.json());
 
+// Serve static files from React frontend in production
+app.use(express.static(path.join(__dirname, "frontend", "dist")));
+
 // ROUTER
 app.use("/api/v1/movies", movieRouter);
 app.use("/api/v1/genres/", genresRouter);
 app.use("/api/v1/movies/:movie_id/comments", commentByMovieRouter);
 app.use("/api/v1/users/:user_id/comments", commentByAccountRouter);
+
+// For any route not handled above, serve React's index.html (for SPA routing)
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+});
 
 // ERROR
 app.all("*", (req, res, next) => {
