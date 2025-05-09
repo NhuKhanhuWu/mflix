@@ -1,7 +1,5 @@
 /** @format */
 
-require("dotenv").config(); // <--- load before using any env variables
-
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 
