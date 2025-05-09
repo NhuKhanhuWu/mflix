@@ -31,7 +31,7 @@ const HeroSection: React.FC<MovieListProps> = ({ movies, isLoading }) => {
   return (
     <CustomCarousel>
       {movies?.map((movie) => (
-        <MovieHeroItem movie={movie} key={movie._id} />
+        <MovieHeroItem movie={movie} key={movie.slug} />
       ))}
     </CustomCarousel>
   );
@@ -132,20 +132,20 @@ function Home() {
     <>
       <Space space="5rem"></Space>
       <HeroSection
-        movies={top5PopularMovies}
+        movies={top5PopularMovies?.movies}
         isLoading={isLoadingPopularMovie}
       />
       <Summary />
 
       {/* best movie */}
       <MovieList
-        movies={top5BestMovies}
+        movies={top5BestMovies?.movies}
         isLoading={isLoadingBestMovie}
         header={<SectionHeader title="best rated" />}></MovieList>
       <Space space="5rem"></Space>
       {/* popular movie */}
       <MovieList
-        movies={top5LatestMovies}
+        movies={top5LatestMovies?.movies}
         isLoading={isLoadingLatestMovie}
         header={<SectionHeader title="latest movie" />}></MovieList>
 
@@ -154,19 +154,19 @@ function Home() {
 
       {/* movie */}
       <MovieList
-        movies={top5ShortMovie}
+        movies={top5ShortMovie?.movies}
         isLoading={isLoadingShortMovie}
         header={<SectionHeader title="short movies" />}></MovieList>
       <Space space="5rem"></Space>
 
       <MovieList
-        movies={top5RomanceMovie}
+        movies={top5RomanceMovie?.movies}
         isLoading={isLoadingRomanceMovie}
         header={<SectionHeader title="romance movies" />}></MovieList>
       <Space space="5rem"></Space>
 
       <MovieList
-        movies={top5MusicalMovie}
+        movies={top5MusicalMovie?.movies}
         isLoading={isLoadingMusicalMovie}
         header={<SectionHeader title="musical movies" />}></MovieList>
 

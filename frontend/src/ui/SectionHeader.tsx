@@ -11,9 +11,11 @@ const SectionHeader: React.FC<SeactionHeader> = ({ title, link }) => {
       <h2 className="text-3xl font-semibold text-brand-red uppercase">
         {title}
       </h2>
-      <a href={link} className="text-xl link">
-        See more
-      </a>
+      {link && (
+        <a href={link} className="text-xl link">
+          See more
+        </a>
+      )}
     </div>
   );
 };

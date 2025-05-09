@@ -1,10 +1,7 @@
 /** @format */
-import { Dispatch, SetStateAction } from "react";
 import {
   Genres,
-  YearRelease,
   Search,
-  ImdbScore,
   Runtime,
   Sort,
   SubmitBtn,
@@ -14,51 +11,23 @@ import {
 
 import { useQuery } from "@tanstack/react-query";
 import { getGenres } from "../../api/getGenre";
-import { useForm, UseFormRegister } from "react-hook-form";
-
-export interface MovieFilterProps {
-  setOpen: Dispatch<SetStateAction<boolean>>;
-}
-
-export interface FilterFormValues {
-  title?: string;
-  genres?: string[];
-  match?: "any" | "all";
-  yearFrom?: number;
-  yearTo?: number;
-  imdbScore?: string;
-  runtime?: "<90" | "90-120" | ">120";
-  sort?: "latest" | "alphabet";
-}
-
-export interface InputRegisterProps {
-  register: UseFormRegister<FilterFormValues>;
-}
-
-const defaultValues = {
-  title: "",
-  genres: [],
-  match: "any",
-  yearFrom: "",
-  yearTo: "",
-  imdbScore: "4",
-  runtime: "<90",
-  sort: "latest",
-};
+import { MovieFilterProps } from "../../interfaces/movieFilterInterface";
+import { useMovieFilters } from "../../hooks/useMovieFilter";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { setQueryString } from "../../redux/movieFilterSlide";
 
 const DesktopFilter: React.FC<MovieFilterProps> = ({ setOpen }) => {
-  const { register, handleSubmit, reset } = useForm<FilterFormValues>({
-    defaultValues: defaultValues,
-  });
+  const { form, applyFilters } = useMovieFilters();
+  const { register, handleSubmit } = form;
 
-  function handleSubmit(data: FilterFormValues) {
-    console.log("Applied filters:", data);
-    // setOpen(false);
-  }
+  const page = useSelector((state) => state.movieFilter.page);
 
+  // genres list
   const { data: genres, isLoading: isLoadingGenres } = useQuery({
     queryKey: ["genres"],
-    queryFn: () => getGenres({ limit: 25, page: 1, sortBy: "alphabet" }),
+    queryFn: () => getGenres({ limit: 50, page: 1, sortBy: "alphabet" }),
   });
 
   return (
@@ -71,41 +40,34 @@ const DesktopFilter: React.FC<MovieFilterProps> = ({ setOpen }) => {
 
         {/* modal content */}
         <form
-          onSubmit={handleSubmit(handleSubmit)}
+          onSubmit={handleSubmit(applyFilters)}
           className="relative z-10 w-full h-full overflow-y-auto p-4 rounded-xl shadow-md grid grid-cols-2 gap-5"
           style={{ backgroundColor: "rgb(48, 48, 48)", color: "white" }}>
+          {/* Genres */}
+          <Genres
+            register={register}
+            genres={genres}
+            isLoading={isLoadingGenres}
+          />
+
           <div className="flex flex-col gap-5">
             {/* title */}
             <Search register={register} />
-
-            {/* Genres */}
-            <Genres
-              register={register}
-              genres={genres}
-              isLoading={isLoadingGenres}
-            />
-          </div>
-
-          <div className="flex flex-col gap-5">
-            {/* Year Release */}
-            <YearRelease register={register} />
-
-            {/* IMDb Score */}
-            <ImdbScore register={register} />
-
             {/* Runtime */}
             <Runtime register={register} />
-
             {/* Sort By */}
             <Sort register={register} />
           </div>
 
           {/* Buttons */}
           <div className="flex gap-4">
-            <SubmitBtn onSubmit={handleSubmit} />
+            <SubmitBtn setOpen={setOpen} />
             <CloseBtn setOpen={setOpen} />
-            <ClearBtn reset={reset} />
+            {/* <ClearBtn reset={reset} /> */}
           </div>
+
+          {/* page */}
+          <input type="hidden" value={page} {...register("page")} />
         </form>
       </div>
     </div>

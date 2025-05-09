@@ -11,6 +11,9 @@ exports.paginateAggregate = async (model, pipeline, page = 1, limit = 20) => {
   const totalResults = countResult[0]?.total || 0;
 
   // Apply skip and limit
+  limit === "all"
+    ? [...pipeline]
+    : [...pipeline, { $skip: skip }, { $limit: limit }];
   const paginatedPipeline = [...pipeline, { $skip: skip }, { $limit: limit }];
   const data = await model.aggregate(paginatedPipeline);
 

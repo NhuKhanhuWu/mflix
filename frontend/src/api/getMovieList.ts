@@ -7,9 +7,13 @@ const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 export async function getMovieList(query: string) {
   try {
     // Fetch data from API
-    const response = await axios.get(`${BASE_URL}${query}`);
+    const response = await axios.get(`${BASE_URL}movies?${query}`);
 
-    return response.data.data;
+    return {
+      movies: response.data.data,
+      totalPage: response.data.totalPages,
+      totalResults: response.data.totalResult,
+    };
   } catch (err: unknown) {
     if (err instanceof Error) {
       throw new Error(err.message);
