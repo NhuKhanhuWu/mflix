@@ -68,11 +68,12 @@ class MovieQuery {
   sort() {
     const sortString = this.queryString?.sort;
 
-    // check if request have title
     if (!sortString) return this;
 
-    if (sortString === "rating") {
+    if (sortString === "imdbScore") {
       this.query = this.query.sort("imdb.rating"); // Sort by best rated
+    } else if (sortString === "-imdbScore") {
+      this.query = this.query.sort("-imdb.rating");
     } else {
       const sortBy = sortString.split(",").join(" ");
       this.query = this.query.sort(sortBy);
@@ -99,12 +100,9 @@ class MovieQuery {
     const skip = (page - 1) * limit;
 
     // Get total count before applying pagination
-    if (page === 1) {
-      //calc only once when it the first page
-      this.totalResults = await this.query.model.countDocuments(
-        this.query.getQuery()
-      );
-    }
+    this.totalResults = await this.query.model.countDocuments(
+      this.query.getQuery()
+    );
 
     // Apply pagination
     this.query = this.query.skip(skip).limit(limit);

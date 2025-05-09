@@ -4,7 +4,10 @@ import { UseFormReset } from "react-hook-form";
 import { GenreProps } from "../../interfaces/genreInterface";
 import { GenreListProps } from "../../interfaces/genreInterface";
 import Spinner from "../../ui/Spinner";
-import { FilterFormValues, InputRegisterProps } from "./MovieFilter";
+import {
+  FilterFormProps,
+  InputRegisterProps,
+} from "../../interfaces/movieFilterInterface";
 import { Dispatch, SetStateAction } from "react";
 
 export function Label({ label }: { label: string }) {
@@ -53,7 +56,7 @@ export const Genres: React.FC<GenreListProps & InputRegisterProps> = ({
       <Label label="Genres" />
       <div className="grid grid-cols-5 gap-y-2 overflow-y-auto pr-2">
         {genres?.map((genre) => (
-          <Genre genre={genre} register={register} />
+          <Genre genre={genre} register={register} key={genre._id} />
         ))}
       </div>
 
@@ -61,17 +64,16 @@ export const Genres: React.FC<GenreListProps & InputRegisterProps> = ({
         <Label label="Match" />
         <label className="mr-4 inline-flex items-center">
           <input
-            name="match"
+            {...register("match")}
             type="radio"
             value="any"
-            defaultChecked
             className="form-radio text-red-600"
           />
           <span className="ml-1 text-xl">Any</span>
         </label>
         <label className="inline-flex items-center">
           <input
-            name="match"
+            {...register("match")}
             type="radio"
             value="all"
             className="form-radio text-red-600"
@@ -83,50 +85,17 @@ export const Genres: React.FC<GenreListProps & InputRegisterProps> = ({
   );
 };
 
-export const YearRelease: React.FC<InputRegisterProps> = ({ register }) => {
-  return (
-    <div className="mb-4">
-      <Label label="Release Year" />
-      <div className="flex gap-4">
-        <input
-          {...register("yearFrom")}
-          type="number"
-          placeholder="From"
-          className="input w-1/2 pl-5"
-        />
-        <input
-          {...register("yearTo")}
-          type="number"
-          placeholder="To"
-          className="input w-1/2 pl-5"
-        />
-      </div>
-    </div>
-  );
-};
-
-export const ImdbScore: React.FC<InputRegisterProps> = ({ register }) => {
-  return (
-    <div className="mb-4">
-      <Label label="IMDb Score" />
-      <select className="input pl-5" {...register("imdbScore")}>
-        <option value="1">1 ⭐</option>
-        <option value="2">2 ⭐</option>
-        <option value="3">3 ⭐</option>
-        <option value="4">4 ⭐</option>
-      </select>
-    </div>
-  );
-};
-
 export const Runtime: React.FC<InputRegisterProps> = ({ register }) => {
   return (
     <div className="mb-4">
       <Label label="Runtime" />
       <select className="input" {...register("runtime")}>
-        <option value="<90">&lt; 90 minutes</option>
-        <option value="90-120">90 – 120 minutes</option>
-        <option value=">120">&gt; 120 minutes</option>
+        <option value="">All</option>
+        <option value="runtime[lt]=90">&lt; 90 minutes</option>
+        <option value="runtime[gte]=90&runtime[lte]=120">
+          90 – 120 minutes
+        </option>
+        <option value="runtime[gt]=120">&gt; 120 minutes</option>
       </select>
     </div>
   );
@@ -137,18 +106,23 @@ export const Sort: React.FC<InputRegisterProps> = ({ register }) => {
     <div className="mb-4">
       <Label label="Sort By" />
       <select className="input" {...register("sort")}>
-        <option value="latest">Latests</option>
-        <option value="alphabet">Alphabetical</option>
+        <option value="-year">Latests</option>
+        <option value="-imdbScore">Hightest score</option>
+        <option value="-title">A-Z</option>
+        <option value="title">Z-A</option>
       </select>
     </div>
   );
 };
 
 export const SubmitBtn: React.FC<{
-  onSubmit: (data: FilterFormValues) => void;
-}> = ({ onSubmit }) => {
+  setOpen: React.Dispatch<SetStateAction<boolean>>;
+}> = ({ setOpen }) => {
   return (
-    <button className="primary-btn btn" onClick={onSubmit} type="sumbit">
+    <button
+      className="primary-btn btn"
+      type="submit"
+      onClick={() => setOpen(false)}>
       Apply
     </button>
   );
@@ -162,17 +136,21 @@ export const CloseBtn: React.FC<{
       className="secondary-btn btn"
       onClick={() => {
         setOpen(false);
-      }}>
+      }}
+      type="button">
       Close
     </button>
   );
 };
 
-export const ClearBtn: React.FC<{ reset: UseFormReset<FilterFormValues> }> = ({
+export const ClearBtn: React.FC<{ reset: UseFormReset<FilterFormProps> }> = ({
   reset,
 }) => {
   return (
-    <button className=" secondary-btn btn" onClick={() => reset()}>
+    <button
+      className=" secondary-btn btn"
+      onClick={() => reset()}
+      type="button">
       X Clear filter
     </button>
   );

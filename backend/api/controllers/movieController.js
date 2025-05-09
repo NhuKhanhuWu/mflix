@@ -19,6 +19,7 @@ exports.getAllMovie = catchAsync(async (req, res) => {
   res.status(200).json({
     status: "success",
     totalResult: queryInstance.totalResults,
+    totalPages: Math.ceil(queryInstance.totalResults / movies.length),
     amount: movies.length,
     data: movies,
   });
