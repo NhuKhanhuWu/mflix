@@ -24,8 +24,12 @@ const DesktopFilter: React.FC<MovieFilterProps> = ({ setOpen }) => {
   const page = useSelector((state: RootState) => state.movieFilter.page);
 
   // genres list
-  const { data: genres, isLoading: isLoadingGenres } = useQuery({
-    queryKey: ["genres"],
+  const {
+    data: genres,
+    isLoading: isLoadingGenres,
+    isError: isGenresErr,
+  } = useQuery({
+    queryKey: ["genres", { limit: 50, page: 1, sortBy: "alphabet" }],
     queryFn: () => getGenres({ limit: 50, page: 1, sortBy: "alphabet" }),
   });
 
@@ -49,6 +53,7 @@ const DesktopFilter: React.FC<MovieFilterProps> = ({ setOpen }) => {
             register={register}
             genres={genres}
             isLoading={isLoadingGenres}
+            isError={isGenresErr}
           />
 
           <div className="flex flex-col gap-5">
