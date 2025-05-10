@@ -1,7 +1,7 @@
 /** @format */
 
 const mongoose = require("mongoose");
-const slugify = require("slugify");
+// const slugify = require("slugify");
 
 const movieSchema = new mongoose.Schema(
   {
@@ -109,8 +109,20 @@ movieSchema.index({ genres: 1 });
 movieSchema.index({ year: -1 });
 
 // create slug
-movieSchema.virtual("slug").get(function () {
-  return slugify(this.title, { lower: true, remove: /[*+~.()'"!:@]/g });
+function slugify(title) {
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "") // Remove punctuation
+    .replace(/[\s_-]+/g, "-") // Replace spaces/underscores with hyphens
+    .replace(/^-+|-+$/g, ""); // Trim hyphens from start and end
+}
+
+movieSchema.pre("save", function (next) {
+  if (!this.slug) {
+    this.slug = slugify(this.title);
+  }
+  next();
 });
 
 const Movies = mongoose.model("Movies", movieSchema);
