@@ -12,7 +12,7 @@ export interface FilterFormProps {
   genres?: string[];
   match?: "any" | "all";
   imdbScore?: string;
-  runtime?:
+  runtime:
     | "runtime[lt]=90"
     | "runtime[gte]=90&runtime[lte]=120"
     | "runtime[gt]=120"

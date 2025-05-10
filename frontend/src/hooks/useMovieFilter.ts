@@ -8,31 +8,6 @@ import { useDispatch } from "react-redux";
 import { changePage, setQueryString } from "../redux/movieFilterSlide";
 import { BaseSyntheticEvent } from "react";
 
-// function parseQueryParams(params: URLSearchParams): FilterFormProps {
-//   const validRuntimes = [
-//     "",
-//     "runtime[lt]=90",
-//     "runtime[gte]=90&runtime[lte]=120",
-//     "runtime[gt]=120",
-//   ];
-//   const validSorts = ["-year", "-title", "title"];
-
-//   const runtimeParam = params.get("runtime") || "";
-//   const sortParam = params.get("sort") || "";
-
-//   const runtime = validRuntimes.includes(runtimeParam) ? runtimeParam : "";
-//   const sort = validSorts.includes(sortParam) ? sortParam : "-year";
-
-//   return {
-//     genres: params.get("genres")?.split(",") || [],
-//     match: (params.get("match") as "any" | "all") || "any",
-//     imdbScore: params.get("imdbScore") || "",
-//     runtime,
-//     sort,
-//     title: params.get("title") || "",
-//   };
-// }
-
 function parseQueryParams(params: URLSearchParams): FilterFormProps {
   const VALID_RUNTIMES = [
     "",
