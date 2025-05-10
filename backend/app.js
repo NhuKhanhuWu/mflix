@@ -17,22 +17,24 @@ const {
 const app = express();
 
 // allow fronend origin
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://mflix-git-dev-nhukhanhuwus-projects.vercel.app",
-];
-
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow of no origin (postman) or on allowedOrigin
-      if (!origin || allowedOrigins.includes(origin)) {
+      // Allow if :
+      // - No origin (Postman)
+      // - Localhost in dev
+      // - Any domain of vercel's project `nhukhanhuwus-projects`
+      if (
+        !origin ||
+        origin === "http://localhost:5173" ||
+        origin.endsWith("nhukhanhuwus-projects.vercel.app")
+      ) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
       }
     },
-    credentials: true, // nếu bạn cần gửi cookie
+    credentials: true, // if need cookies
   })
 );
 
