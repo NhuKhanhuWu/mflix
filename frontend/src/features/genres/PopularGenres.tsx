@@ -37,7 +37,7 @@ const PopularGernes: React.FC<GenreListProps> = ({ genres, isLoading }) => {
             key={genre._id}
             className={`${colStartClasses[index]} flex justify-center`}>
             <Link
-              to={`genres/${genre._id}`}
+              to={`movies?genres=${genre._id}&page=1`}
               className="flex gap-3 secondary-btn btn">
               <span>{genre._id}</span>
               <span className="text-[var(--color-gray-600)] text-xl self-end">
