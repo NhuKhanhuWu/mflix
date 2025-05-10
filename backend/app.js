@@ -15,7 +15,28 @@ const {
 } = require("./api/routes/commentRouter");
 
 const app = express();
-app.use(cors({ origin: "http://localhost:5173" })); // allow frontend request
+
+// allow fronend origin
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://mflix-git-dev-nhukhanhuwus-projects.vercel.app",
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow of no origin (postman) or on allowedOrigin
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // nếu bạn cần gửi cookie
+  })
+);
+
+// app.use(cors({ origin: "http://localhost:5173" })); // allow frontend request
 app.use(express.json());
 
 // Serve static files from React frontend in production
