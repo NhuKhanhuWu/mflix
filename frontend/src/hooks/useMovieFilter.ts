@@ -38,7 +38,11 @@ function parseQueryParams(params: URLSearchParams): FilterFormProps {
     .filter(Boolean) // remove falsy like undefined/false
     .join("&");
 
-  const runtime = VALID_RUNTIMES.includes(rawRuntime) ? rawRuntime : "";
+  const runtime = VALID_RUNTIMES.includes(
+    rawRuntime as (typeof VALID_RUNTIMES)[number]
+  )
+    ? (rawRuntime as (typeof VALID_RUNTIMES)[number])
+    : "";
 
   // sort
   const sort = VALID_SORTS.includes(getParam("sort") as any)
