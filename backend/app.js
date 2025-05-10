@@ -15,7 +15,30 @@ const {
 } = require("./api/routes/commentRouter");
 
 const app = express();
-app.use(cors({ origin: "http://localhost:5173" })); // allow frontend request
+
+// allow fronend origin
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow if :
+      // - No origin (Postman)
+      // - Localhost in dev
+      // - Any domain of vercel's project `nhukhanhuwus-projects`
+      if (
+        !origin ||
+        origin === "http://localhost:5173" ||
+        origin.endsWith("nhukhanhuwus-projects.vercel.app")
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // if need cookies
+  })
+);
+
+// app.use(cors({ origin: "http://localhost:5173" })); // allow frontend request
 app.use(express.json());
 
 // Serve static files from React frontend in production
