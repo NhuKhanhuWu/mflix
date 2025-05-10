@@ -1,11 +1,5 @@
 /** @format */
-const normalizeGenre = (genre) =>
-  genre
-    .trim()
-    .toLowerCase()
-    .split(" ")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
+const normalizeGenre = (genre) => genre.trim();
 
 const excludedFields = [
   "page",
