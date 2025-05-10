@@ -8,7 +8,12 @@ const { default: slugify } = require("slugify");
 
 // MOVIE
 // get movies (many movies at once, limit fields)
-exports.getAllMovie = catchAsync(async (req, res) => {
+exports.getAllMovie = catchAsync(async (req, res, next) => {
+  // if user request sort by popularity
+  if (req.query.sort === "popular") {
+    return exports.sortByMostReviewed(req, res, next);
+  }
+
   // Otherwise, use regular Mongoose query
   const queryInstance = new MovieQuery(Movie.find(), req.query);
   queryInstance.limitField().search().genre().filter().sort();

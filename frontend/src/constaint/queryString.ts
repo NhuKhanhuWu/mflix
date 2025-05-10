@@ -6,7 +6,7 @@ interface movieByGenresProps {
 }
 
 // movies
-export const get5PopularMovieQuery = "/most_rated?limit=5";
+export const get5PopularMovieQuery = "sort=popular&limit=5";
 export const get5BestMovieQuery = "limit=5&sort=-rating";
 export const get5LatestMovieQuery = "sort=-year&limit=5";
 export const getMovieByGenresQuery = ({

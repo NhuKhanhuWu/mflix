@@ -6,23 +6,22 @@ import {
   Sort,
   SubmitBtn,
   CloseBtn,
-  ClearBtn,
+  // ClearBtn,
 } from "./MovieFilterComponents";
 
 import { useQuery } from "@tanstack/react-query";
 import { getGenres } from "../../api/getGenre";
 import { MovieFilterProps } from "../../interfaces/movieFilterInterface";
 import { useMovieFilters } from "../../hooks/useMovieFilter";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
-import { setQueryString } from "../../redux/movieFilterSlide";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { BaseSyntheticEvent } from "react";
 
 const DesktopFilter: React.FC<MovieFilterProps> = ({ setOpen }) => {
   const { form, applyFilters } = useMovieFilters();
   const { register, handleSubmit } = form;
 
-  const page = useSelector((state) => state.movieFilter.page);
+  const page = useSelector((state: RootState) => state.movieFilter.page);
 
   // genres list
   const { data: genres, isLoading: isLoadingGenres } = useQuery({
@@ -40,7 +39,9 @@ const DesktopFilter: React.FC<MovieFilterProps> = ({ setOpen }) => {
 
         {/* modal content */}
         <form
-          onSubmit={handleSubmit(applyFilters)}
+          onSubmit={handleSubmit((data, e) =>
+            applyFilters(data, e as BaseSyntheticEvent<object, any, any>)
+          )}
           className="relative z-10 w-full h-full overflow-y-auto p-4 rounded-xl shadow-md grid grid-cols-2 gap-5"
           style={{ backgroundColor: "rgb(48, 48, 48)", color: "white" }}>
           {/* Genres */}

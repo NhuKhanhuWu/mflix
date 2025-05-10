@@ -16,9 +16,23 @@ function useSyncMovieFiltersFromURL() {
       const page = isNaN(pageParam) || pageParam < 1 ? 1 : pageParam;
       dispatch(changePage(page));
 
-      // update movieFilter query string
-      searchParams.delete("page");
-      const queryString = decodeURIComponent(searchParams.toString());
+      // Clone searchParams to modify
+      const params = new URLSearchParams(searchParams.toString());
+
+      // Ensure default values if not present
+      if (!params.has("match")) {
+        params.set("match", "any");
+      }
+
+      if (!params.has("sort")) {
+        params.set("sort", "-year");
+      }
+
+      // Remove page param for query string
+      params.delete("page");
+
+      // Update movieFilter query string
+      const queryString = decodeURIComponent(params.toString());
       dispatch(setQueryString(queryString));
     },
     [dispatch, searchParams]

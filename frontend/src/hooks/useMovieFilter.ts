@@ -6,25 +6,78 @@ import { useForm } from "react-hook-form";
 import { FilterFormProps } from "../interfaces/movieFilterInterface";
 import { useDispatch } from "react-redux";
 import { changePage, setQueryString } from "../redux/movieFilterSlide";
-// import { useEffect } from "react";
+import { BaseSyntheticEvent } from "react";
+
+// function parseQueryParams(params: URLSearchParams): FilterFormProps {
+//   const validRuntimes = [
+//     "",
+//     "runtime[lt]=90",
+//     "runtime[gte]=90&runtime[lte]=120",
+//     "runtime[gt]=120",
+//   ];
+//   const validSorts = ["-year", "-title", "title"];
+
+//   const runtimeParam = params.get("runtime") || "";
+//   const sortParam = params.get("sort") || "";
+
+//   const runtime = validRuntimes.includes(runtimeParam) ? runtimeParam : "";
+//   const sort = validSorts.includes(sortParam) ? sortParam : "-year";
+
+//   return {
+//     genres: params.get("genres")?.split(",") || [],
+//     match: (params.get("match") as "any" | "all") || "any",
+//     imdbScore: params.get("imdbScore") || "",
+//     runtime,
+//     sort,
+//     title: params.get("title") || "",
+//   };
+// }
 
 function parseQueryParams(params: URLSearchParams): FilterFormProps {
-  const validRuntimes = ["<90", "90-120", ">120", ""];
-  const validSorts = ["-year", "-title", "title"];
+  const VALID_RUNTIMES = [
+    "",
+    "runtime[lt]=90",
+    "runtime[gte]=90&runtime[lte]=120",
+    "runtime[gt]=120",
+  ] as const;
 
-  const runtimeParam = params.get("runtime") || "";
-  const sortParam = params.get("sort") || "";
+  const VALID_SORTS = ["-year", "-title", "title"] as const;
+  const VALID_MATCHES = ["any", "all"] as const;
 
-  const runtime = validRuntimes.includes(runtimeParam) ? runtimeParam : "<90";
-  const sort = validSorts.includes(sortParam) ? sortParam : "-year";
+  const getParam = (key: string) => params.get(key) || "";
+
+  const genres = getParam("genres").split(",").filter(Boolean);
+  const match = VALID_MATCHES.includes(getParam("match") as any)
+    ? (getParam("match") as "any" | "all")
+    : "any";
+  const imdbScore = getParam("imdbScore");
+  const title = getParam("title");
+
+  // runtime
+  const rawRuntime = [
+    getParam("runtime[lt]") && `runtime[lt]=${getParam("runtime[lt]")}`,
+    getParam("runtime[gte]") && `runtime[gte]=${getParam("runtime[gte]")}`,
+    getParam("runtime[lte]") && `runtime[lte]=${getParam("runtime[lte]")}`,
+    getParam("runtime[gt]") && `runtime[gt]=${getParam("runtime[gt]")}`,
+  ]
+    .filter(Boolean) // remove falsy like undefined/false
+    .join("&");
+
+  const runtime = VALID_RUNTIMES.includes(rawRuntime) ? rawRuntime : "";
+
+  // sort
+  const sort = VALID_SORTS.includes(getParam("sort") as any)
+    ? (getParam("sort") as (typeof VALID_SORTS)[number])
+    : "-year";
 
   return {
-    genres: params.get("genres")?.split(",") || [],
-    match: (params.get("match") as "any" | "all") || "any",
-    imdbScore: params.get("imdbScore") || "",
+    genres,
+    match,
+    imdbScore,
     runtime,
     sort,
-    title: params.get("title") || "",
+    title,
+    page: 0,
   };
 }
 
@@ -47,7 +100,7 @@ function buildQueryParams(form: FilterFormProps): URLSearchParams {
   if (form.genres?.length) {
     params.set("genres", form.genres.join(","));
   }
-  params.set("match", form.match);
+  params.set("match", form.match || "any");
 
   if (form.runtime) buildCompareParams(form, params, "runtime");
   if (form.sort) params.set("sort", form.sort);
@@ -67,10 +120,7 @@ export function useMovieFilters() {
     defaultValues,
   });
 
-  const applyFilters = (
-    formData: FilterFormProps,
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const applyFilters = (formData: FilterFormProps, e: BaseSyntheticEvent) => {
     e.preventDefault();
     formData.page = 1; // 🔁 reset page when apply new filter
 
@@ -88,6 +138,6 @@ export function useMovieFilters() {
     form,
     applyFilters,
     currentParams: searchParams.toString(),
-    queryString: "?" + decodeURIComponent(searchParams.toString()),
+    queryString: decodeURIComponent(searchParams.toString()),
   };
 }

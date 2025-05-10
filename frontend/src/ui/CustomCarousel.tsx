@@ -66,7 +66,10 @@ const CustomCarousel: React.FC<CustomCarouselProps> = ({ children }) => {
         />
       )}
       prevArrow={({ handlePrev }) => <PrevButton onClick={handlePrev} />}
-      nextArrow={({ handleNext }) => <NextButton onClick={handleNext} />}>
+      nextArrow={({ handleNext }) => <NextButton onClick={handleNext} />}
+      placeholder={undefined}
+      onPointerEnterCapture={undefined}
+      onPointerLeaveCapture={undefined}>
       {children}
     </Carousel>
   );

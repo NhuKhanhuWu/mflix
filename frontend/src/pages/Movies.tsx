@@ -9,16 +9,19 @@ import { useQuery } from "@tanstack/react-query";
 import { resetMovieFilter, changePage } from "../redux/movieFilterSlide";
 import MovieList from "../features/movies/MovieList";
 import SectionHeader from "../ui/SectionHeader";
-import Paginate from "../ui/paginate";
+import Paginate from "../ui/Paginate";
 import useSyncMovieFiltersFromURL from "../hooks/useSyncMovieFiltersFromURL ";
+import { RootState } from "../redux/store";
 
 function Movies() {
   // set filter by url
   useSyncMovieFiltersFromURL();
 
   const [isOpenModal, setOpenModal] = useState(false);
-  const queryString = useSelector((state) => state.movieFilter.queryString);
-  const page = useSelector((state) => state.movieFilter.page);
+  const queryString = useSelector(
+    (state: RootState) => state.movieFilter.queryString
+  );
+  const page = useSelector((state: RootState) => state.movieFilter.page);
   const dispatch = useDispatch();
 
   // movie list
