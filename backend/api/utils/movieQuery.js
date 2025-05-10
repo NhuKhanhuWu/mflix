@@ -1,11 +1,5 @@
 /** @format */
-const normalizeGenre = (genre) =>
-  genre
-    .trim()
-    .toLowerCase()
-    .split(" ")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
+const normalizeGenre = (genre) => genre.trim();
 
 const excludedFields = [
   "page",
@@ -48,6 +42,8 @@ class MovieQuery {
 
     // CREATE FILTER ARRAY
     const genresList = genres.split(",").map(normalizeGenre);
+
+    console.log(genresList);
 
     // FILTERING
     if (match === "all") {
