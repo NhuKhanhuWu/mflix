@@ -12,6 +12,7 @@ import SectionHeader from "../ui/SectionHeader";
 import Paginate from "../ui/Paginate";
 import useSyncMovieFiltersFromURL from "../hooks/useSyncMovieFiltersFromURL ";
 import { RootState } from "../redux/store";
+import EmptyResult from "../ui/EmptyResult";
 
 function Movies() {
   // set filter by url
@@ -53,16 +54,23 @@ function Movies() {
 
       {/* movies */}
       <SectionHeader title="Result"></SectionHeader>
-      <MovieList
-        movies={moviesObj?.movies}
-        isLoading={isLoadingMovies}></MovieList>
 
-      {/* pagination */}
-      <Paginate
-        pageAmount={moviesObj?.totalPage}
-        currPage={page}
-        changePageFunc={(page: number) => dispatch(changePage(page))}
-      />
+      {moviesObj?.movies.length === 0 ? (
+        <EmptyResult />
+      ) : (
+        <>
+          <MovieList
+            movies={moviesObj?.movies}
+            isLoading={isLoadingMovies}></MovieList>
+
+          {/* pagination */}
+          <Paginate
+            pageAmount={moviesObj?.totalPage}
+            currPage={page}
+            changePageFunc={(page: number) => dispatch(changePage(page))}
+          />
+        </>
+      )}
     </div>
   );
 }

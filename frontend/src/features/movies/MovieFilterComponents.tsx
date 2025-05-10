@@ -48,18 +48,21 @@ export const Genres: React.FC<GenreListProps & InputRegisterProps> = ({
   genres,
   isLoading,
   register,
+  isError = false,
 }) => {
-  if (isLoading) return <Spinner />;
-
   return (
     <div className="mb-4">
       <Label label="Genres" />
+
+      {/* genres list */}
+      <Spinner isLoading={isLoading} isError={isError} />
       <div className="grid grid-cols-5 gap-y-2 overflow-y-auto pr-2">
         {genres?.map((genre) => (
           <Genre genre={genre} register={register} key={genre._id} />
         ))}
       </div>
 
+      {/* match genres options */}
       <div className="mt-2 text-sm">
         <Label label="Match" />
         <label className="mr-4 inline-flex items-center">
