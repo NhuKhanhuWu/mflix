@@ -24,6 +24,7 @@ export interface MovieProps {
 
 export interface MovieListProps {
   movies: Movie[];
-  isLoading?: boolean;
+  isLoading: boolean;
+  isError?: boolean;
   header?: ReactElement;
 }
