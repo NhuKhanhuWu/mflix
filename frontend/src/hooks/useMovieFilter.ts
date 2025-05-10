@@ -53,10 +53,19 @@ function parseQueryParams(params: URLSearchParams): FilterFormProps {
   const imdbScore = getParam("imdbScore");
   const title = getParam("title");
 
-  const runtime = VALID_RUNTIMES.includes(getParam("runtime") as any)
-    ? (getParam("runtime") as (typeof VALID_RUNTIMES)[number])
-    : "";
+  // runtime
+  const rawRuntime = [
+    getParam("runtime[lt]") && `runtime[lt]=${getParam("runtime[lt]")}`,
+    getParam("runtime[gte]") && `runtime[gte]=${getParam("runtime[gte]")}`,
+    getParam("runtime[lte]") && `runtime[lte]=${getParam("runtime[lte]")}`,
+    getParam("runtime[gt]") && `runtime[gt]=${getParam("runtime[gt]")}`,
+  ]
+    .filter(Boolean) // remove falsy like undefined/false
+    .join("&");
 
+  const runtime = VALID_RUNTIMES.includes(rawRuntime) ? rawRuntime : "";
+
+  // sort
   const sort = VALID_SORTS.includes(getParam("sort") as any)
     ? (getParam("sort") as (typeof VALID_SORTS)[number])
     : "-year";
@@ -120,7 +129,7 @@ export function useMovieFilters() {
     setSearchParams(newParams);
 
     // update in movieFilter redux
-    const decodedQuery = "?" + decodeURIComponent(newParams.toString());
+    const decodedQuery = decodeURIComponent(newParams.toString());
     dispatch(setQueryString(decodedQuery));
     dispatch(changePage(formData.page));
   };
@@ -129,6 +138,6 @@ export function useMovieFilters() {
     form,
     applyFilters,
     currentParams: searchParams.toString(),
-    queryString: "?" + decodeURIComponent(searchParams.toString()),
+    queryString: decodeURIComponent(searchParams.toString()),
   };
 }

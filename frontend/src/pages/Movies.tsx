@@ -26,8 +26,8 @@ function Movies() {
 
   // movie list
   const { data: moviesObj, isLoading: isLoadingMovies } = useQuery({
-    queryKey: ["movies", `?page=${page}&${queryString}`],
-    queryFn: () => getMovieList(`?page=${page}&${queryString}`),
+    queryKey: ["movies", `page=${page}&${queryString}`],
+    queryFn: () => getMovieList(`page=${page}&${queryString}`),
   });
 
   // clear redux state when leaves page
