@@ -20,13 +20,6 @@
 }
 
 @layer components {
-  .highlight-txt-5xl {
-    color: #df2143;
-    font-family: "Train One", cursive;
-    font-size: 3rem; /* Equivalent to text-5xl */
-    line-height: 1;
-  }
-
   .btn {
     border-radius: 9999px;
     display: flex;
@@ -35,6 +28,21 @@
     width: fit-content;
     padding: 0.5rem 1rem;
     cursor: pointer;
+  }
+
+  .big-movie-title {
+    @apply text-5xl font-bold mb-2 uppercase;
+  }
+
+  .medium-movie-title {
+    @apply text-2xl font-bold mb-2 uppercase;
+  }
+
+  .highlight-txt-5xl {
+    color: #df2143;
+    font-family: "Train One", cursive;
+    font-size: 3rem; /* Equivalent to text-5xl */
+    line-height: 1;
   }
 
   .primary-btn {

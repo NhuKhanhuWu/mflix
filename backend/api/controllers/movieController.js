@@ -30,7 +30,17 @@ exports.getAllMovie = catchAsync(async (req, res, next) => {
   });
 });
 
-// get one movie, all fields
+// get one movie, all fields by name (slug)
+exports.getMovieByName = catchAsync(async (req, res) => {
+  const movie = await Movie.findOne({ slug: req.params.slug });
+
+  res.status(200).json({
+    status: "success",
+    data: movie,
+  });
+});
+
+// get one movie, all fields by id
 exports.getMovieById = catchAsync(async (req, res) => {
   const movie = await Movie.findById(req.params.id);
 

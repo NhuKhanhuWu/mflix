@@ -3,16 +3,12 @@
 import axios from "axios";
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
-export async function getMovieList(query: string) {
+export async function getMovieDetail(slug: string) {
   try {
     // Fetch data from API
-    const response = await axios.get(`${BASE_URL}movies?${query}`);
+    const response = await axios.get(`${BASE_URL}movies/slug/${slug}`);
 
-    return {
-      movies: response.data.data,
-      totalPage: response.data.totalPages,
-      totalResults: response.data.totalResult,
-    };
+    return response.data.data;
   } catch (err: unknown) {
     if (err instanceof Error) {
       throw new Error(err.message);

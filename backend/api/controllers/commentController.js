@@ -19,7 +19,7 @@ const validateMovieAndUser = async (movie_id, account_id) => {
 // get comment of a movie (paginate, sorting)
 exports.getCommentsByMovie = catchAsync(async (req, res) => {
   const queryInstance = new CommentQuery(
-    Comment.find({ movie_id: req.params.movie_id }),
+    Comment.find({ movie_id: req.params.movie_id }).populate("user_id", "name"),
     req.query
   )
     .limitField()
@@ -33,6 +33,7 @@ exports.getCommentsByMovie = catchAsync(async (req, res) => {
     status: "success",
     amount: comment.length,
     totalResult: queryInstance.totalResult,
+    totalPages: Math.ceil(queryInstance.totalResult / comment.length),
     data: comment,
   });
 });

@@ -10,7 +10,10 @@ import { ContentBlock } from "../ui/ContentBlock";
 import { getMovieList } from "../api/getMovieList";
 import { getGenres } from "../api/getGenre";
 
-import { MovieHeroItem } from "../features/movies/MovieHeroItem";
+import {
+  MovieHeroItem,
+  MovieHeroSummary,
+} from "../features/movies/MovieHeroItem";
 import MovieList from "../features/movies/MovieList";
 import PopularGernes from "../features/genres/PopularGenres";
 
@@ -23,22 +26,21 @@ import {
   getMovieByGenresQuery,
 } from "../constaint/queryString";
 import { Link } from "react-router-dom";
-import SpinnerAndErr from "../ui/Spinner";
+import LoadAndErr from "../ui/Spinner";
 
 const HeroSection: React.FC<MovieListProps> = ({
   movies,
   isLoading,
   isError,
 }) => {
-  // if (isLoading)
-  //   return <SpinnerAndErr isLoading={isLoading} isError={isError} />;
-
   return (
     <>
-      <SpinnerAndErr isLoading={isLoading} isError={isError} />
+      <LoadAndErr isLoading={isLoading} isError={isError} />
       <CustomCarousel>
         {movies?.map((movie) => (
-          <MovieHeroItem movie={movie} key={movie.slug} />
+          <MovieHeroItem movie={movie} key={movie.slug}>
+            <MovieHeroSummary movie={movie} />
+          </MovieHeroItem>
         ))}
       </CustomCarousel>
     </>
