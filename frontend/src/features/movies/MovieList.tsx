@@ -1,7 +1,7 @@
 /** @format */
 
 import { MovieListProps } from "../../interfaces/movieInterfaces";
-import SpinnerAndErr from "../../ui/Spinner";
+import LoadAndErr from "../../ui/Spinner";
 import MovieCard from "./MovieCard";
 
 const MovieList: React.FC<MovieListProps> = ({
@@ -15,7 +15,7 @@ const MovieList: React.FC<MovieListProps> = ({
       {header}
 
       {/* loading/err message */}
-      <SpinnerAndErr isLoading={isLoading} isError={isError} />
+      <LoadAndErr isLoading={isLoading} isError={isError} />
 
       {/* movies */}
       <div className="grid grid-cols-5 gap-4 mx-4">

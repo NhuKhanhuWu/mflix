@@ -2,11 +2,11 @@
 
 // store/movieFilterSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Movie } from "../interfaces/movieInterfaces";
+import { MovieSimplify } from "../interfaces/movieInterfaces";
 
 interface MovieFilterState {
   queryString: string;
-  movies: Movie[];
+  movies: MovieSimplify[];
   page: number;
 }
 
@@ -23,7 +23,7 @@ export const movieFilterSlice = createSlice({
     setQueryString(state, action: PayloadAction<string>) {
       state.queryString = action.payload;
     },
-    setMovies(state, action: PayloadAction<Movie[]>) {
+    setMovies(state, action: PayloadAction<MovieSimplify[]>) {
       state.movies = action.payload;
     },
     resetMovieFilter(state) {

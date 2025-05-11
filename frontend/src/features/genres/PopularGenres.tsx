@@ -3,7 +3,7 @@
 import { Link } from "react-router-dom";
 import { GenreListProps } from "../../interfaces/genreInterface";
 import { ContentBlock } from "../../ui/ContentBlock";
-import SpinnerAndErr from "../../ui/Spinner";
+import LoadAndErr from "../../ui/Spinner";
 
 // Predefined column start values to center items in each row (7-column grid)
 const colStartClasses = [
@@ -36,7 +36,7 @@ const PopularGernes: React.FC<GenreListProps> = ({
         style={{ gridTemplateColumns: "repeat(7, min-content)" }}>
         {/* loading/err message */}
         {isError || isLoading ? (
-          <SpinnerAndErr isLoading={isLoading} isError={isError} />
+          <LoadAndErr isLoading={isLoading} isError={isError} />
         ) : (
           ""
         )}
