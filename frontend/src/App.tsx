@@ -4,11 +4,13 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AppLayout from "./ui/AppLayout";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools/production";
+import { lazy, Suspense } from "react";
+import PageLoader from "./ui/PageLoader";
 
-import Home from "./pages/Home";
-import Movies from "./pages/Movies";
-import MovieDetail from "./pages/MovieDetail";
-import NotFound from "./pages/NotFound";
+const Home = lazy(() => import("./pages/Home"));
+const Movies = lazy(() => import("./pages/Movies"));
+const MovieDetail = lazy(() => import("./pages/MovieDetail"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 const router = createBrowserRouter([
   {
@@ -37,7 +39,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
-      <RouterProvider router={router}></RouterProvider>
+      <Suspense fallback={<PageLoader />}>
+        <RouterProvider router={router}></RouterProvider>
+      </Suspense>
     </QueryClientProvider>
   );
 }
