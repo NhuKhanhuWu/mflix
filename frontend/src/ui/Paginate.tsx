@@ -14,6 +14,7 @@ interface PaginateProps {
   pageAmount: number;
   currPage: number;
   changePageFunc: (page: number) => void;
+  targetRef: React.RefObject<HTMLElement>;
 }
 
 function pageSchema(pageAmount: number) {
@@ -32,6 +33,7 @@ const Paginate: React.FC<PaginateProps> = ({
   pageAmount,
   currPage,
   changePageFunc,
+  targetRef,
 }) => {
   const {
     register,
@@ -50,6 +52,9 @@ const Paginate: React.FC<PaginateProps> = ({
 
   function onSubmit(data: { page: number }) {
     changePageFunc(data.page);
+
+    // scroll to top when change page
+    targetRef.current?.scrollIntoView({ behavior: "smooth" });
   }
 
   return (
@@ -58,7 +63,10 @@ const Paginate: React.FC<PaginateProps> = ({
         {/* pre page btn */}
         {currPage > 1 && (
           <PrePage
-            onClick={() => changePageFunc(currPage - 1)}
+            onClick={() => {
+              changePageFunc(currPage - 1);
+              targetRef.current?.scrollIntoView({ behavior: "smooth" });
+            }}
             className="btn-circle-hover"
           />
         )}
@@ -85,7 +93,10 @@ const Paginate: React.FC<PaginateProps> = ({
         {/* next page btn */}
         {currPage < pageAmount && (
           <NextPage
-            onClick={() => changePageFunc(currPage + 1)}
+            onClick={() => {
+              changePageFunc(currPage + 1);
+              targetRef.current?.scrollIntoView({ behavior: "smooth" });
+            }}
             className="btn-circle-hover"
           />
         )}

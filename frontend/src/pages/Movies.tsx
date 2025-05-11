@@ -1,6 +1,6 @@
 /** @format */
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CustomModal from "../ui/Modal";
 import DesktopFilter from "../features/movies/MovieFilter";
 import { getMovieList } from "../api/getMovieList";
@@ -31,6 +31,9 @@ function Movies() {
     queryFn: () => getMovieList(`page=${page}&${queryString}`),
   });
 
+  // scroll to top when change page
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   // clear redux state when leaves page
   useEffect(() => {
     return () => {
@@ -39,7 +42,7 @@ function Movies() {
   }, []);
 
   return (
-    <div>
+    <div ref={scrollRef}>
       {/* filter/sorter sidebar */}
       <div>
         <button
@@ -65,6 +68,7 @@ function Movies() {
 
           {/* pagination */}
           <Paginate
+            targetRef={scrollRef}
             pageAmount={moviesObj?.totalPage}
             currPage={page}
             changePageFunc={(page: number) => dispatch(changePage(page))}

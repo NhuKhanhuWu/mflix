@@ -3,16 +3,14 @@
 import axios from "axios";
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
-export async function getMovieList(query: string) {
+export async function getCommentByMovie(id?: string, page?: number) {
   try {
     // Fetch data from API
-    const response = await axios.get(`${BASE_URL}movies?${query}`);
+    const response = await axios.get(
+      `${BASE_URL}movies/${id}/comments?page=${page}`
+    );
 
-    return {
-      movies: response.data.data,
-      totalPage: response.data.totalPages,
-      totalResults: response.data.totalResult,
-    };
+    return response.data;
   } catch (err: unknown) {
     if (err instanceof Error) {
       throw new Error(err.message);
