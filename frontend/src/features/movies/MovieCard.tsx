@@ -1,9 +1,9 @@
 /** @format */
 
-import { MovieProps } from "../../interfaces/movieInterfaces";
+import { MovieSimplifyProps } from "../../interfaces/movieInterfaces";
 import RatingRuntime from "../../ui/RatingRuntime";
 
-const Img: React.FC<MovieProps> = ({ movie }) => {
+const Img: React.FC<MovieSimplifyProps> = ({ movie }) => {
   return (
     <img
       src={movie.poster}
@@ -13,7 +13,7 @@ const Img: React.FC<MovieProps> = ({ movie }) => {
   );
 };
 
-const Text: React.FC<MovieProps> = ({ movie }) => {
+const Text: React.FC<MovieSimplifyProps> = ({ movie }) => {
   return (
     <div
       className="absolute bottom-0 w-full p-4 text-white"
@@ -23,7 +23,7 @@ const Text: React.FC<MovieProps> = ({ movie }) => {
       }}>
       {/* title */}
       <a
-        href={`movies/${movie.slug}`}
+        href={`movie/${movie.slug}`}
         className="text-[2rem] font-bold uppercase hover:text-[#df2144c3] transition-all duration-300">
         {movie.title}
       </a>
@@ -39,7 +39,7 @@ const Text: React.FC<MovieProps> = ({ movie }) => {
   );
 };
 
-const MovieCard: React.FC<MovieProps> = ({ movie }) => {
+const MovieCard: React.FC<MovieSimplifyProps> = ({ movie }) => {
   return (
     <div className="relative w-fit h-[30rem] overflow-hidden rounded-lg group">
       <Img movie={movie} />

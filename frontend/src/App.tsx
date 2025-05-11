@@ -8,10 +8,12 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools/production";
 import Home from "./pages/Home";
 import Movies from "./pages/Movies";
 import MovieDetail from "./pages/MovieDetail";
+import NotFound from "./pages/NotFound";
 
 const router = createBrowserRouter([
   {
     element: <AppLayout />,
+    errorElement: <NotFound />,
     children: [
       { path: "/", element: <Home /> },
       { path: "/theaters", element: <p>movies</p> },
@@ -20,7 +22,7 @@ const router = createBrowserRouter([
         element: <Movies />,
       },
       {
-        path: "/movie/:name",
+        path: "/movie/:slug",
         element: <MovieDetail />,
       },
     ],

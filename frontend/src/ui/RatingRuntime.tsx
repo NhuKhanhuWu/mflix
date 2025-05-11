@@ -1,9 +1,14 @@
 /** @format */
 
 import { FaClock, FaStar } from "react-icons/fa";
-import { MovieProps } from "../interfaces/movieInterfaces";
+import { MovieSimplifyProps } from "../interfaces/movieInterfaces";
+import { ReactNode } from "react";
 
-const RatingRuntime: React.FC<MovieProps> = ({ movie }) => {
+interface RatingRuntimeProps extends MovieSimplifyProps {
+  children?: ReactNode;
+}
+
+const RatingRuntime: React.FC<RatingRuntimeProps> = ({ movie, children }) => {
   return (
     <div className="flex items-center gap-4 text-2xl mt-1">
       <span className="flex items-center gap-1">
@@ -14,6 +19,7 @@ const RatingRuntime: React.FC<MovieProps> = ({ movie }) => {
           <FaClock /> {movie.runtime} min
         </span>
       )}
+      {children}
     </div>
   );
 };

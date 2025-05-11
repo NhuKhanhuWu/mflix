@@ -13,10 +13,10 @@ function Error() {
   return <p>Something went wrong...</p>;
 }
 
-function SpinnerAndErr({ isLoading = false, isError = false }: SpinnerAndErr) {
+function LoadAndErr({ isLoading = false, isError = false }: SpinnerAndErr) {
   if (isLoading) return <Spinner></Spinner>;
 
   if (isError) return <Error></Error>;
 }
 
-export default SpinnerAndErr;
+export default LoadAndErr;
