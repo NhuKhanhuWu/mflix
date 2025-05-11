@@ -91,6 +91,7 @@ function MovieDetail() {
       {/* comment */}
       <Space space="5rem" />
       <MovieComment sectionId={CONTENT_LIST[4]} movieId={movieDetail?.id} />
+      <Space space="8rem" />
     </>
   );
 }
