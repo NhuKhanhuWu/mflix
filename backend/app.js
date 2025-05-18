@@ -16,7 +16,7 @@ const {
 
 const app = express();
 
-// allow fronend origin
+// allow frontend origin
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -38,7 +38,6 @@ app.use(
   })
 );
 
-// app.use(cors({ origin: "http://localhost:5173" })); // allow frontend request
 app.use(express.json());
 
 // Serve static files from React frontend in production
