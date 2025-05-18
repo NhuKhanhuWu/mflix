@@ -1,6 +1,6 @@
 /** @format */
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CustomModal from "../ui/Modal";
 import DesktopFilter from "../features/movies/MovieFilter";
 import { getMovieList } from "../api/getMovieList";
@@ -12,6 +12,7 @@ import SectionHeader from "../ui/SectionHeader";
 import Paginate from "../ui/Paginate";
 import useSyncMovieFiltersFromURL from "../hooks/useSyncMovieFiltersFromURL ";
 import { RootState } from "../redux/store";
+import EmptyResult from "../ui/EmptyResult";
 
 function Movies() {
   // set filter by url
@@ -30,6 +31,9 @@ function Movies() {
     queryFn: () => getMovieList(`page=${page}&${queryString}`),
   });
 
+  // scroll to top when change page
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   // clear redux state when leaves page
   useEffect(() => {
     return () => {
@@ -38,7 +42,7 @@ function Movies() {
   }, []);
 
   return (
-    <div>
+    <div ref={scrollRef}>
       {/* filter/sorter sidebar */}
       <div>
         <button
@@ -53,16 +57,24 @@ function Movies() {
 
       {/* movies */}
       <SectionHeader title="Result"></SectionHeader>
-      <MovieList
-        movies={moviesObj?.movies}
-        isLoading={isLoadingMovies}></MovieList>
 
-      {/* pagination */}
-      <Paginate
-        pageAmount={moviesObj?.totalPage}
-        currPage={page}
-        changePageFunc={(page: number) => dispatch(changePage(page))}
-      />
+      {moviesObj?.movies.length === 0 ? (
+        <EmptyResult />
+      ) : (
+        <>
+          <MovieList
+            movies={moviesObj?.movies}
+            isLoading={isLoadingMovies}></MovieList>
+
+          {/* pagination */}
+          <Paginate
+            targetRef={scrollRef}
+            pageAmount={moviesObj?.totalPage}
+            currPage={page}
+            changePageFunc={(page: number) => dispatch(changePage(page))}
+          />
+        </>
+      )}
     </div>
   );
 }

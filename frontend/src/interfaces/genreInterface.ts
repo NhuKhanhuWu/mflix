@@ -11,5 +11,6 @@ export interface GenreProps {
 
 export interface GenreListProps {
   genres: Genre[];
-  isLoading?: boolean;
+  isLoading: boolean;
+  isError?: boolean;
 }

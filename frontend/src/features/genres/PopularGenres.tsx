@@ -3,7 +3,7 @@
 import { Link } from "react-router-dom";
 import { GenreListProps } from "../../interfaces/genreInterface";
 import { ContentBlock } from "../../ui/ContentBlock";
-import Spinner from "../../ui/Spinner";
+import LoadAndErr from "../../ui/Spinner";
 
 // Predefined column start values to center items in each row (7-column grid)
 const colStartClasses = [
@@ -24,14 +24,24 @@ const colStartClasses = [
   "col-start-7", // Row 3 (7 items)
 ];
 
-const PopularGernes: React.FC<GenreListProps> = ({ genres, isLoading }) => {
-  if (isLoading) return <Spinner />;
-
+const PopularGernes: React.FC<GenreListProps> = ({
+  genres,
+  isLoading,
+  isError,
+}) => {
   return (
     <ContentBlock title="popular genres">
       <div
         className="grid justify-center gap-2"
         style={{ gridTemplateColumns: "repeat(7, min-content)" }}>
+        {/* loading/err message */}
+        {isError || isLoading ? (
+          <LoadAndErr isLoading={isLoading} isError={isError} />
+        ) : (
+          ""
+        )}
+
+        {/* genres list */}
         {genres?.slice(0, 15).map((genre, index) => (
           <div
             key={genre._id}
