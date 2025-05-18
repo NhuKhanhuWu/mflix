@@ -24,6 +24,6 @@ dist-ssr
 *.sw?
 
 # enviroment
-.env
+frontend/.env
 frontend/.env.production
 backend/config.env
