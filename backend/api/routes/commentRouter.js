@@ -21,13 +21,15 @@ router
  */
 router
   .route("/:id")
-  .patch(authController.protect, commentController.updateComment)
-  .delete(authController.protect, commentController.deleteComment);
+  .patch(authController.protect, commentController.updateMyComment)
+  .delete(authController.protect, commentController.deleteMyComment);
 
 /**
  * Route: /api/v1/users/:user_id/comments
- * Description: Get all comments by a specific user
+ * Description: Get all comments by a specific user (only if user login)
  */
-router.route("/by-user").get(commentController.getCommentsByAccount); // expects req.params.user_id
+router
+  .route("/by-user")
+  .get(authController.protect, commentController.getMyComments); // expects req.params.user_id
 
 module.exports = router;
