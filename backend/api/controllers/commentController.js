@@ -70,8 +70,8 @@ exports.createComment = catchAsync(async (req, res, next) => {
   const { movie_id, text } = req.body;
 
   // Validate movie_id and account_id
-  const isMovieExists = await checkMovieExists(movie_id);
-  if (!isMovieExists) {
+  // const isMovieExists = await checkMovieExists(movie_id);
+  if (!(await checkMovieExists(movie_id))) {
     return next(new AppError("Movie not exists", 400));
   }
 

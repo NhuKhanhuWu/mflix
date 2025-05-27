@@ -41,6 +41,7 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: Date,
 });
 
+// PRE SAVE
 // process password before save
 userSchema.pre("save", async function (next) {
   // only run if password is modified
@@ -55,6 +56,15 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+// prevent passwordChangedAt if smaller jwt created time
+userSchema.pre("save", function (next) {
+  if (!this.isModified("password") || this.isNew) return next();
+
+  this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
+
+// METHOBS
 // compare password
 userSchema.methods.comparePassword = async function (
   candidatePassword,
