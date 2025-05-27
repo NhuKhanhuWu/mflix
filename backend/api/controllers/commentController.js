@@ -19,7 +19,7 @@ const validateMovieAndUser = async (movie_id, account_id) => {
 // get comment of a movie (paginate, sorting)
 exports.getCommentsByMovie = catchAsync(async (req, res) => {
   const queryInstance = new CommentQuery(
-    Comment.find({ movie_id: req.params.movie_id }).populate("user_id", "name"),
+    Comment.find({ movie_id: req.query.movie_id }).populate("user_id", "name"),
     req.query
   )
     .limitField()
