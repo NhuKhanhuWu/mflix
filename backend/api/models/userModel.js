@@ -1,44 +1,20 @@
 /** @format */
 
 const mongoose = require("mongoose");
-const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const commonUserFields = require("./shared/userFields");
 
 const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, "User name required"],
-  },
-  email: {
-    type: String,
-    required: [true, "Email required"],
-    unique: true,
-    match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    validate: [validator.isEmail, "Invalid email"],
-  },
+  ...commonUserFields,
   role: {
     type: String,
     emun: ["user", "admin", "moderator "],
     default: "user",
   },
-  password: {
-    type: String,
-    required: [true, "Password required"],
-    minlenght: 8,
-    select: false,
-  },
-  passwordConfirm: {
-    type: String,
-    required: [true, "Please confirm your password"],
-    validate: {
-      // only work on CREATE and SAVE!!!
-      validator: function (el) {
-        return el === this.password;
-      },
-      message: "Passwords are not the same!",
-    },
-  },
   passwordChangedAt: Date,
+
+  // otp: String,
+  // otpExpired: Date,
 });
 
 // PRE SAVE
@@ -56,7 +32,7 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// prevent passwordChangedAt if smaller jwt created time
+// prevent passwordChangedAt if smaller jwt created time & automatically save it
 userSchema.pre("save", function (next) {
   if (!this.isModified("password") || this.isNew) return next();
 
