@@ -8,6 +8,7 @@ import formatDate from "../../services/formatDate";
 import LoadAndErr from "../../ui/Spinner";
 import Paginate from "../../ui/Paginate";
 import { useRef, useState } from "react";
+import { data } from "react-router-dom";
 
 const CommentItem: React.FC<CommentProps> = ({ comment }) => {
   return (

@@ -7,7 +7,7 @@
   --text-red: #df2143;
 }
 
-@layer utilities {
+@layer components {
   .text-brand-red {
     color: #df2143;
   }
@@ -17,9 +17,11 @@
     text-decoration: underline;
     cursor: pointer;
   }
-}
 
-@layer components {
+  .link-disable {
+    color: var(--color-gray-500);
+  }
+
   .btn {
     border-radius: 9999px;
     display: flex;
@@ -51,7 +53,8 @@
     transition: background-color 0.2s ease;
   }
 
-  .primary-btn:hover {
+  .primary-btn:hover,
+  .primary-btn-disable {
     background-color: var(--color-red-500);
   }
 
@@ -61,7 +64,8 @@
     transition: background-color 0.2s ease;
   }
 
-  .secondary-btn:hover {
+  .secondary-btn:hover,
+  .secondary-btn-disable {
     background-color: var(--color-gray-700);
   }
 
@@ -84,7 +88,26 @@
     border-color: #df2143;
   }
 
+  .input-disable {
+    background-color: var(--color-gray-600);
+    color: var(--color-gray-800);
+  }
+
   .btn-circle-hover {
     @apply w-12 h-12 rounded-full cursor-pointer hover:bg-[var(--color-gray-600)] p-2;
+  }
+
+  .label {
+    @apply block text-xl font-medium;
+  }
+
+  .error-message {
+    color: var(--color-red-800);
+    font-style: italic;
+    font-size: 1.2rem;
+  }
+
+  .form-container {
+    @apply w-fit border-[var(--color-gray-600)] border-2 shadow-md rounded-2xl p-8 space-y-6;
   }
 }

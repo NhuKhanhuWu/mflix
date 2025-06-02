@@ -62,8 +62,30 @@ exports.sendSignUpOtp = catchAsync(async (req, res, next) => {
   const { email } = req.body;
   if (!email) return next(new AppError("Email required", 400));
 
+  // 1.1 check if already in use
   const userExists = await User.findOne({ email });
-  if (userExists) return next(new AppError("Email already in used", 400));
+  if (userExists) return next(new AppError("Email already in use", 400));
+
+  // 1.2 check if otp is countdown (within 3mins from the lastes request)
+  const existingPendingEmail = await PendingEmails.findOne({ email });
+  if (
+    existingPendingEmail &&
+    Date.now() <
+      new Date(existingPendingEmail.updatedAt).getTime() + 3 * 60 * 1000
+  ) {
+    const remaining = Math.ceil(
+      (new Date(existingPendingEmail.updatedAt).getTime() +
+        3 * 60 * 1000 -
+        Date.now()) /
+        1000
+    );
+    return next(
+      new AppError(
+        `Please wait ${remaining} seconds before requesting a new OTP`,
+        429
+      )
+    );
+  }
 
   // 2. create otp
   const otp = Math.floor(100000 + Math.random() * 900000).toString();

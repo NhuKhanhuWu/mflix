@@ -17,7 +17,7 @@ const commonUserFields = {
   password: {
     type: String,
     required: [true, "Password required"],
-    minlength: 8,
+    minlength: [8, "Password must has at least 8 character"],
     select: false,
   },
   passwordConfirm: {
