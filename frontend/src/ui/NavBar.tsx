@@ -2,8 +2,10 @@
 
 import { NavLink } from "react-router-dom";
 
-import logo from "../../public/logo.png";
 import { SearchBar } from "./SearchBar";
+import { FaRegUserCircle } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 interface NavItemProps {
   to: string;
@@ -27,11 +29,16 @@ const NavItem: React.FC<NavItemProps> = ({ to, label }) => (
 );
 
 function NavBar() {
+  // check if login
+  const isLogin = useSelector((state: RootState) => state.auth.isLogin);
+
   return (
     <nav className="flex items-center justify-between h-24 px-6 bg-[#303030] border-b-2 border-[#df2143] sticky top-0 z-[15]">
       {/* logo */}
-      <NavLink to="/" className="text-[#df2143] text-2xl font-bold">
-        <img src={logo} alt="Logo" className="h-10" />
+      <NavLink
+        to="/"
+        className="text-[#df2143] text-6xl font-train-one font-medium">
+        MFLIX
       </NavLink>
 
       {/* nav links */}
@@ -47,14 +54,22 @@ function NavBar() {
         <SearchBar></SearchBar>
 
         {/* login/signup */}
-        {/* <Button type="primary"> */}
-        <NavLink to="/login" className="primary-btn btn">
-          Login
-        </NavLink>
-        {/* </Button> */}
-        <NavLink to="/login" className="secondary-btn btn">
-          Signup
-        </NavLink>
+        {isLogin ? (
+          <NavLink
+            to="/profile"
+            className="text-5xl text-[var(--color-gray-300)] hover:text-[var(--color-red-900)]">
+            <FaRegUserCircle />
+          </NavLink>
+        ) : (
+          <>
+            <NavLink to="/login" className="primary-btn btn">
+              Login
+            </NavLink>
+            <NavLink to="/signup" className="secondary-btn btn">
+              Signup
+            </NavLink>
+          </>
+        )}
       </div>
     </nav>
   );

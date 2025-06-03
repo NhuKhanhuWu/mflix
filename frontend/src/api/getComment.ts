@@ -7,7 +7,7 @@ export async function getCommentByMovie(id?: string, page?: number) {
   try {
     // Fetch data from API
     const response = await axios.get(
-      `${BASE_URL}/comments?movies_id=${id}&page=${page}`
+      `${BASE_URL}/comments?movie_id=${id}&page=${page}`
     );
 
     return response.data;
