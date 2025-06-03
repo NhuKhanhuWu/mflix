@@ -14,6 +14,8 @@ const Movies = lazy(() => import("./pages/Movies"));
 const MovieDetail = lazy(() => import("./pages/MovieDetail"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Login = lazy(() => import("./pages/Login"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 
 const router = createBrowserRouter([
   {
@@ -38,6 +40,8 @@ const router = createBrowserRouter([
         path: "/signup",
         element: <SignUp />,
       },
+      { path: "/forgot-password", element: <ForgotPassword /> },
+      { path: "/reset-password/:token", element: <ResetPassword /> },
       {
         path: "/profile",
         element: <Profile />,

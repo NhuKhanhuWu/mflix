@@ -4,24 +4,23 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { useSignUp } from "../../hooks/signupHooks";
-import LoadAndErr from "../../ui/Spinner";
 import { useLogin } from "../../hooks/useLogin";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/authSlide";
 import { useNavigate } from "react-router-dom";
+import {
+  passwordConfirmSchema,
+  passwordSchema,
+} from "../../constaint/formSchema";
+import { InputField } from "../../ui/Input";
+import SubmitBtn from "../../ui/SubmitBtn";
 
 // form schema
 const otpSchema = yup.object().shape({
   name: yup.string().required("Name required"),
-  password: yup
-    .string()
-    .required("Password required")
-    .min(8, "Password must have at least 8 characters"),
-  passwordConfirm: yup
-    .string()
-    .required("Password confirm required")
-    .oneOf([yup.ref("password")], "Passwords must match"),
+  password: passwordSchema,
+  passwordConfirm: passwordConfirmSchema,
 });
 
 // form data interface
@@ -43,13 +42,13 @@ const SignUpForm: React.FC<{ jwt: string; email: string }> = ({
   } = useForm({ resolver: yupResolver(otpSchema) });
 
   //   2. set up submit otp
-  const { mutate, isPending, isError, error } = useSignUp();
+  const { mutate: signUpMutate, isPending, isError, error } = useSignUp();
   const { mutate: loginMutate } = useLogin();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   function onSubmit(data: formDataProps) {
-    mutate(
+    signUpMutate(
       {
         name: data.name,
         password: data.password,
@@ -87,59 +86,42 @@ const SignUpForm: React.FC<{ jwt: string; email: string }> = ({
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <label className="label">Your name</label>
-        <input
-          {...register("name")}
-          maxLength={6}
-          type="string"
-          className={`input w-[30rem] ${isPending && "input-disable"}`}
-          placeholder="xxxxxx"
-          disabled={isPending}
-        />
-        {errors.name && <p className="error-message">*{errors.name.message}</p>}
-      </div>
+      {/* name */}
+      <InputField
+        errors={errors}
+        isPending={isPending}
+        name="name"
+        register={register}
+        label="Name"
+        placeholder="Your name"
+        type="text"
+      />
 
-      <div>
-        <label className="label">Password</label>
-        <input
-          {...register("password")}
-          type="string"
-          className={`input w-[30rem] ${isPending && "input-disable"}`}
-          placeholder="••••••••"
-          disabled={isPending}
-        />
+      {/* password */}
+      <InputField
+        errors={errors}
+        isPending={isPending}
+        label="*Password"
+        name="password"
+        register={register}
+        placeholder="Your password"
+        type="password"
+      />
 
-        {errors.password && (
-          <p className="error-message">*{errors.password.message}</p>
-        )}
-      </div>
-
-      <div>
-        <label className="label">Password confirm</label>
-        <input
-          {...register("passwordConfirm")}
-          type="string"
-          className={`input w-[30rem] ${isPending && "input-disable"}`}
-          placeholder="••••••••"
-          disabled={isPending}
-        />
-
-        {errors.passwordConfirm && (
-          <p className="error-message">*{errors.passwordConfirm.message}</p>
-        )}
-      </div>
+      {/* password confirm */}
+      <InputField
+        errors={errors}
+        isPending={isPending}
+        label="*Password confirm"
+        name="passwordConfirm"
+        register={register}
+        placeholder="Password confirm"
+        type="password"
+      />
 
       {isError && <p className="error-message">*{(error as Error).message}</p>}
 
-      <button
-        type="submit"
-        className={`btn primary-btn w-full ${
-          isPending && "primary-btn-disable"
-        }`}
-        disabled={isPending}>
-        {isPending ? <LoadAndErr isLoading={isPending} /> : "Sign Up"}
-      </button>
+      <SubmitBtn btnTxt="Submit" isPending={isPending} />
     </form>
   );
 };

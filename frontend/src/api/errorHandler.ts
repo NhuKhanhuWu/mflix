@@ -10,7 +10,13 @@ function errorHandler(err: unknown) {
 
     // Handle API error message from server
     const message = err.response.data?.message || "Something went wrong.";
-    throw new Error(message);
+    const statusCode = err.response.status;
+
+    throw {
+      name: "APIError",
+      message,
+      statusCode,
+    };
   }
 
   throw new Error("An unknown error occurred.");

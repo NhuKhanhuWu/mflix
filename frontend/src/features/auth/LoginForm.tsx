@@ -2,23 +2,21 @@
 
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+
 import { useForm } from "react-hook-form";
 import { useLogin } from "../../hooks/useLogin";
-import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+
+import Cookies from "js-cookie";
 import { loginSuccess } from "../../redux/authSlide";
+import { emailSchema, passwordSchema } from "../../constaint/formSchema";
+import { InputField } from "../../ui/Input";
+import SubmitBtn from "../../ui/SubmitBtn";
 
 const loginSchema = yup.object().shape({
-  email: yup
-    .string()
-    .required("Email is required")
-    .email("Invalid email format"),
-
-  password: yup
-    .string()
-    .required("Password is required")
-    .min(8, "Password must be at least 8 characters"),
+  email: emailSchema,
+  password: passwordSchema,
 });
 
 const LoginForm: React.FC = () => {
@@ -54,7 +52,7 @@ const LoginForm: React.FC = () => {
           dispatch(loginSuccess());
 
           // 4. redirect to previous page
-          navigate(-1);
+          navigate("/");
         },
       }
     );
@@ -62,44 +60,32 @@ const LoginForm: React.FC = () => {
 
   return (
     <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <label className="label">*Email</label>
-        <input
-          {...register("email")}
-          type="email"
-          placeholder="you@example.com"
-          className={`input w-[30rem] ${isPending && "input-disable"}`}
-          disabled={isPending}
-        />
-        {errors.email && (
-          <p className="error-message">*{errors.email.message}</p>
-        )}
-      </div>
+      {/* email */}
+      <InputField
+        errors={errors}
+        isPending={isPending}
+        label="*Email"
+        name="email"
+        register={register}
+        type="text"
+        placeholder="youremail@gmail.com"
+      />
 
-      <div>
-        <label className="label">*Password</label>
-        <input
-          {...register("password")}
-          type="password"
-          placeholder="••••••••"
-          className={`input w-[30rem] ${isPending && "input-disable"}`}
-          disabled={isPending}
-        />
-        {errors.password && (
-          <p className="error-message">*{errors.password.message}</p>
-        )}
-      </div>
+      {/* password */}
+      <InputField
+        errors={errors}
+        isPending={isPending}
+        label="*Password"
+        name="password"
+        register={register}
+        type="password"
+        placeholder="Your password"
+      />
 
       {isError && <p className="error-message">*{(error as Error).message}</p>}
 
       <div className="flex justify-center">
-        <button
-          type="submit"
-          className={`btn primary-btn w-full ${
-            isPending && "primary-btn-disable"
-          }`}>
-          Login
-        </button>
+        <SubmitBtn btnTxt="Login" isPending={isPending} />
       </div>
     </form>
   );

@@ -5,8 +5,9 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { SetState } from "../../interfaces/general";
 import { useSendOtpRequest, useSubmitOtp } from "../../hooks/signupHooks";
-import LoadAndErr from "../../ui/Spinner";
-import { useEffect, useState } from "react";
+import { SendOtpButton } from "./SendOtpButton";
+import SubmitBtn from "../../ui/SubmitBtn";
+import { InputField } from "../../ui/Input";
 
 // move to next step func
 interface setStepFuncInterface {
@@ -22,47 +23,6 @@ const otpSchema = yup.object().shape({
     .required("OTP required")
     .length(6, "OTP lenght is 6 characters"),
 });
-
-const SendOtpButton = ({ email }: { email: string }) => {
-  const [otpCountdown, setOtpCountdown] = useState(3 * 60);
-  const { mutate: sendOtp, isPending } = useSendOtpRequest();
-
-  // Countdown effect
-  useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>;
-    if (otpCountdown > 0) {
-      timer = setTimeout(() => setOtpCountdown(otpCountdown - 1), 1000);
-    }
-    return () => clearTimeout(timer);
-  }, [otpCountdown]);
-
-  // Click handler
-  const handleSendAgain = () => {
-    if (otpCountdown === 0) {
-      sendOtp(
-        { email },
-        {
-          onSuccess: () => {
-            setOtpCountdown(3 * 60); // set 60s countdown
-          },
-        }
-      );
-    }
-  };
-
-  return (
-    <button
-      onClick={handleSendAgain}
-      disabled={otpCountdown !== 0 || isPending}
-      className={`link ${otpCountdown ? "link-disable" : ""}`}>
-      {isPending
-        ? "Sending..."
-        : otpCountdown
-        ? `Send again (${otpCountdown}s)`
-        : "Send again"}
-    </button>
-  );
-};
 
 const SubmitOtpForm: React.FC<setStepFuncInterface> = ({
   setStep,
@@ -103,19 +63,15 @@ const SubmitOtpForm: React.FC<setStepFuncInterface> = ({
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         {/* otp input */}
         <p className="text-center">Your code was sent to you via email</p>
-        <div>
-          <label className="label">*OTP</label>
-          <input
-            {...register("otp")}
-            maxLength={6}
-            type="string"
-            className={`input w-[30rem] ${isPending && "input-disable"}`}
-            placeholder="••••••"
-            disabled={isPending}
-          />
-
-          {errors.otp && <p className="error-message">*{errors.otp.message}</p>}
-        </div>
+        <InputField
+          errors={errors}
+          isPending={isPending}
+          name="otp"
+          register={register}
+          label="6-digits OTP"
+          placeholder="your otp"
+          type="text"
+        />
 
         {/* err mess */}
         {isError && (
@@ -123,18 +79,13 @@ const SubmitOtpForm: React.FC<setStepFuncInterface> = ({
         )}
 
         {/* submit btn */}
-        <button
-          type="submit"
-          className={`btn primary-btn w-full ${
-            isPending && "primary-btn-disable"
-          }`}>
-          {isPending ? <LoadAndErr isLoading={isPending} /> : "Submit OTP"}
-        </button>
+        <SubmitBtn btnTxt="Send OTP" isPending={isPending} />
       </form>
 
       {/* send otp again */}
       <p className="text-xl text-center space-y-1">
-        Didn't receive OTP? <SendOtpButton email={email} />
+        Didn't receive OTP?{" "}
+        <SendOtpButton email={email} hook={useSendOtpRequest} />
       </p>
     </>
   );

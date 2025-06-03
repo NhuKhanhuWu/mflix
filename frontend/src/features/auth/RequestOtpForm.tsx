@@ -6,8 +6,9 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSendOtpRequest } from "../../hooks/signupHooks";
-import LoadAndErr from "../../ui/Spinner";
 import { Link } from "react-router-dom";
+import { InputField } from "../../ui/Input";
+import SubmitBtn from "../../ui/SubmitBtn";
 
 interface setStepFuncInterface {
   setStep: SetState<number>;
@@ -53,20 +54,15 @@ const RequestOtpForm: React.FC<setStepFuncInterface> = ({
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
       {/* input email */}
-      <div>
-        <label className="label">*Email</label>
-        <input
-          {...register("email")}
-          type="email"
-          className={`input w-[30rem] ${isPending && "input-disable"}`}
-          placeholder="you@example.com"
-          disabled={isPending}
-        />
-
-        {errors.email && (
-          <p className="error-message">*{errors.email.message}</p>
-        )}
-      </div>
+      <InputField
+        errors={errors}
+        isPending={isPending}
+        label="*Email"
+        name="email"
+        register={register}
+        type="text"
+        placeholder="youremail@gmail.com"
+      />
 
       {/* err message */}
       {isError && <p className="error-message">*{(error as Error).message}</p>}
@@ -82,13 +78,7 @@ const RequestOtpForm: React.FC<setStepFuncInterface> = ({
       </div>
 
       {/* submit btn */}
-      <button
-        type="submit"
-        className={`btn primary-btn w-full ${
-          isPending && "primary-btn-disable"
-        }`}>
-        {isPending ? <LoadAndErr isLoading={isPending} /> : "Send OTP"}
-      </button>
+      <SubmitBtn btnTxt="Send OTP" isPending={isPending} />
     </form>
   );
 };

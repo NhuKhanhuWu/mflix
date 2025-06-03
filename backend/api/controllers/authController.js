@@ -4,6 +4,7 @@ const { promisify } = require("util");
 const User = require("../models/userModel");
 const PendingEmails = require("../models/pendingEmailModel");
 const AppError = require("../utils/appError");
+const createOtpLimiter = require("../utils/createOtpLimiter");
 
 const catchAsync = require("../utils/catchAsync");
 const {
@@ -56,6 +57,34 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
+// CREATE RATE LIMITTER
+// sign up otp
+exports.signupOtpLimiter = createOtpLimiter({
+  max: 1, // 1 request
+  windowMs: 3 * 60 * 1000, // 3 mins
+  message:
+    "You can only request signup OTP once every 3 minutes with this email.",
+  keyGenerator: (req) => req.body.email,
+});
+
+// For forgot-password OTP: limit 1 request per 3 mins by email
+exports.forgotPasswordOtpLimiterEmail = createOtpLimiter({
+  max: 1,
+  windowMs: 3 * 60 * 1000,
+  message:
+    "You can only request a password reset once every 3 minutes with this email.",
+  keyGenerator: (req) => req.body.email,
+});
+
+// For forgot-password OTP: limit 10 request per 1 hour by IP
+exports.forgotPasswordOtpLimiterIP = createOtpLimiter({
+  max: 10,
+  windowMs: 60 * 60 * 1000,
+  message:
+    "You can only request a password reset 10 times every 1 hour with your device.",
+  keyGenerator: (req) => req.ip,
+});
+
 // SIGN UP
 exports.sendSignUpOtp = catchAsync(async (req, res, next) => {
   // 1. get & check email
@@ -65,27 +94,6 @@ exports.sendSignUpOtp = catchAsync(async (req, res, next) => {
   // 1.1 check if already in use
   const userExists = await User.findOne({ email });
   if (userExists) return next(new AppError("Email already in use", 400));
-
-  // 1.2 check if otp is countdown (within 3mins from the lastes request)
-  const existingPendingEmail = await PendingEmails.findOne({ email });
-  if (
-    existingPendingEmail &&
-    Date.now() <
-      new Date(existingPendingEmail.updatedAt).getTime() + 3 * 60 * 1000
-  ) {
-    const remaining = Math.ceil(
-      (new Date(existingPendingEmail.updatedAt).getTime() +
-        3 * 60 * 1000 -
-        Date.now()) /
-        1000
-    );
-    return next(
-      new AppError(
-        `Please wait ${remaining} seconds before requesting a new OTP`,
-        429
-      )
-    );
-  }
 
   // 2. create otp
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -104,7 +112,7 @@ exports.sendSignUpOtp = catchAsync(async (req, res, next) => {
   await sendTokenEmail(
     {
       email: email,
-      subject: "Your password reset token (valid for 10 mins)",
+      subject: "Your sign up OTP (valid for 10 mins)",
       htmlMessage: emailMessage,
     },
     res,
@@ -119,11 +127,10 @@ exports.checkOtp = catchAsync(async (req, res, next) => {
 
   // 2. check if otp is valid
   const pendingEmail = await PendingEmails.findOne({ email });
+
   if (!pendingEmail || pendingEmail.otpExpires < Date.now())
     return next(new AppError("Invalid email or invalid otp", 401));
   if (pendingEmail.otp !== otp) return next(new AppError("Invalid otp", 401));
-  // if (pendingEmail.otpExpires < Date.now())
-  //   return next(new AppError("Otp expired", 401));
 
   // 3. create jwt
   const token = signToken({ email: email });
@@ -183,7 +190,7 @@ exports.login = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
-// make sure user login
+// MAKE SURE USER LOGIN
 exports.protect = catchAsync(async (req, res, next) => {
   // 1. check if token is sended
   // 1.1 get token
@@ -217,11 +224,17 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
-// forgot password
+// FORGOT PASSWORD
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   // 1. get user by email
   const user = await User.findOne({ email: req.body.email });
-  if (!user) return next(new AppError("No user found!", 404));
+  // still send success status to prevent attacker find which email is registed
+  if (!user) {
+    return res.status(200).json({
+      status: "success",
+      message: "Token sent to email!",
+    });
+  }
 
   // 2. create token, expire in 10min
   const token = signToken({ id: user._id }, "10m");
@@ -229,10 +242,17 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   // 3. send email
   const message = resetPasswordEmail(token);
 
+  // res.status(200).json({
+  //   status: "success",
+  //   message: "Token sent to email!",
+  //   token,
+  // });
+
+  // TEMPORARY TURN OFF SEND VIA EMAIL FOR TESTING
   await sendTokenEmail(
     {
       email: user.email,
-      subject: "Your password reset token (valid for 10 mins)",
+      subject: "Your password reset link (valid for 10 mins)",
       htmlMessage: message,
     },
     res,
@@ -240,22 +260,33 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   );
 });
 
-exports.resetPassword = catchAsync(async (req, res, next) => {
+exports.checkResetPasswordToken = catchAsync(async (req, res, next) => {
   // 1. get check token
   const token = getToken(req);
+  if (!token) return next(new AppError("Token required", 401));
 
-  // 2 check if token is sended or expired
-  const decodeToken = await promisify(jwt.verify)(
-    token,
-    process.env.JWT_SECRET
-  );
-  if (!token) return next(new AppError("Token required"));
+  // 2. Verify token (catch expiration or invalid errors)
+  let decodeToken;
+  try {
+    decodeToken = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  } catch (err) {
+    return next(new AppError("Token is invalid or has expired! TEST", 401));
+  }
 
   // 3. get user by id in token
   const user = await User.findById(decodeToken.id);
-  if (!user) return next(new AppError("Token is invalid or has expired!", 400));
+  if (!user) return next(new AppError("Token is invalid or has expired!", 401));
 
-  // 4. update password
+  req.user = user; // pass user to req
+
+  next();
+});
+
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  // 1. get user from req
+  const user = req.user;
+
+  // 2. update password
   user.password = req.body.password;
   user.passwordConfirm = req.body.passwordConfirm;
   await user.save();
