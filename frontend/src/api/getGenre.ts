@@ -16,7 +16,7 @@ export async function getGenres({
   try {
     // Fetch data from API
     const response = await axios.get(
-      `${BASE_URL}genres?limit=${limit}&page=${page}&sortBy=${sortBy}`
+      `${BASE_URL}/genres?limit=${limit}&page=${page}&sortBy=${sortBy}`
     );
 
     return response.data.data;
