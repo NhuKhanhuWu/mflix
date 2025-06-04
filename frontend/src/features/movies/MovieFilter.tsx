@@ -6,7 +6,6 @@ import {
   Sort,
   SubmitBtn,
   CloseBtn,
-  // ClearBtn,
 } from "./MovieFilterComponents";
 
 import { useQuery } from "@tanstack/react-query";

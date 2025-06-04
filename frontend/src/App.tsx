@@ -6,11 +6,16 @@ import AppLayout from "./ui/AppLayout";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools/production";
 import { lazy, Suspense } from "react";
 import PageLoader from "./ui/PageLoader";
+import Profile from "./pages/Profile";
+import SignUp from "./pages/SignUp";
 
 const Home = lazy(() => import("./pages/Home"));
 const Movies = lazy(() => import("./pages/Movies"));
 const MovieDetail = lazy(() => import("./pages/MovieDetail"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Login = lazy(() => import("./pages/Login"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 
 const router = createBrowserRouter([
   {
@@ -26,6 +31,20 @@ const router = createBrowserRouter([
       {
         path: "/movie/:slug",
         element: <MovieDetail />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/signup",
+        element: <SignUp />,
+      },
+      { path: "/forgot-password", element: <ForgotPassword /> },
+      { path: "/reset-password/:token", element: <ResetPassword /> },
+      {
+        path: "/profile",
+        element: <Profile />,
       },
     ],
   },

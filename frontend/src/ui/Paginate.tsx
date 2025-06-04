@@ -102,9 +102,7 @@ const Paginate: React.FC<PaginateProps> = ({
         )}
       </div>
 
-      {errors.page && (
-        <p className="text-[var(--color-red-800)]">{errors.page.message}</p>
-      )}
+      {errors.page && <p className="error-message">{errors.page.message}</p>}
     </div>
   );
 };

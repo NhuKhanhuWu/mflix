@@ -23,4 +23,10 @@ const commentSchema = new mongoose.Schema({
   },
 });
 
+// set the cmt date before save
+commentSchema.pre("save", function (next) {
+  this.date = Date.now();
+  next();
+});
+
 module.exports = mongoose.model("Comments", commentSchema);

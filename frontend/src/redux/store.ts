@@ -2,10 +2,12 @@
 
 import { configureStore } from "@reduxjs/toolkit";
 import movieFilterSlice from "./movieFilterSlide";
+import authSide from "./authSlide";
 
 export const store = configureStore({
   reducer: {
     movieFilter: movieFilterSlice,
+    auth: authSide,
   },
 });
 
