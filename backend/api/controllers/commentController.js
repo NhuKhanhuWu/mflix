@@ -1,25 +1,29 @@
 /** @format */
 const { CommentQuery } = require("../utils/commentQuery");
 const Comment = require("../models/commentModel");
-const User = require("../models/userModel");
 const Movie = require("../models/movieModel");
+const AppError = require("../utils/appError");
+
 const catchAsync = require("../utils/catchAsync");
+const mongoose = require("mongoose");
 
+// REQUEST FROM USER
 // check if movie_id and account_id exists
-const validateMovieAndUser = async (movie_id, account_id) => {
+const checkMovieExists = async (movie_id) => {
+  // if id is invalid
+  if (!mongoose.Types.ObjectId.isValid(movie_id)) return false;
+
+  // if movie not exists
   const movieExists = await Movie.findById(movie_id);
-  if (!movieExists) return { valid: false, message: "Invalid movie ID" };
+  if (!movieExists) return false;
 
-  const userExists = await User.findById(account_id);
-  if (!userExists) return { valid: false, message: "Invalid account ID" };
-
-  return { valid: true };
+  return true;
 };
 
 // get comment of a movie (paginate, sorting)
 exports.getCommentsByMovie = catchAsync(async (req, res) => {
   const queryInstance = new CommentQuery(
-    Comment.find({ movie_id: req.params.movie_id }).populate("user_id", "name"),
+    Comment.find({ movie_id: req.query.movie_id }).populate("user_id", "name"),
     req.query
   )
     .limitField()
@@ -39,10 +43,10 @@ exports.getCommentsByMovie = catchAsync(async (req, res) => {
 });
 
 // get comment of an account (paginate, sorting)
-exports.getCommentsByAccount = catchAsync(async (req, res) => {
+exports.getMyComments = catchAsync(async (req, res) => {
   // get comment
   const queryInstance = new CommentQuery(
-    Comment.find({ user_id: req.params.user_id }).populate("user_id", "name"),
+    Comment.find({ user_id: req.user._id }).populate("user_id", "name"),
     req.query
   )
     .limitField()
@@ -62,21 +66,21 @@ exports.getCommentsByAccount = catchAsync(async (req, res) => {
 });
 
 // create comment
-exports.createComment = catchAsync(async (req, res) => {
-  req.body.movie_id = req.params.movie_id;
-  const { movie_id, user_id } = req.body;
+exports.createComment = catchAsync(async (req, res, next) => {
+  const { movie_id, text } = req.body;
 
   // Validate movie_id and account_id
-  const validation = await validateMovieAndUser(movie_id, user_id);
-  if (!validation.valid) {
-    return res.status(400).json({
-      status: "fail",
-      message: validation.message,
-    });
+  // const isMovieExists = await checkMovieExists(movie_id);
+  if (!(await checkMovieExists(movie_id))) {
+    return next(new AppError("Movie not exists", 400));
   }
 
   // create new comment
-  const newComment = await Comment.create(req.body);
+  const newComment = await Comment.create({
+    movie_id: movie_id,
+    text: text,
+    user_id: req.user._id,
+  });
 
   res.status(201).json({
     status: "success",
@@ -85,12 +89,9 @@ exports.createComment = catchAsync(async (req, res) => {
 });
 
 // update comment
-exports.updateComment = catchAsync(async (req, res) => {
+exports.updateMyComment = catchAsync(async (req, res) => {
   // Validate movie_id and account_id
-  const validation = await validateMovieAndUser(
-    req.query.movie_id,
-    req.query.account_id
-  );
+  const validation = await checkMovieExists(req.query.movie_id);
   if (!validation.valid) {
     return res.status(400).json({
       status: "fail",
@@ -113,12 +114,9 @@ exports.updateComment = catchAsync(async (req, res) => {
   });
 });
 
-exports.deleteComment = catchAsync(async (req, res) => {
+exports.deleteMyComment = catchAsync(async (req, res) => {
   // Validate movie_id and account_id
-  const validation = await validateMovieAndUser(
-    req.query.movie_id,
-    req.query.account_id
-  );
+  const validation = await checkMovieExists(req.query.movie_id);
   if (!validation.valid) {
     return res.status(400).json({
       status: "fail",
@@ -132,3 +130,5 @@ exports.deleteComment = catchAsync(async (req, res) => {
     data: null,
   });
 });
+
+// REQUEST FROM ADMIN
