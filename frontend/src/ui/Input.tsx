@@ -15,6 +15,7 @@ interface GeneralInputProps<T extends FieldValues> {
   label?: string;
   placeholder?: string;
   type?: "text" | "password" | "email";
+  width?: string;
 }
 
 export const InputField = <T extends FieldValues>({
@@ -43,6 +44,43 @@ export const InputField = <T extends FieldValues>({
           autoCapitalize: "off",
           spellCheck: false,
         })}
+      />
+      {error && (
+        <p className="error-message">
+          *{(error.message as string) || "Invalid input"}
+        </p>
+      )}
+    </div>
+  );
+};
+
+export const TextAreaField = <T extends FieldValues>({
+  register,
+  name,
+  isPending,
+  errors,
+  label = "",
+  placeholder = "",
+}: GeneralInputProps<T>) => {
+  const error = errors[name];
+
+  return (
+    <div className="flex-1">
+      {label && <label className="label">{label}</label>}
+      <textarea
+        {...register(name)}
+        placeholder={placeholder}
+        className={`input rounded-4xl resize-none overflow-hidden ${
+          isPending ? "input-disable" : ""
+        }`}
+        disabled={isPending}
+        // auto expland heigh
+        onInput={(e) => {
+          const target = e.target as HTMLTextAreaElement;
+          target.style.height = "auto";
+          target.style.height = `${target.scrollHeight}px`;
+        }}
+        rows={1}
       />
       {error && (
         <p className="error-message">

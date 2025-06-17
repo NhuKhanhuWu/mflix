@@ -1,9 +1,10 @@
 /** @format */
 class CommentQuery {
-  constructor(query, queryString) {
+  constructor(query, queryString, originalFilter) {
     this.query = query;
     this.queryString = queryString;
     this.totalResult = 0;
+    this.originalFilter = originalFilter;
   }
 
   async paginate() {
@@ -13,7 +14,7 @@ class CommentQuery {
 
     // Get total count before applying pagination
     this.totalResult = await this.query.model.countDocuments(
-      this.query.getQuery()
+      this.originalFilter
     );
 
     // get comment

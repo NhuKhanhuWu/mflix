@@ -8,6 +8,7 @@ export interface Comment {
   user_id: {
     _id: string;
     name: string;
+    avartar: string;
   };
 }
 export interface CommentProps {
@@ -15,6 +16,7 @@ export interface CommentProps {
 }
 
 export interface CommnentList {
+  totalResult: number;
   totalPages: number;
   data: Comment[];
 }

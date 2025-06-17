@@ -2,7 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import CustomCarousel from "../ui/CustomCarousel";
 import SectionHeader from "../ui/SectionHeader";
 import Space from "../ui/Space";
 import { ContentBlock } from "../ui/ContentBlock";
@@ -10,14 +9,8 @@ import { ContentBlock } from "../ui/ContentBlock";
 import { getMovieList } from "../api/getMovieList";
 import { getGenres } from "../api/getGenre";
 
-import {
-  MovieHeroItem,
-  MovieHeroSummary,
-} from "../features/movies/MovieHeroItem";
 import MovieList from "../features/movies/MovieList";
 import PopularGernes from "../features/genres/PopularGenres";
-
-import { MovieListProps } from "../interfaces/movieInterfaces";
 
 import {
   get5BestMovieQuery,
@@ -26,26 +19,7 @@ import {
   getMovieByGenresQuery,
 } from "../constaint/queryString";
 import { Link } from "react-router-dom";
-import LoadAndErr from "../ui/Spinner";
-
-const HeroSection: React.FC<MovieListProps> = ({
-  movies,
-  isLoading,
-  isError,
-}) => {
-  return (
-    <>
-      <LoadAndErr isLoading={isLoading} isError={isError} />
-      <CustomCarousel>
-        {movies?.map((movie) => (
-          <MovieHeroItem movie={movie} key={movie.slug}>
-            <MovieHeroSummary movie={movie} />
-          </MovieHeroItem>
-        ))}
-      </CustomCarousel>
-    </>
-  );
-};
+import HeroSection from "../features/movies/HeroSection";
 
 function Summary() {
   return (
@@ -90,69 +64,6 @@ function TheaterSummary() {
 
 function Home() {
   const {
-    data: top5PopularMovies,
-    isLoading: isLoadingPopularMovie,
-    isError: is5PopularErr,
-  } = useQuery({
-    queryKey: ["5PopularMovie"],
-    queryFn: () => getMovieList(get5PopularMovieQuery),
-  });
-
-  const {
-    data: top5LatestMovies,
-    isLoading: isLoadingLatestMovie,
-    isError: is5LatestErr,
-  } = useQuery({
-    queryKey: ["5LatestMovie"],
-    queryFn: () => getMovieList(get5LatestMovieQuery),
-  });
-
-  const {
-    data: top5BestMovies,
-    isLoading: isLoadingBestMovie,
-    isError: is5BestErr,
-  } = useQuery({
-    queryKey: ["5BestMovie"],
-    queryFn: () => getMovieList(get5BestMovieQuery),
-  });
-
-  const {
-    data: top5ShortMovie,
-    isLoading: isLoadingShortMovie,
-    isError: is5ShortErr,
-  } = useQuery({
-    queryKey: ["5ShortMovie"],
-    queryFn: () =>
-      getMovieList(
-        getMovieByGenresQuery({ genre: "Short", limit: 5, page: 1 })
-      ),
-  });
-
-  const {
-    data: top5RomanceMovie,
-    isLoading: isLoadingRomanceMovie,
-    isError: is5RomanceErr,
-  } = useQuery({
-    queryKey: ["5RomanceMovie"],
-    queryFn: () =>
-      getMovieList(
-        getMovieByGenresQuery({ genre: "Romance", limit: 5, page: 1 })
-      ),
-  });
-
-  const {
-    data: top5MusicalMovie,
-    isLoading: isLoadingMusicalMovie,
-    isError: is5MusicalErr,
-  } = useQuery({
-    queryKey: ["5MusicalMovie"],
-    queryFn: () =>
-      getMovieList(
-        getMovieByGenresQuery({ genre: "Musical", limit: 5, page: 1 })
-      ),
-  });
-
-  const {
     data: genres,
     isLoading: isLoadingGenres,
     isError: isGenresErr,
@@ -165,25 +76,25 @@ function Home() {
     <>
       <Space space="5rem"></Space>
       <HeroSection
-        movies={top5PopularMovies?.movies}
-        isLoading={isLoadingPopularMovie}
-        isError={is5PopularErr}
+        queryKey={["5PopularMovie"]}
+        queryFn={() => getMovieList(get5PopularMovieQuery)}
       />
       <Summary />
 
-      {/* best movie */}
+      {/* best movies */}
       <MovieList
-        movies={top5BestMovies?.movies}
-        isLoading={isLoadingBestMovie}
-        isError={is5BestErr}
-        header={<SectionHeader title="best rated" />}></MovieList>
+        header={<SectionHeader title="best rated" />}
+        queryFn={() => getMovieList(get5LatestMovieQuery)}
+        queryKey={["5LatestMovie"]}
+      />
       <Space space="5rem"></Space>
-      {/* latest movie */}
+
+      {/* latest movies */}
       <MovieList
-        movies={top5LatestMovies?.movies}
-        isLoading={isLoadingLatestMovie}
-        isError={is5LatestErr}
-        header={<SectionHeader title="latest movie" />}></MovieList>
+        header={<SectionHeader title="latest movie" />}
+        queryKey={["5BestMovie"]}
+        queryFn={() => getMovieList(get5BestMovieQuery)}
+      />
 
       {/* genres */}
       <PopularGernes
@@ -192,26 +103,40 @@ function Home() {
         isError={isGenresErr}
       />
 
-      {/* movie */}
+      {/* short movies */}
       <MovieList
-        movies={top5ShortMovie?.movies}
-        isLoading={isLoadingShortMovie}
-        isError={is5ShortErr}
-        header={<SectionHeader title="short movies" />}></MovieList>
+        header={<SectionHeader title="short movies" />}
+        queryKey={["5ShortMovie"]}
+        queryFn={() =>
+          getMovieList(
+            getMovieByGenresQuery({ genre: "Short", limit: 5, page: 1 })
+          )
+        }
+      />
       <Space space="5rem"></Space>
 
+      {/* romance movies */}
       <MovieList
-        movies={top5RomanceMovie?.movies}
-        isLoading={isLoadingRomanceMovie}
-        isError={is5RomanceErr}
-        header={<SectionHeader title="romance movies" />}></MovieList>
+        header={<SectionHeader title="romance movies" />}
+        queryKey={["5RomanceMovie"]}
+        queryFn={() =>
+          getMovieList(
+            getMovieByGenresQuery({ genre: "Romance", limit: 5, page: 1 })
+          )
+        }
+      />
       <Space space="5rem"></Space>
 
+      {/* musical movies */}
       <MovieList
-        movies={top5MusicalMovie?.movies}
-        isLoading={isLoadingMusicalMovie}
-        isError={is5MusicalErr}
-        header={<SectionHeader title="musical movies" />}></MovieList>
+        header={<SectionHeader title="musical movies" />}
+        queryKey={["5MusicalMovie"]}
+        queryFn={() =>
+          getMovieList(
+            getMovieByGenresQuery({ genre: "Musical", limit: 5, page: 1 })
+          )
+        }
+      />
 
       <TheaterSummary></TheaterSummary>
     </>

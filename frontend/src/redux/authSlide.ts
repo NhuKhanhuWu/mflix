@@ -1,13 +1,26 @@
 /** @format */
+import Cookies from "js-cookie";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getMyInfor } from "../api/getMyInfor";
 
-import { createSlice } from "@reduxjs/toolkit";
+export const fetchUserInfo = createAsyncThunk(
+  "auth/fetchUserInfo",
+  async () => {
+    const userData = await getMyInfor();
+    return userData; // assume it includes `avatar`
+  }
+);
 
 interface authSildeInterface {
   isLogin: boolean;
+  avartar: string;
+  id: string;
 }
 
 const initialState: authSildeInterface = {
-  isLogin: false,
+  isLogin: Cookies.get("loginToken") !== undefined,
+  avartar: "",
+  id: "",
 };
 
 export const authSide = createSlice({
@@ -19,7 +32,14 @@ export const authSide = createSlice({
     },
     logOutSuccess(state) {
       state.isLogin = false;
+      state.avartar = "";
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchUserInfo.fulfilled, (state, action) => {
+      state.avartar = action.payload.avatar;
+      state.id = action.payload._id;
+    });
   },
 });
 

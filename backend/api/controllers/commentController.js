@@ -6,6 +6,7 @@ const AppError = require("../utils/appError");
 
 const catchAsync = require("../utils/catchAsync");
 const mongoose = require("mongoose");
+const createLimiter = require("../utils/createLimiter");
 
 // REQUEST FROM USER
 // check if movie_id and account_id exists
@@ -23,7 +24,10 @@ const checkMovieExists = async (movie_id) => {
 // get comment of a movie (paginate, sorting)
 exports.getCommentsByMovie = catchAsync(async (req, res) => {
   const queryInstance = new CommentQuery(
-    Comment.find({ movie_id: req.query.movie_id }).populate("user_id", "name"),
+    Comment.find({ movie_id: req.query.movie_id }).populate("user_id", [
+      "name",
+      "avartar",
+    ]),
     req.query
   )
     .limitField()
@@ -32,7 +36,6 @@ exports.getCommentsByMovie = catchAsync(async (req, res) => {
   await queryInstance.paginate();
 
   const comment = await queryInstance.query;
-
   res.status(200).json({
     status: "success",
     amount: comment.length,
@@ -66,11 +69,17 @@ exports.getMyComments = catchAsync(async (req, res) => {
 });
 
 // create comment
+exports.newCommentLimiter = createLimiter({
+  max: 1,
+  windowMs: 30 * 1000,
+  keyGenerator: (req) => req.ip,
+  message: "Please wait before posting another comment.",
+});
+
 exports.createComment = catchAsync(async (req, res, next) => {
   const { movie_id, text } = req.body;
 
   // Validate movie_id and account_id
-  // const isMovieExists = await checkMovieExists(movie_id);
   if (!(await checkMovieExists(movie_id))) {
     return next(new AppError("Movie not exists", 400));
   }
