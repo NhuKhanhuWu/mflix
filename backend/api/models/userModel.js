@@ -12,9 +12,11 @@ const userSchema = new mongoose.Schema({
     default: "user",
   },
   passwordChangedAt: Date,
-
-  // otp: String,
-  // otpExpired: Date,
+  avartar: {
+    type: String,
+    default:
+      "https://i.pinimg.com/474x/e6/e4/df/e6e4df26ba752161b9fc6a17321fa286.jpg",
+  },
 });
 
 // PRE SAVE

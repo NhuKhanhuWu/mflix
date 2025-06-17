@@ -12,7 +12,6 @@ import SectionHeader from "../ui/SectionHeader";
 import Paginate from "../ui/Paginate";
 import useSyncMovieFiltersFromURL from "../hooks/useSyncMovieFiltersFromURL ";
 import { RootState } from "../redux/store";
-import EmptyResult from "../ui/EmptyResult";
 
 function Movies() {
   // set filter by url
@@ -26,7 +25,7 @@ function Movies() {
   const dispatch = useDispatch();
 
   // movie list
-  const { data: moviesObj, isLoading: isLoadingMovies } = useQuery({
+  const { data: moviesObj } = useQuery({
     queryKey: ["movies", `page=${page}&${queryString}`],
     queryFn: () => getMovieList(`page=${page}&${queryString}`),
   });
@@ -58,23 +57,17 @@ function Movies() {
       {/* movies */}
       <SectionHeader title="Result"></SectionHeader>
 
-      {moviesObj?.movies.length === 0 ? (
-        <EmptyResult />
-      ) : (
-        <>
-          <MovieList
-            movies={moviesObj?.movies}
-            isLoading={isLoadingMovies}></MovieList>
+      <MovieList
+        queryKey={["movies", `page=${page}&${queryString}`]}
+        queryFn={() => getMovieList(`page=${page}&${queryString}`)}></MovieList>
 
-          {/* pagination */}
-          <Paginate
-            targetRef={scrollRef}
-            pageAmount={moviesObj?.totalPage}
-            currPage={page}
-            changePageFunc={(page: number) => dispatch(changePage(page))}
-          />
-        </>
-      )}
+      {/* pagination */}
+      <Paginate
+        targetRef={scrollRef}
+        pageAmount={moviesObj?.totalPage}
+        currPage={page}
+        changePageFunc={(page: number) => dispatch(changePage(page))}
+      />
     </div>
   );
 }
