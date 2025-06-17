@@ -7,6 +7,7 @@ export async function getMovieList(query: string) {
   try {
     // Fetch data from API
     const response = await axios.get(`${BASE_URL}/movies?${query}`);
+    console.log(`${BASE_URL}/movies?${query}`);
 
     return {
       movies: response.data.data,
