@@ -2,7 +2,7 @@
 
 const express = require("express");
 const commentController = require("../controllers/commentController");
-const authController = require("../controllers/authController");
+const protectController = require("../controllers/authController/protectController");
 
 const router = express.Router();
 
@@ -12,8 +12,13 @@ const router = express.Router();
  */
 router
   .route("/")
-  .get(commentController.getCommentsByMovie) // expects ?movie_id= or similar
-  .post(authController.protect, commentController.createComment);
+  // .get(commentController.getCommentsByMovie) // expects ?movie_id= or similar
+  .get(commentController.getCommentsByMovie)
+  .post(
+    protectController.protect,
+    commentController.newCommentLimiter,
+    commentController.createComment
+  );
 
 /**
  * Route: /api/v1/comments/:id
@@ -21,15 +26,15 @@ router
  */
 router
   .route("/:id")
-  .patch(authController.protect, commentController.updateMyComment)
-  .delete(authController.protect, commentController.deleteMyComment);
+  .patch(protectController.protect, commentController.updateMyComment)
+  .delete(protectController.protect, commentController.deleteMyComment);
 
 /**
  * Route: /api/v1/users/:user_id/comments
  * Description: Get all comments by a specific user (only if user login)
  */
 router
-  .route("/by-user")
-  .get(authController.protect, commentController.getMyComments); // expects req.params.user_id
+  .route("/my-comments")
+  .get(protectController.protect, commentController.getMyComments); // expects req.params.user_id
 
 module.exports = router;

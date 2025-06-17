@@ -3,7 +3,7 @@
 // utils/createOtpLimiter.js
 const rateLimit = require("express-rate-limit");
 
-function createOtpLimiter({ max, windowMs, message, keyGenerator }) {
+function createLimiter({ max, windowMs, message, keyGenerator }) {
   return rateLimit({
     windowMs, // e.g., 3 * 60 * 1000 = 3 minutes
     max, // e.g., 1 request in the window
@@ -15,4 +15,4 @@ function createOtpLimiter({ max, windowMs, message, keyGenerator }) {
   });
 }
 
-module.exports = createOtpLimiter;
+module.exports = createLimiter;

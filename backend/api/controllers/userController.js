@@ -3,4 +3,9 @@
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 
-exports.login = catchAsync(async (req, res, next) => {});
+exports.getMyInfor = catchAsync(async (req, res, next) => {
+  res.status(200).json({
+    status: "success",
+    user: req.user,
+  });
+});

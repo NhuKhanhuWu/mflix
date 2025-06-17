@@ -9,6 +9,15 @@ import PageLoader from "./ui/PageLoader";
 import Profile from "./pages/Profile";
 import SignUp from "./pages/SignUp";
 
+// fetch user after open app
+import { useEffect } from "react";
+import { fetchUserInfo } from "./redux/authSlide";
+import { useAppDispatch } from "./redux/store";
+
+// toast
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const Home = lazy(() => import("./pages/Home"));
 const Movies = lazy(() => import("./pages/Movies"));
 const MovieDetail = lazy(() => import("./pages/MovieDetail"));
@@ -55,8 +64,16 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  // fetch user after open app
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUserInfo());
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
+      <ToastContainer />
       <ReactQueryDevtools initialIsOpen={false} />
       <Suspense fallback={<PageLoader />}>
         <RouterProvider router={router}></RouterProvider>
