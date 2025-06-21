@@ -1,35 +1,41 @@
 /** @format */
 
-const authController = require("../controllers/authController");
+const userController = require("../controllers/userController");
+const loginController = require("../controllers/authController/loginController");
+const signupController = require("../controllers/authController/signupController");
+const protectController = require("../controllers/authController/protectController");
+const forgotPasswordController = require("../controllers/authController/forgotPasswordController");
+
 const express = require("express");
 
 const router = express.Router();
 
-// auth
+// sign up
 router.post(
   "/sendSignupOtp",
-  authController.signupOtpLimiter,
-  authController.sendSignUpOtp
+  signupController.signupOtpLimiter,
+  signupController.sendSignUpOtp
 );
-router.post(
-  "/checkOtp",
+router.post("/checkOtp", signupController.checkOtp);
+router.post("/signup", signupController.signup);
 
-  authController.checkOtp
-);
-router.post("/signup", authController.signup);
-router.post("/login", authController.login);
+// login
+router.post("/login", loginController.login);
 
 // change password
 router.post(
   "/forgotPassword",
-  authController.forgotPasswordOtpLimiterEmail,
-  authController.forgotPasswordOtpLimiterIP,
-  authController.forgotPassword
+  forgotPasswordController.forgotPasswordOtpLimiterEmail,
+  forgotPasswordController.forgotPasswordOtpLimiterIP,
+  forgotPasswordController.forgotPassword
 );
 router.patch(
   "/resetPassword",
-  authController.checkResetPasswordToken,
-  authController.resetPassword
+  forgotPasswordController.checkResetPasswordToken,
+  forgotPasswordController.resetPassword
 );
+
+// get my infor
+router.post("/me", protectController.protect, userController.getMyInfor);
 
 module.exports = router;

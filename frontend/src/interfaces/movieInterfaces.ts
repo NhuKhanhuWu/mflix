@@ -1,7 +1,5 @@
 /** @format */
 
-import { ReactElement } from "react";
-
 export interface MovieSimplify {
   imdb: {
     rating: number;
@@ -23,10 +21,17 @@ export interface MovieSimplifyProps {
 }
 
 export interface MovieListProps {
-  movies: MovieSimplify[];
-  isLoading: boolean;
-  isError?: boolean;
-  header?: ReactElement;
+  // movies: MovieSimplify[];
+  // isLoading: boolean;
+  // isError?: boolean;
+  header?: React.ReactNode;
+  cols?: number;
+  queryKey: unknown[];
+  queryFn: () => Promise<{
+    movies: MovieSimplify[];
+    totalPage: number;
+    totalResults: number;
+  }>;
 }
 
 export interface TomatosProps {
