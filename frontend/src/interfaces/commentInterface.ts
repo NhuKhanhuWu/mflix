@@ -5,12 +5,19 @@ export interface Comment {
   movie_id: string;
   text: string;
   date: string; // or use Date if you plan to convert it
-  user_id: {
-    _id: string;
+  user_id: string;
+  user: {
     name: string;
-    avartar: string;
+    avatar: string;
   };
 }
+
+export interface CommentPage {
+  data: Comment[]; // list of comments
+  totalResult: number; // total number of comments
+  totalPages: number; // total number of pages
+}
+
 export interface CommentProps {
   comment: Comment;
 }

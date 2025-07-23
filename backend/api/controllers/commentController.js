@@ -1,5 +1,5 @@
 /** @format */
-const { CommentQuery } = require("../utils/commentQuery");
+const CommentQuery = require("../utils/commentQuery");
 const Comment = require("../models/commentModel");
 const Movie = require("../models/movieModel");
 const AppError = require("../utils/appError");
@@ -23,25 +23,24 @@ const checkMovieExists = async (movie_id) => {
 
 // get comment of a movie (paginate, sorting)
 exports.getCommentsByMovie = catchAsync(async (req, res) => {
-  const queryInstance = new CommentQuery(
-    Comment.find({ movie_id: req.query.movie_id }).populate("user_id", [
-      "name",
-      "avartar",
-    ]),
-    req.query
-  )
-    .limitField()
-    .sort();
+  const queryInstance = new CommentQuery(Comment, req.query);
 
-  await queryInstance.paginate();
+  await queryInstance
+    .matchMovie() // find cmt of certain movie
+    .prioritizeUser() // cmt of logged user (user_id) on top
+    .sort() // sort movie
+    .lookupUser() // look up user of cmt
+    .limitFields() // limit returned fields
+    .paginate(); // paginate (20 by default)
 
-  const comment = await queryInstance.query;
+  const comments = await queryInstance.exec();
+
   res.status(200).json({
     status: "success",
-    amount: comment.length,
+    amount: comments.length,
     totalResult: queryInstance.totalResult,
-    totalPages: Math.ceil(queryInstance.totalResult / comment.length),
-    data: comment,
+    totalPages: Math.ceil(queryInstance.totalResult / comments.length),
+    data: comments,
   });
 });
 
