@@ -2,8 +2,8 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
-import { createNewCmt } from "../api/comment/createNewCmt";
 import { UseFormReset } from "react-hook-form";
+import { createNewCmt } from "../../api/comment/createNewCmt";
 
 interface newCmtProps {
   movie_id: string;

@@ -1,88 +1,98 @@
 /** @format */
 
-import { useQuery } from "@tanstack/react-query";
-import { getCommentByMovie } from "../../api/comment/getComment";
-import SectionHeader from "../../ui/SectionHeader";
-import { CommnentList } from "../../interfaces/commentInterface";
-import LoadAndErr from "../../ui/Spinner";
-import Paginate from "../../ui/Paginate";
+import {
+  useInfiniteQuery,
+  InfiniteData,
+  QueryFunctionContext,
+} from "@tanstack/react-query";
 import { useMemo, useRef, useState } from "react";
-import CommentItem from "./CommentItem";
-import AddCmtForm from "./AddCmtForm";
 import { useSelector } from "react-redux";
+import InfiniteScroll from "react-infinite-scroller";
+
+import { getCommentByMovie } from "../../api/comment/getComment";
 import { RootState } from "../../redux/store";
-import CmtFilter from "./CmtFilter";
+import { Comment, CommentPage } from "../../interfaces/commentInterface";
+import SectionHeader from "../../ui/SectionHeader";
+import LoadAndErr from "../../ui/Spinner";
+import CmtItem from "./CommentItem";
+import AddCmtForm from "./AddCmtForm";
+import CmtSort from "./CmtSort";
 
-const MovieComment: React.FC<{ movieId?: string; sectionId: string }> = ({
-  movieId,
-  sectionId,
-}) => {
-  // mangage page state
-  const [commentPage, setCommentPage] = useState(1);
-  const user_id = useSelector((state: RootState) => state.auth.id);
-  const [showOnlyMyCmt, setShowOnlyMyCmt] = useState<true | false>(false);
+type queryKey = [string, string, string | undefined, string];
 
-  //   manage comment
+interface MovieCommentProps {
+  movieId: string;
+  sectionId: string;
+}
+
+type QueryKeyType = [string, string, string?, string?];
+
+const MovieComment: React.FC<MovieCommentProps> = ({ movieId, sectionId }) => {
+  const userId = useSelector((state: RootState) => state.auth.id);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [sortOrder, setSortOrder] = useState("-date"); // -date: desc, date: asc
+
   const {
-    data: commentsObj,
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
     isLoading,
     isError,
-  } = useQuery<CommnentList>({
-    queryKey: ["comments", movieId, commentPage],
-    queryFn: () =>
+  } = useInfiniteQuery<
+    CommentPage,
+    Error,
+    InfiniteData<CommentPage, number>,
+    queryKey,
+    number
+  >({
+    queryKey: ["comments", movieId, userId, sortOrder],
+    queryFn: ({ pageParam = 1 }: QueryFunctionContext<QueryKeyType, number>) =>
       getCommentByMovie({
         movie_id: movieId,
-        page: commentPage,
-        user_id,
+        page: pageParam,
+        user_id: userId,
+        sort: sortOrder,
       }),
+    getNextPageParam: (lastPage, allPages) =>
+      allPages.length < lastPage.totalPages ? allPages.length + 1 : undefined,
+    initialPageParam: 1,
   });
 
-  // memorize filter cmt to improve performent
-  const comments = useMemo(() => {
-    if (!commentsObj) return [];
+  const allComments = useMemo<Comment[]>(() => {
+    return data?.pages.flatMap((page) => page.data) ?? [];
+  }, [data]);
 
-    if (showOnlyMyCmt) {
-      return commentsObj.data.filter((cmt) => cmt.user_id._id === user_id);
-    }
-
-    return commentsObj.data;
-  }, [showOnlyMyCmt, commentsObj, user_id]);
-
-  //   scroll to top
-  const scrollRef = useRef(null);
+  const totalResult = data?.pages[0]?.totalResult ?? 0;
 
   return (
     <div ref={scrollRef} className="w-[60%] pl-6">
-      <SectionHeader title="comment" id={sectionId} />
+      <SectionHeader title="Comments" id={sectionId} />
 
-      {/* total cmt, filter */}
-      <div className="flex gap-16 items-center mb-8">
-        <p className="text-3xl font-bold">
-          {commentsObj?.totalResult} comment(s)
-        </p>
-        <CmtFilter setShowOnlyMyCmt={setShowOnlyMyCmt} />
+      {/* sort */}
+      <div className="mb-8 flex items-center gap-16">
+        <p className="text-3xl font-bold">{totalResult} comment(s)</p>
+        <CmtSort setSortOrder={setSortOrder} />
       </div>
 
-      {/* add cmt form */}
+      {/* add cmt */}
       <AddCmtForm movieId={movieId} />
 
-      {commentsObj?.totalResult ? (
-        <>
-          <div className="p-6 flex flex-col gap-6 bg-[var(--color-gray-800)] rounded-2xl">
-            {comments.map((cmt) => (
-              <CommentItem comment={cmt} key={cmt._id} />
+      {/* cmt */}
+      {isLoading || isError ? (
+        <LoadAndErr isLoading={isLoading} isError={isError} />
+      ) : (
+        <InfiniteScroll
+          pageStart={0}
+          loadMore={() => fetchNextPage()}
+          hasMore={hasNextPage && !isFetchingNextPage}
+          loader={<div className="loader">Loading more comments...</div>}>
+          <div className="flex flex-col gap-6 rounded-2xl bg-[var(--color-gray-800)] p-6">
+            {allComments.map((comment) => (
+              <CmtItem key={comment._id} comment={comment} />
             ))}
           </div>
-
-          <Paginate
-            targetRef={scrollRef}
-            pageAmount={commentsObj.totalPages}
-            currPage={commentPage}
-            changePageFunc={setCommentPage}
-          />
-        </>
-      ) : (
-        <LoadAndErr isLoading={isLoading} isError={isError} />
+        </InfiniteScroll>
       )}
     </div>
   );

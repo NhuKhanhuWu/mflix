@@ -35,6 +35,14 @@ body {
   font-family: "Parkinsans", sans-serif;
 }
 
+button {
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
 .carousel > div {
   flex: 1 0 100%;
 }

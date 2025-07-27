@@ -39,7 +39,8 @@ app.use(
 app.use(express.json());
 
 // Serve static files from React frontend in production
-app.use(express.static(path.join(__dirname, "frontend", "dist")));
+// app.use(express.static(path.join(__dirname, "frontend", "dist")));
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
 // ROUTER
 app.use("/api/v1/movies", movieRouter);
@@ -47,14 +48,15 @@ app.use("/api/v1/genres/", genresRouter);
 app.use("/api/v1/users/", userRouter);
 app.use("/api/v1/comments", commentRouter);
 
-// For any route not handled above, serve React's index.html (for SPA routing)
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
-});
-
 // ERROR
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 400));
+});
+
+// For any route not handled above, serve React's index.html (for SPA routing)
+app.get("*", (req, res) => {
+  // res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
 app.use(globalErrHandler);

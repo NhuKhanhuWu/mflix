@@ -22,10 +22,10 @@ router
 
 /**
  * Route: /api/v1/comments/:id
- * Description: Update or delete a specific comment
+ * Description: Update or delete a specific comment of logged user
  */
 router
-  .route("/:id")
+  .route("/:cmt_id")
   .patch(protectController.protect, commentController.updateMyComment)
   .delete(protectController.protect, commentController.deleteMyComment);
 

@@ -95,7 +95,10 @@ function MovieDetail() {
       {/* comment */}
       <Space space="5rem" />
       <div className="flex gap-5">
-        <MovieComment sectionId={CONTENT_LIST[4]} movieId={movieDetail?.id} />
+        <MovieComment
+          sectionId={CONTENT_LIST[4]}
+          movieId={movieDetail?.id || ""}
+        />
         <MovieList
           header={<SectionHeader title="You may like" />}
           cols={2}

@@ -16,6 +16,7 @@ interface GeneralInputProps<T extends FieldValues> {
   placeholder?: string;
   type?: "text" | "password" | "email";
   width?: string;
+  value?: string;
 }
 
 export const InputField = <T extends FieldValues>({
@@ -61,6 +62,7 @@ export const TextAreaField = <T extends FieldValues>({
   errors,
   label = "",
   placeholder = "",
+  value = "",
 }: GeneralInputProps<T>) => {
   const error = errors[name];
 
@@ -68,6 +70,7 @@ export const TextAreaField = <T extends FieldValues>({
     <div className="flex-1">
       {label && <label className="label">{label}</label>}
       <textarea
+        defaultValue={value}
         {...register(name)}
         placeholder={placeholder}
         className={`input rounded-4xl resize-none overflow-hidden ${

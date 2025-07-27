@@ -47,7 +47,6 @@ exports.sendSignUpOtp = catchAsync(async (req, res, next) => {
   // 4. send email
   const emailMessage = otpEmail(otp);
 
-  // FOR TESTING WITHOUT SENDING EMAIL
   res.status(200).json({
     status: "success",
     otp,
