@@ -18,6 +18,11 @@ import { TextAreaField } from "../../ui/Input";
 import SubmitBtn from "../../ui/SubmitBtn";
 import { useUpdateCmt } from "../../hooks/cmt/useUpdateCmt";
 import React, { ReactNode, useState } from "react";
+import Modal from "../../ui/Modal";
+import { useDeleteCmt } from "../../hooks/cmt/useDeleteCmt";
+import LoadAndErr from "../../ui/Spinner";
+
+const token = Cookies.get("loginToken") || "";
 
 interface SetStateProps {
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
@@ -43,15 +48,58 @@ const EditCmtBtn: React.FC<SetStateProps> = ({ setIsEditing }) => {
   );
 };
 
-const DeleteCmtBtn: React.FC = () => {
+const DeleteCmtBtn: React.FC<{ cmt_id: string }> = ({ cmt_id }) => {
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // set up send request
+  const { mutate, isPending, isError } = useDeleteCmt({ setIsDeleting });
+
+  function onDelete() {
+    mutate({ cmt_id, token });
+  }
+
   return (
-    <div className="py-1">
-      <Menu>
-        <button className="dot-menu-item">
-          <FaRegTrashAlt className="text-2xl" /> Delete
-        </button>
-      </Menu>
-    </div>
+    <>
+      <div className="py-1">
+        <Menu>
+          <button className="dot-menu-item" onClick={() => setIsDeleting(true)}>
+            <FaRegTrashAlt className="text-2xl" /> Delete
+          </button>
+        </Menu>
+      </div>
+
+      <Modal open={isDeleting} setOpen={setIsDeleting}>
+        <div className="p-6 text-center">
+          {/* message */}
+          <p className="text-2xl mb-8">
+            Do you really want to delete this comment forever?
+          </p>
+
+          {/* btns */}
+          <div className="flex gap-4 justify-center">
+            {/* cancel */}
+            <button
+              className="btn secondary-btn"
+              onClick={() => setIsDeleting(false)}>
+              Cancel
+            </button>
+
+            {/* delete */}
+            <button
+              onClick={() => onDelete()}
+              className={`btn ${
+                isPending ? "secondary-btn-disable" : "secondary-btn"
+              }`}
+              disabled={isPending}>
+              Delete
+            </button>
+          </div>
+
+          {/* err message */}
+          <LoadAndErr isLoading={isPending} isError={isError} />
+        </div>
+      </Modal>
+    </>
   );
 };
 
@@ -91,8 +139,6 @@ const CmtEditForm: React.FC<CommentProps & SetStateProps> = ({
   comment,
   setIsEditing,
 }) => {
-  const token = Cookies.get("loginToken") || "";
-
   // set up form
   const {
     register,
@@ -162,7 +208,7 @@ const CmtItem: React.FC<CommentProps> = ({ comment }) => {
         <div className="self-center">
           <CmtMenu
             editBtn={<EditCmtBtn setIsEditing={setIsEditing} />}
-            deleteBtn={<DeleteCmtBtn />}
+            deleteBtn={<DeleteCmtBtn cmt_id={comment._id} />}
           />
         </div>
       )}
