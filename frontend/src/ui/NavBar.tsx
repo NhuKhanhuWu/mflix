@@ -3,9 +3,9 @@
 import { NavLink } from "react-router-dom";
 
 import { SearchBar } from "./SearchBar";
-import { FaRegUserCircle } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import SmallAvartar from "./SmallAvartar";
 
 interface NavItemProps {
   to: string;
@@ -31,6 +31,7 @@ const NavItem: React.FC<NavItemProps> = ({ to, label }) => (
 function NavBar() {
   // check if login
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
+  const avatar = useSelector((state: RootState) => state.auth.avartar);
 
   return (
     <nav className="flex items-center justify-between h-24 px-6 bg-[#303030] border-b-2 border-[#df2143] sticky top-0 z-[15]">
@@ -58,7 +59,7 @@ function NavBar() {
           <NavLink
             to="/profile"
             className="text-5xl text-[var(--color-gray-300)] hover:text-[var(--color-red-900)]">
-            <FaRegUserCircle />
+            <SmallAvartar avartar={avatar} />
           </NavLink>
         ) : (
           <>

@@ -1,5 +1,6 @@
 /** @format */
 
+import { Link } from "react-router-dom";
 import { MovieSimplifyProps } from "../../interfaces/movieInterfaces";
 import RatingRuntime from "../../ui/RatingRuntime";
 
@@ -22,11 +23,11 @@ const Text: React.FC<MovieSimplifyProps> = ({ movie }) => {
           "linear-gradient(360deg, rgb(50, 50, 50), rgb(0 0 0 / 10%))",
       }}>
       {/* title */}
-      <a
-        href={`movie/${movie.slug}`}
+      <Link
+        to={`/movie/${movie.slug}`}
         className="text-[2rem] font-bold uppercase hover:text-[#df2144c3] transition-all duration-300">
         {movie.title}
-      </a>
+      </Link>
 
       {/* rating & runtime */}
       <RatingRuntime movie={movie} />
