@@ -5,7 +5,7 @@ import {
   InfiniteData,
   QueryFunctionContext,
 } from "@tanstack/react-query";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import InfiniteScroll from "react-infinite-scroller";
 
@@ -14,18 +14,23 @@ import { RootState } from "../../redux/store";
 import { Comment, CommentPage } from "../../interfaces/commentInterface";
 import SectionHeader from "../../ui/SectionHeader";
 import LoadAndErr from "../../ui/Spinner";
-import CommentItem from "./CommentItem";
+import CmtItem from "./CommentItem";
 import AddCmtForm from "./AddCmtForm";
 import CmtSort from "./CmtSort";
+
+type queryKey = [string, string, string | undefined, string];
 
 interface MovieCommentProps {
   movieId: string;
   sectionId: string;
 }
 
+type QueryKeyType = [string, string, string?, string?];
+
 const MovieComment: React.FC<MovieCommentProps> = ({ movieId, sectionId }) => {
   const userId = useSelector((state: RootState) => state.auth.id);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [sortOrder, setSortOrder] = useState("-date"); // -date: desc, date: asc
 
   const {
     data,
@@ -38,17 +43,16 @@ const MovieComment: React.FC<MovieCommentProps> = ({ movieId, sectionId }) => {
     CommentPage,
     Error,
     InfiniteData<CommentPage, number>,
-    [string, string, string | undefined],
+    queryKey,
     number
   >({
-    queryKey: ["comments", movieId, userId],
-    queryFn: ({
-      pageParam = 1,
-    }: QueryFunctionContext<[string, string, string | undefined], number>) =>
+    queryKey: ["comments", movieId, userId, sortOrder],
+    queryFn: ({ pageParam = 1 }: QueryFunctionContext<QueryKeyType, number>) =>
       getCommentByMovie({
         movie_id: movieId,
         page: pageParam,
         user_id: userId,
+        sort: sortOrder,
       }),
     getNextPageParam: (lastPage, allPages) =>
       allPages.length < lastPage.totalPages ? allPages.length + 1 : undefined,
@@ -68,7 +72,7 @@ const MovieComment: React.FC<MovieCommentProps> = ({ movieId, sectionId }) => {
       {/* sort */}
       <div className="mb-8 flex items-center gap-16">
         <p className="text-3xl font-bold">{totalResult} comment(s)</p>
-        <CmtSort />
+        <CmtSort setSortOrder={setSortOrder} />
       </div>
 
       {/* add cmt */}
@@ -85,7 +89,7 @@ const MovieComment: React.FC<MovieCommentProps> = ({ movieId, sectionId }) => {
           loader={<div className="loader">Loading more comments...</div>}>
           <div className="flex flex-col gap-6 rounded-2xl bg-[var(--color-gray-800)] p-6">
             {allComments.map((comment) => (
-              <CommentItem key={comment._id} comment={comment} />
+              <CmtItem key={comment._id} comment={comment} />
             ))}
           </div>
         </InfiniteScroll>

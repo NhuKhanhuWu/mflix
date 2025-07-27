@@ -8,17 +8,19 @@ interface getCommentByMovieProps {
   movie_id: string;
   page: number;
   user_id?: string;
+  sort?: string;
 }
 
 export async function getCommentByMovie({
   movie_id: id,
   page,
   user_id,
+  sort = "",
 }: getCommentByMovieProps): Promise<CommentPage> {
   try {
     // Fetch data from API
     const response = await axios.get(
-      `${BASE_URL}/comments?movie_id=${id}&page=${page}&user_id=${
+      `${BASE_URL}/comments?movie_id=${id}&page=${page}&sort=${sort}&user_id=${
         user_id ?? ""
       }`
     );

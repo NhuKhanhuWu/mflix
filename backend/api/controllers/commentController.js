@@ -97,42 +97,49 @@ exports.createComment = catchAsync(async (req, res, next) => {
 });
 
 // update comment
-exports.updateMyComment = catchAsync(async (req, res) => {
-  // Validate movie_id and account_id
-  const validation = await checkMovieExists(req.query.movie_id);
-  if (!validation.valid) {
-    return res.status(400).json({
-      status: "fail",
-      message: validation.message,
-    });
-  }
+exports.updateMyComment = catchAsync(async (req, res, next) => {
+  const currCmt = await Comment.findById(req.params.cmt_id);
 
+  // check if cmt exists
+  if (!currCmt) return next(new AppError("Comment not found!", 404));
+
+  // check if cmt belongs to logged user
+  if (currCmt.user_id.toString() !== req.user.id)
+    return next(
+      new AppError("This comment does not belong to your account!", 403)
+    );
+
+  // Update cmt
   const updatedComment = await Comment.findByIdAndUpdate(
-    req.params.id,
-    req.body,
+    req.params.cmt_id,
+    { text: req.body.text },
     {
       runValidators: true,
       new: true,
     }
   );
 
+  // send res
   res.status(200).json({
     status: "success",
     data: updatedComment,
   });
 });
 
-exports.deleteMyComment = catchAsync(async (req, res) => {
-  // Validate movie_id and account_id
-  const validation = await checkMovieExists(req.query.movie_id);
-  if (!validation.valid) {
-    return res.status(400).json({
-      status: "fail",
-      message: validation.message,
-    });
-  }
+exports.deleteMyComment = catchAsync(async (req, res, next) => {
+  const currCmt = await Comment.findById(req.params.cmt_id);
 
-  await Comment.findByIdAndDelete(req.params.id);
+  // check if cmt exists
+  if (!currCmt) return next(new AppError("Comment not found!", 404));
+
+  // check if cmt belongs to logged user
+  if (currCmt.user_id.toString() !== req.user.id)
+    return next(
+      new AppError("This comment does not belong to your account!", 403)
+    );
+
+  await Comment.findByIdAndDelete(req.params.cmt_id);
+
   res.status(204).json({
     status: "success",
     data: null,

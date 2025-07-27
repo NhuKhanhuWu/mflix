@@ -19,6 +19,7 @@ export interface CommentPage {
 }
 
 export interface CommentProps {
+  // text: string | undefined;
   comment: Comment;
 }
 

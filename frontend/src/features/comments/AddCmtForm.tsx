@@ -9,9 +9,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { TextAreaField } from "../../ui/Input";
 import SubmitBtn from "../../ui/SubmitBtn";
 import SmallAvartar from "../../ui/SmallAvartar";
-import { useNewCmt } from "../../hooks/useNewCmt";
+import { useNewCmt } from "../../hooks/cmt/useNewCmt";
 import LoadAndErr from "../../ui/Spinner";
 import Cookies from "js-cookie";
+import { useState } from "react";
 
 const formSchema = yup.object().shape({
   text: yup.string().required("Comment's content required!"),
@@ -20,9 +21,10 @@ const formSchema = yup.object().shape({
 const AddCmtForm: React.FC<{ movieId?: string }> = ({ movieId = "" }) => {
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
   const avartar = useSelector((state: RootState) => state.auth.avartar);
+  const [isFormFocus, setIsFormFocus] = useState(false);
   const token = Cookies.get("loginToken") || "";
 
-  // set up login form
+  // set up form
   const {
     register,
     handleSubmit,
@@ -39,6 +41,11 @@ const AddCmtForm: React.FC<{ movieId?: string }> = ({ movieId = "" }) => {
       text: data.text,
       token,
     });
+  }
+
+  function onClearForm() {
+    reset();
+    setIsFormFocus(false);
   }
 
   if (!movieId) return <LoadAndErr isLoading={false} isError={true} />;
@@ -58,7 +65,7 @@ const AddCmtForm: React.FC<{ movieId?: string }> = ({ movieId = "" }) => {
     <form onSubmit={handleSubmit(onSubmit)} className="mb-8 flex gap-2">
       <SmallAvartar avartar={avartar} />
 
-      <div className="flex-1">
+      <div className="flex-1" onFocus={() => setIsFormFocus(true)}>
         <TextAreaField
           errors={errors}
           isPending={isPending}
@@ -71,7 +78,16 @@ const AddCmtForm: React.FC<{ movieId?: string }> = ({ movieId = "" }) => {
         {isError && <p className="error-message">*Failed to post comment.</p>}
       </div>
 
-      <SubmitBtn btnTxt="Send" isPending={isPending} width="fit-content" />
+      {isFormFocus && (
+        <>
+          <button
+            className="btn secondary-btn h-fit"
+            onClick={() => onClearForm()}>
+            Cancel
+          </button>
+          <SubmitBtn btnTxt="Send" isPending={isPending} width="fit-content" />
+        </>
+      )}
     </form>
   );
 };

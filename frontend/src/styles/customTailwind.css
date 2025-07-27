@@ -37,6 +37,18 @@
     @apply text-5xl font-bold mb-2 uppercase;
   }
 
+  .dots-menu-btn {
+    @apply inline-flex w-full justify-center items-center rounded-full p-4 text-3xl font-medium text-white hover:bg-gray-700 transition;
+  }
+
+  .dot-menu-items-container {
+    @apply absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-[rgb(48,48,48)] border border-[rgb(134,134,134)] shadow-lg focus:outline-none text-xl;
+  }
+
+  .dot-menu-item {
+    @apply w-full text-left px-4 py-3 flex gap-2 hover:bg-[rgb(134,134,134)];
+  }
+
   .medium-movie-title {
     @apply text-2xl font-bold mb-2 uppercase;
   }
@@ -87,14 +99,11 @@
     transition: all 0.3s ease;
     outline: none;
     border: 1px solid transparent;
+    border-color: #df2143;
   }
 
   .input::placeholder {
     color: #d1d5db; /* placeholder-gray-300 */
-  }
-
-  .input:focus {
-    border-color: #df2143;
   }
 
   .input-disable {
