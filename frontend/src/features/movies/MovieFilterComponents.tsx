@@ -111,8 +111,8 @@ export const Sort: React.FC<InputRegisterProps> = ({ register }) => {
       <select className="input" {...register("sort")}>
         <option value="-year">Latests</option>
         <option value="-imdbScore">Hightest score</option>
-        <option value="-title">A-Z</option>
-        <option value="title">Z-A</option>
+        <option value="title">A-Z</option>
+        <option value="-title">Z-A</option>
       </select>
     </div>
   );
