@@ -1,7 +1,7 @@
 /** @format */
 
 // hooks/useMovieFilters.ts
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { FilterFormProps } from "../interfaces/movieFilterInterface";
 import { useDispatch } from "react-redux";
@@ -94,6 +94,7 @@ export function useMovieFilters() {
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
   const defaultValues = parseQueryParams(searchParams);
+  const navigate = useNavigate();
 
   const form = useForm<FilterFormProps>({
     defaultValues,
@@ -111,6 +112,11 @@ export function useMovieFilters() {
     const decodedQuery = decodeURIComponent(newParams.toString());
     dispatch(setQueryString(decodedQuery));
     dispatch(changePage(formData.page));
+
+    // Redirect to /movies if not already there
+    if (location.pathname !== "/movies") {
+      navigate("/movies");
+    }
   };
 
   return {
