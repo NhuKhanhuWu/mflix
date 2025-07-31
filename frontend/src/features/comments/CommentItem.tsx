@@ -3,7 +3,7 @@
 import { useSelector } from "react-redux";
 import { CommentProps } from "../../interfaces/commentInterface";
 import formatDate from "../../services/formatDate";
-import SmallAvartar from "../../ui/SmallAvartar";
+import SmallAvartar from "../../ui/common/SmallAvartar";
 import { RootState } from "../../redux/store";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import * as yup from "yup";
@@ -14,13 +14,13 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { TiPencil } from "react-icons/ti";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { TextAreaField } from "../../ui/Input";
-import SubmitBtn from "../../ui/SubmitBtn";
+import { TextAreaField } from "../../ui/common/Input";
+import SubmitBtn from "../../ui/common/SubmitBtn";
 import { useUpdateCmt } from "../../hooks/cmt/useUpdateCmt";
 import React, { ReactNode, useState } from "react";
-import Modal from "../../ui/Modal";
+import Modal from "../../ui/common/Modal";
 import { useDeleteCmt } from "../../hooks/cmt/useDeleteCmt";
-import LoadAndErr from "../../ui/Spinner";
+import LoadAndErr from "../../ui/common/Spinner";
 
 const token = Cookies.get("loginToken") || "";
 

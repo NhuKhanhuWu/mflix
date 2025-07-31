@@ -3,8 +3,8 @@
 import { NavLink } from "react-router-dom";
 
 import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
-import SmallAvartar from "./SmallAvartar";
+import { RootState } from "../../redux/store.ts";
+import SmallAvartar from "../common/SmallAvartar.tsx";
 
 interface NavItemProps {
   to: string;

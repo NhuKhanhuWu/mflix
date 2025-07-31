@@ -1,13 +1,7 @@
 /** @format */
 
-import LogOut from "../features/auth/LogOut";
-
 function Profile() {
-  return (
-    <>
-      <LogOut />
-    </>
-  );
+  return <></>;
 }
 
 export default Profile;

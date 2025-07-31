@@ -6,8 +6,8 @@ import * as yup from "yup";
 import { SetState } from "../../interfaces/general";
 import { useSendOtpRequest, useSubmitOtp } from "../../hooks/signupHooks";
 import { SendOtpButton } from "./SendOtpButton";
-import SubmitBtn from "../../ui/SubmitBtn";
-import { InputField } from "../../ui/Input";
+import SubmitBtn from "../../ui/common/SubmitBtn";
+import { InputField } from "../../ui/common/Input";
 
 // move to next step func
 interface setStepFuncInterface {
