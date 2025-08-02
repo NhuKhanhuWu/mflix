@@ -8,8 +8,8 @@ import {
   passwordConfirmSchema,
   passwordSchema,
 } from "../../constaint/formSchema";
-import { InputField } from "../../ui/Input";
-import SubmitBtn from "../../ui/SubmitBtn";
+import { InputField } from "../../ui/common/Input";
+import SubmitBtn from "../../ui/common/SubmitBtn";
 import { useNavigate, useParams } from "react-router-dom";
 
 const resetPassSchema = yup.object().shape({

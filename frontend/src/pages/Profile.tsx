@@ -1,12 +1,17 @@
 /** @format */
 
-import LogOut from "../features/auth/LogOut";
+import MyCmt from "../features/comments/MyCmt";
+import UserInfor from "../features/user/UserInfor";
 
 function Profile() {
   return (
-    <>
-      <LogOut />
-    </>
+    <div className="flex gap-12">
+      {/* ACCOUNT INFOR */}
+      <UserInfor />
+
+      {/* CMT */}
+      <MyCmt />
+    </div>
   );
 }
 

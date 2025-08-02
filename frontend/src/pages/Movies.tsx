@@ -1,15 +1,15 @@
 /** @format */
 
 import { useEffect, useRef, useState } from "react";
-import CustomModal from "../ui/Modal";
+import CustomModal from "../ui/common/Modal";
 import DesktopFilter from "../features/movies/MovieFilter";
-import { getMovieList } from "../api/getMovieList";
+import { getMovieList } from "../api/movie/getMovieList";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { resetMovieFilter, changePage } from "../redux/movieFilterSlide";
 import MovieList from "../features/movies/MovieList";
-import SectionHeader from "../ui/SectionHeader";
-import Paginate from "../ui/Paginate";
+import SectionHeader from "../ui/common/SectionHeader";
+import Paginate from "../ui/common/Paginate";
 import useSyncMovieFiltersFromURL from "../hooks/useSyncMovieFiltersFromURL ";
 import { RootState } from "../redux/store";
 

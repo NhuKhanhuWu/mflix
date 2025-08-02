@@ -11,8 +11,8 @@ import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 import { loginSuccess } from "../../redux/authSlide";
 import { emailSchema, passwordSchema } from "../../constaint/formSchema";
-import { InputField } from "../../ui/Input";
-import SubmitBtn from "../../ui/SubmitBtn";
+import { InputField } from "../../ui/common/Input";
+import SubmitBtn from "../../ui/common/SubmitBtn";
 
 const loginSchema = yup.object().shape({
   email: emailSchema,

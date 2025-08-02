@@ -1,7 +1,7 @@
 /** @format */
 
 import { FaClock, FaStar } from "react-icons/fa";
-import { MovieSimplifyProps } from "../interfaces/movieInterfaces";
+import { MovieSimplifyProps } from "../../interfaces/movieInterfaces";
 import { ReactNode } from "react";
 
 interface RatingRuntimeProps extends MovieSimplifyProps {

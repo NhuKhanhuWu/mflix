@@ -5,18 +5,19 @@ import {
   InfiniteData,
   QueryFunctionContext,
 } from "@tanstack/react-query";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import InfiniteScroll from "react-infinite-scroller";
 
-import { getCommentByMovie } from "../../api/comment/getComment";
+import { getCommentByMovie } from "../../api/comment/getMovieCmt";
 import { RootState } from "../../redux/store";
-import { Comment, CommentPage } from "../../interfaces/commentInterface";
-import SectionHeader from "../../ui/SectionHeader";
-import LoadAndErr from "../../ui/Spinner";
+import { CmtByMovie, CommentPage } from "../../interfaces/commentInterface";
+import SectionHeader from "../../ui/common/SectionHeader";
+import LoadAndErr from "../../ui/common/Spinner";
 import CmtItem from "./CommentItem";
 import AddCmtForm from "./AddCmtForm";
 import CmtSort from "./CmtSort";
+import { useLocation } from "react-router-dom";
 
 type queryKey = [string, string, string | undefined, string];
 
@@ -59,11 +60,30 @@ const MovieComment: React.FC<MovieCommentProps> = ({ movieId, sectionId }) => {
     initialPageParam: 1,
   });
 
-  const allComments = useMemo<Comment[]>(() => {
+  const allComments = useMemo<CmtByMovie[]>(() => {
     return data?.pages.flatMap((page) => page.data) ?? [];
   }, [data]);
 
   const totalResult = data?.pages[0]?.totalResult ?? 0;
+
+  // scroll to cmt
+  const location = useLocation();
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (location.hash) {
+        const el = document.getElementById(location.hash.slice(1));
+        if (el) {
+          el.scrollIntoView({
+            block: "start",
+            inline: "nearest",
+          });
+        }
+      }
+    }, 1000); // Adjust delay if needed
+
+    return () => clearTimeout(timeout);
+  }, [location]);
 
   return (
     <div ref={scrollRef} className="w-[60%] pl-6">

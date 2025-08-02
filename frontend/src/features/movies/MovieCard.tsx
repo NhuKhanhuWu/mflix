@@ -2,7 +2,7 @@
 
 import { Link } from "react-router-dom";
 import { MovieSimplifyProps } from "../../interfaces/movieInterfaces";
-import RatingRuntime from "../../ui/RatingRuntime";
+import RatingRuntime from "../../ui/movies/RatingRuntime.tsx";
 
 const Img: React.FC<MovieSimplifyProps> = ({ movie }) => {
   return (

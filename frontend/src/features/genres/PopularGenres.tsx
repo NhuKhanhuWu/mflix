@@ -2,8 +2,8 @@
 
 import { Link } from "react-router-dom";
 import { GenreListProps } from "../../interfaces/genreInterface";
-import { ContentBlock } from "../../ui/ContentBlock";
-import LoadAndErr from "../../ui/Spinner";
+import { ContentBlock } from "../../ui/blocks/ContentBlock";
+import LoadAndErr from "../../ui/common/Spinner";
 
 // Predefined column start values to center items in each row (7-column grid)
 const colStartClasses = [
