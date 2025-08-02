@@ -7,8 +7,8 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSendOtpRequest } from "../../hooks/signupHooks";
 import { Link } from "react-router-dom";
-import { InputField } from "../../ui/Input";
-import SubmitBtn from "../../ui/SubmitBtn";
+import { InputField } from "../../ui/common/Input";
+import SubmitBtn from "../../ui/common/SubmitBtn";
 
 interface setStepFuncInterface {
   setStep: SetState<number>;

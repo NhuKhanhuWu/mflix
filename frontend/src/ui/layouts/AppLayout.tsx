@@ -1,8 +1,8 @@
 /** @format */
 
 import { Outlet } from "react-router-dom";
-import NavBar from "./NavBar";
-import Footer from "./Footer";
+import NavBar from "../navigation/NavBar.tsx";
+import Footer from "../common/Footer.tsx";
 
 function AppLayout() {
   return (

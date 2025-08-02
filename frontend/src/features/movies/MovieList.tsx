@@ -2,9 +2,9 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { MovieListProps } from "../../interfaces/movieInterfaces";
-import LoadAndErr from "../../ui/Spinner";
+import LoadAndErr from "../../ui/common/Spinner";
 import MovieCard from "./MovieCard";
-import EmptyResult from "../../ui/EmptyResult";
+import EmptyResult from "../../ui/common/EmptyResult";
 
 const MovieList: React.FC<MovieListProps> = ({
   header,

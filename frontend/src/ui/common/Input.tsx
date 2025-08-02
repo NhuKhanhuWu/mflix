@@ -7,7 +7,7 @@ import {
   UseFormRegister,
   Path,
 } from "react-hook-form";
-import { SetState } from "../interfaces/general";
+import { SetState } from "../../interfaces/general";
 
 interface ShowPassBtnProps {
   isShowPass: boolean;
