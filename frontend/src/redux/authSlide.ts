@@ -1,7 +1,7 @@
 /** @format */
 import Cookies from "js-cookie";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getMyInfor } from "../api/getMyInfor";
+import { getMyInfor } from "../api/user/getMyInfor";
 
 export const fetchUserInfo = createAsyncThunk(
   "auth/fetchUserInfo",

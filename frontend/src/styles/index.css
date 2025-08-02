@@ -3,10 +3,10 @@
 @import "tailwindcss";
 
 :root {
-  --color-gray-600: rgb(134, 134, 134);
-  --color-gray-700: rgb(101, 101, 101);
-  --color-gray-800: rgb(75, 75, 75);
-  --color-gray-900: rgb(48, 48, 48);
+  --color-gray-600: #868686;
+  --color-gray-700: #656565;
+  --color-gray-800: #4b4b4b;
+  --color-gray-900: #303030;
   --yellow: #ffd43b;
   --orange: #ff914d;
   --color-red-500: #ec7a8e;
@@ -20,6 +20,7 @@
 
 html {
   font-size: 62.5%;
+  scroll-behavior: smooth;
 }
 
 * {
@@ -41,6 +42,15 @@ button {
 
 .hidden {
   display: none;
+}
+
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }
 
 .carousel > div {

@@ -8,8 +8,8 @@ import { List, ListItem, ListItemPrefix } from "@material-tailwind/react";
 import SidebarSection from "../navigation/sidebar/SidebarSection";
 import SidebarItem from "../navigation/sidebar/SidebarItem";
 
-import { FaPowerOff, FaRegClock, FaRegUserCircle } from "react-icons/fa";
-import { MdChat, MdOutlineEmail, MdOutlinePassword } from "react-icons/md";
+import { FaPowerOff, FaRegUserCircle } from "react-icons/fa";
+import { MdOutlineEmail, MdOutlinePassword } from "react-icons/md";
 import { AiOutlineProfile } from "react-icons/ai";
 import LogOut from "../../features/auth/LogOut";
 
@@ -47,18 +47,6 @@ function SideBar() {
         </SidebarSection>
         {/* ACCOUNT: END */}
 
-        {/* ACTIVITIES: START */}
-        <SidebarSection
-          open={open === 2}
-          icon={<FaRegClock className="h-8 w-8" />}
-          title="Activities"
-          onClick={() => handleOpen(2)}>
-          <SidebarItem icon={<MdChat className="h-8 w-8" />}>
-            <Link to={"my-comment"}>My comment</Link>
-          </SidebarItem>
-        </SidebarSection>
-        {/* ACTIVITIES: END */}
-
         {/* LOGOUT: START */}
         <LogOut>
           <ListItem
@@ -83,14 +71,14 @@ function SideBar() {
 
 function ProfileLayout() {
   return (
-    <>
+    <div className="flex gap-12">
       {/* side bar */}
       <SideBar />
 
-      <main>
+      <main className="pt-8">
         <Outlet></Outlet>
       </main>
-    </>
+    </div>
   );
 }
 
