@@ -1,6 +1,6 @@
 /** @format */
 interface movieByGenresProps {
-  genre: string;
+  genre?: string;
   limit?: number;
   page?: number;
 }

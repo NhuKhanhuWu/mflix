@@ -2,22 +2,39 @@
 
 const express = require("express");
 const commentController = require("../controllers/commentController");
+const protectController = require("../controllers/authController/protectController");
 
-const commentByMovieRouter = express.Router({ mergeParams: true });
-const commentByAccountRouter = express.Router({ mergeParams: true });
+const router = express.Router();
 
-// comment by movie
-commentByMovieRouter
+/**
+ * Route: /api/v1/comments
+ * Description: Get all comments by movie, or create a new comment
+ */
+router
   .route("/")
+  // .get(commentController.getCommentsByMovie) // expects ?movie_id= or similar
   .get(commentController.getCommentsByMovie)
-  .post(commentController.createComment);
+  .post(
+    protectController.protect,
+    commentController.newCommentLimiter,
+    commentController.createComment
+  );
 
-commentByMovieRouter
-  .route("/:id")
-  .patch(commentController.updateComment)
-  .delete(commentController.deleteComment);
+/**
+ * Route: /api/v1/comments/:id
+ * Description: Update or delete a specific comment of logged user
+ */
+router
+  .route("/:cmt_id")
+  .patch(protectController.protect, commentController.updateMyComment)
+  .delete(protectController.protect, commentController.deleteMyComment);
 
-// comment by account
-commentByAccountRouter.route("/").get(commentController.getCommentsByAccount);
+/**
+ * Route: /api/v1/users/:user_id/comments
+ * Description: Get all comments by a specific user (only if user login)
+ */
+router
+  .route("/my-comments")
+  .get(protectController.protect, commentController.getMyComments); // expects req.params.user_id
 
-module.exports = { commentByMovieRouter, commentByAccountRouter };
+module.exports = router;

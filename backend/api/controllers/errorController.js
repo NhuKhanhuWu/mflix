@@ -16,7 +16,7 @@ const sendErrorProd = (err, res) => {
       message: err.message,
     });
   }
-  // programing or other unknown error: don't leck error details
+  // programing or other unknown error: don't leak error details
   else {
     // 1. Log error
     console.error("Error ❌", err);
@@ -33,6 +33,7 @@ module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
 
+  return sendErrorDev(err, res);
   if (process.env.NODE_ENV === "development") {
     return sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === "production") {
