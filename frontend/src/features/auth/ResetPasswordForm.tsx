@@ -3,7 +3,7 @@
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { useResetPassword } from "../../hooks/changePasswordHooks";
+import { useResetPassword } from "../../hooks/auth/changePasswordHooks";
 import {
   passwordConfirmSchema,
   passwordSchema,
