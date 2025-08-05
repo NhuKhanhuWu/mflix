@@ -3,9 +3,9 @@
 // hooks/useMovieFilters.ts
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { FilterFormProps } from "../interfaces/movieFilterInterface";
+import { FilterFormProps } from "../../interfaces/movieFilterInterface";
 import { useDispatch } from "react-redux";
-import { changePage, setQueryString } from "../redux/movieFilterSlide";
+import { changePage, setQueryString } from "../../redux/movieFilterSlide";
 import { BaseSyntheticEvent } from "react";
 
 function parseQueryParams(params: URLSearchParams): FilterFormProps {

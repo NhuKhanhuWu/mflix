@@ -5,7 +5,7 @@ import { SetState } from "../../interfaces/general";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useSendOtpRequest } from "../../hooks/signupHooks";
+import { useSendOtpRequest } from "../../hooks/auth/signupHooks";
 import { Link } from "react-router-dom";
 import { InputField } from "../../ui/common/Input";
 import SubmitBtn from "../../ui/common/SubmitBtn";
