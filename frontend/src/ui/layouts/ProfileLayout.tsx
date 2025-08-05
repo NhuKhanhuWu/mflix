@@ -1,6 +1,6 @@
 /** @format */
 
-import { Link, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useState } from "react";
 
 import SidebarWrapper from "../navigation/sidebar/SidebarWrapper";
@@ -12,10 +12,50 @@ import { FaPowerOff, FaRegUserCircle } from "react-icons/fa";
 import { MdOutlineEmail, MdOutlinePassword } from "react-icons/md";
 import { AiOutlineProfile } from "react-icons/ai";
 import LogOut from "../../features/auth/LogOut";
+import { getNavLinkClass } from "../../utils/getNavLinkClass";
+
+const sectionMap = [
+  {
+    id: 1,
+    title: "Account",
+    icon: <FaRegUserCircle className="h-8 w-8" />,
+    items: [
+      {
+        label: "Profile",
+        to: "/profile",
+        icon: <AiOutlineProfile className="h-8 w-8" />,
+      },
+      {
+        label: "Change Email",
+        to: "/change-email",
+        icon: <MdOutlineEmail className="h-8 w-8" />,
+      },
+      {
+        label: "Change Password",
+        to: "/change-password",
+        icon: <MdOutlinePassword className="h-8 w-8" />,
+      },
+    ],
+  },
+  // Add more sections if needed
+];
 
 function SideBar() {
-  const [open, setOpen] = useState(0);
-  const handleOpen = (value: number) => setOpen(open === value ? 0 : value);
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  const getInitialOpen = () => {
+    const found = sectionMap.find((section) =>
+      section.items.some((item) => currentPath.startsWith(item.to))
+    );
+    return found?.id ?? 0;
+  };
+
+  const [open, setOpen] = useState<number>(getInitialOpen());
+
+  const handleOpen = (value: number) => {
+    setOpen((prev) => (prev === value ? 0 : value));
+  };
 
   return (
     <SidebarWrapper>
@@ -24,28 +64,22 @@ function SideBar() {
         placeholder={undefined}
         onPointerEnterCapture={undefined}
         onPointerLeaveCapture={undefined}>
-        {/* ACCOUNT: START */}
-        <SidebarSection
-          open={open === 1}
-          icon={<FaRegUserCircle className="h-8 w-8" />}
-          title="Account"
-          onClick={() => handleOpen(1)}>
-          {/* profile */}
-          <SidebarItem icon={<AiOutlineProfile className="h-8 w-8" />}>
-            <Link to={"/profile"}>Profile</Link>
-          </SidebarItem>
-
-          {/* change email */}
-          <SidebarItem icon={<MdOutlineEmail className="h-8 w-8" />}>
-            <Link to={"change-email"}>Change Email</Link>
-          </SidebarItem>
-
-          {/* change password */}
-          <SidebarItem icon={<MdOutlinePassword className="h-8 w-8" />}>
-            <Link to={"change-password"}>Change Password</Link>
-          </SidebarItem>
-        </SidebarSection>
-        {/* ACCOUNT: END */}
+        {sectionMap.map((section) => (
+          <SidebarSection
+            key={section.id}
+            open={open === section.id}
+            icon={section.icon}
+            title={section.title}
+            onClick={() => handleOpen(section.id)}>
+            {section.items.map((item) => (
+              <NavLink to={item.to} className={getNavLinkClass}>
+                <SidebarItem icon={item.icon} key={item.to}>
+                  {item.label}
+                </SidebarItem>
+              </NavLink>
+            ))}
+          </SidebarSection>
+        ))}
 
         {/* LOGOUT: START */}
         <LogOut>
@@ -75,7 +109,7 @@ function ProfileLayout() {
       {/* side bar */}
       <SideBar />
 
-      <main className="pt-8">
+      <main className="pt-8 grow">
         <Outlet></Outlet>
       </main>
     </div>

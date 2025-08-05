@@ -7,6 +7,7 @@ const protectController = require("../controllers/authController/protectControll
 const forgotPasswordController = require("../controllers/authController/forgotPasswordController");
 
 const express = require("express");
+const { verifyUserToken } = require("../middleware/verifyToken");
 
 const router = express.Router();
 
@@ -31,11 +32,24 @@ router.post(
 );
 router.patch(
   "/resetPassword",
-  forgotPasswordController.checkResetPasswordToken,
+  verifyUserToken,
   forgotPasswordController.resetPassword
 );
 
 // get my infor
 router.post("/me", protectController.protect, userController.getMyInfor);
+
+// change email
+router.post(
+  "/changeEmail",
+  protectController.protect,
+  userController.checkUpdateEmailReq,
+  userController.updateMyEmailReq
+);
+router.patch(
+  "/changeEmailConfirm",
+  verifyUserToken,
+  userController.updateMyEmail
+);
 
 module.exports = router;

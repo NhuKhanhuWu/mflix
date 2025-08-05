@@ -2,52 +2,23 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import { useForgotPassword } from "../../hooks/changePasswordHooks";
+import { useForgotPassword } from "../../hooks/auth/changePasswordHooks";
 import { useState } from "react";
 import { SendOtpButton } from "./SendOtpButton";
-import { FaArrowLeft } from "react-icons/fa";
 import { emailSchema } from "../../constaint/formSchema";
+import EmailSendedMessage from "../EmailSendedMessage";
+import { InputField } from "../../ui/common/Input";
 
 const forgotPasswordSchema = yup.object().shape({
   email: emailSchema,
 });
-
-interface EmailSendedMessageProps {
-  email: string;
-  setIsEmailSended: React.Dispatch<React.SetStateAction<boolean>>;
-}
-const EmailSendedMessage: React.FC<EmailSendedMessageProps> = ({
-  email,
-  setIsEmailSended,
-}) => {
-  return (
-    <>
-      {/* re-enter email */}
-      <button
-        className="flex gap-2 items-center cursor-pointer"
-        onClick={() => setIsEmailSended(false)}>
-        <FaArrowLeft />
-        Re-enter email
-      </button>
-      {/* message */}
-      <p className="text-brand-red">
-        Check your email to get reset password link
-      </p>
-      {/* send otp again */}
-      <p className="text-xl text-center space-y-1">
-        Didn't receive email?{" "}
-        <SendOtpButton email={email} hook={useForgotPassword} />
-      </p>
-    </>
-  );
-};
 
 function ForgotPasswordForm() {
   // 1. set up from
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors: formErr },
   } = useForm({ resolver: yupResolver(forgotPasswordSchema) });
   const [isEmailSended, setIsEmailSended] = useState(false);
   const [email, setEmail] = useState("");
@@ -72,7 +43,11 @@ function ForgotPasswordForm() {
 
   if (isEmailSended)
     return (
-      <EmailSendedMessage email={email} setIsEmailSended={setIsEmailSended} />
+      <EmailSendedMessage
+        resendButton={<SendOtpButton email={email} hook={useForgotPassword} />}
+        email={email}
+        setIsEmailSended={setIsEmailSended}
+      />
     );
 
   return (
@@ -83,18 +58,14 @@ function ForgotPasswordForm() {
           password.
         </p>
 
-        <div>
-          <label className="label">*Email</label>
-          <input
-            {...register("email")}
-            placeholder="you@example.com"
-            className={`input w-[30rem] ${isPending && "input-disable"}`}
-            disabled={isPending}
-          />
-          {errors.email && (
-            <p className="error-message">*{errors.email.message}</p>
-          )}
-        </div>
+        <InputField
+          errors={formErr}
+          isPending={isPending}
+          name="email"
+          register={register}
+          label="*Email"
+          placeholder="example@gmail.com"
+        />
 
         {isError && (
           <p className="error-message w-[30rem]">*{(error as Error).message}</p>

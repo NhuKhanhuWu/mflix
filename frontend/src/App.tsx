@@ -26,6 +26,8 @@ const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const ProfileLayout = lazy(() => import("./ui/layouts/ProfileLayout.tsx"));
 const Profile = lazy(() => import("./pages/Profile"));
+const ChangeEmail = lazy(() => import("./pages/ChangeEmail.tsx"));
+const ChangeEmailResult = lazy(() => import("./pages/ChangeEmailResult.tsx"));
 
 const router = createBrowserRouter([
   {
@@ -53,9 +55,15 @@ const router = createBrowserRouter([
       { path: "/forgot-password", element: <ForgotPassword /> },
       { path: "/reset-password/:token", element: <ResetPassword /> },
       {
-        // path: "/profile",
         element: <ProfileLayout />,
-        children: [{ path: "profile", element: <Profile /> }],
+        children: [
+          { path: "profile", element: <Profile /> },
+          { path: "change-email", element: <ChangeEmail /> },
+        ],
+      },
+      {
+        path: "change-email-result/:token",
+        element: <ChangeEmailResult />,
       },
     ],
   },

@@ -11,7 +11,7 @@ interface Props {
 const SidebarItem = ({ icon, children }: Props) => {
   return (
     <ListItem
-      className="text-xl transition-colors duration-300 hover:bg-[rgb(134,134,134)] rounded-full"
+      className="text-xl font-semibold transition-colors duration-300 hover:bg-[rgb(134,134,134)] rounded-full"
       placeholder={undefined}
       onPointerEnterCapture={undefined}
       onPointerLeaveCapture={undefined}>

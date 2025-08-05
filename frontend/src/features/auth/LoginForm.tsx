@@ -4,7 +4,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useForm } from "react-hook-form";
-import { useLogin } from "../../hooks/useLogin";
+import { useLogin } from "../../hooks/auth/useLogin";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 

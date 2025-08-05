@@ -3,8 +3,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import { useSignUp } from "../../hooks/signupHooks";
-import { useLogin } from "../../hooks/useLogin";
+import { useSignUp } from "../../hooks/auth/signupHooks";
+import { useLogin } from "../../hooks/auth/useLogin";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/authSlide";

@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store.ts";
 import SmallAvartar from "../common/SmallAvartar.tsx";
+import { getNavLinkClass } from "../../utils/getNavLinkClass.ts";
 
 interface NavItemProps {
   to: string;
@@ -16,11 +17,7 @@ const NavItem: React.FC<NavItemProps> = ({ to, label }) => (
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `${
-          isActive
-            ? "text-[#df2143] "
-            : "text-white hover:text-[#df2143] transition"
-        } uppercase text-3xl font-medium`
+        `${getNavLinkClass({ isActive })} uppercase text-3xl font-medium`
       }>
       {label}
     </NavLink>
