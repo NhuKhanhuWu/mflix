@@ -1,17 +1,13 @@
 /** @format */
 
 const User = require("../../models/userModel");
-const AppError = require("../../utils/appError");
 
 const catchAsync = require("../../utils/catchAsync");
 const { resetPasswordEmail, sendTokenEmail } = require("../../utils/email");
-const jwt = require("jsonwebtoken");
 
 const createOtpLimiter = require("../../utils/createLimiter");
 const createSendToken = require("../../utils/createSendToken");
 const signToken = require("../../utils/signToken");
-const getToken = require("../../utils/getToken");
-const { promisify } = require("util");
 
 // rate limit
 // For forgot-password OTP: limit 1 request per 3 mins by email
@@ -49,15 +45,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   // 3. send email
   const message = resetPasswordEmail(token);
-
-  // FOR TESTNG WITHOUT SENDING EMAIL
-  //   res.status(200).json({
-  //     status: "success",
-  //     message: "Token sent to email!",
-  //     token,
-  //   });
-  // FOR TESTNG WITHOUT SENDING EMAIL
-
   await sendTokenEmail(
     {
       email: user.email,
@@ -67,28 +54,12 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     res,
     next
   );
-});
 
-exports.checkResetPasswordToken = catchAsync(async (req, res, next) => {
-  // 1. get check token
-  const token = getToken(req);
-  if (!token) return next(new AppError("Token required", 401));
-
-  // 2. Verify token (catch expiration or invalid errors)
-  let decodeToken;
-  try {
-    decodeToken = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  } catch (err) {
-    return next(new AppError("Token is invalid or has expired! TEST", 401));
-  }
-
-  // 3. get user by id in token
-  const user = await User.findById(decodeToken.id);
-  if (!user) return next(new AppError("Token is invalid or has expired!", 401));
-
-  req.user = user; // pass user to req
-
-  next();
+  // send res
+  res.status(200).json({
+    status: "success",
+    message: "Reset link sent to email!",
+  });
 });
 
 exports.resetPassword = catchAsync(async (req, res, next) => {

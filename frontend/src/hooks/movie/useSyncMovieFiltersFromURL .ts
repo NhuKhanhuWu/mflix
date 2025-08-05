@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { changePage, setQueryString } from "../redux/movieFilterSlide";
+import { changePage, setQueryString } from "../../redux/movieFilterSlide";
 
 function useSyncMovieFiltersFromURL() {
   const [searchParams] = useSearchParams();

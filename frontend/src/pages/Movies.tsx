@@ -10,7 +10,7 @@ import { resetMovieFilter, changePage } from "../redux/movieFilterSlide";
 import MovieList from "../features/movies/MovieList";
 import SectionHeader from "../ui/common/SectionHeader";
 import Paginate from "../ui/common/Paginate";
-import useSyncMovieFiltersFromURL from "../hooks/useSyncMovieFiltersFromURL ";
+import useSyncMovieFiltersFromURL from "../hooks/movie/useSyncMovieFiltersFromURL ";
 import { RootState } from "../redux/store";
 
 function Movies() {

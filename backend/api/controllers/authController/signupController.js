@@ -47,21 +47,20 @@ exports.sendSignUpOtp = catchAsync(async (req, res, next) => {
   // 4. send email
   const emailMessage = otpEmail(otp);
 
+  await sendTokenEmail(
+    {
+      email: email,
+      subject: "Your sign up OTP (valid for 10 mins)",
+      htmlMessage: emailMessage,
+    },
+    res,
+    next
+  );
+
   res.status(200).json({
     status: "success",
-    otp,
+    message: "OTP sended!",
   });
-  // FOR TESTING WITHOUT SENDING EMAIL
-
-  // await sendTokenEmail(
-  //   {
-  //     email: email,
-  //     subject: "Your sign up OTP (valid for 10 mins)",
-  //     htmlMessage: emailMessage,
-  //   },
-  //   res,
-  //   next
-  // );
 });
 
 exports.checkOtp = catchAsync(async (req, res, next) => {
