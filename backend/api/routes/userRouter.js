@@ -43,6 +43,7 @@ router.post("/me", protectController.protect, userController.getMyInfor);
 router.post(
   "/changeEmail",
   protectController.protect,
+  userController.updateEmailLimiter,
   userController.checkUpdateEmailReq,
   userController.updateMyEmailReq
 );
