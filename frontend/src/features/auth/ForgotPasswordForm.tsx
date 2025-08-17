@@ -8,6 +8,7 @@ import { SendOtpButton } from "./SendOtpButton";
 import { emailSchema } from "../../constaint/formSchema";
 import EmailSendedMessage from "../EmailSendedMessage";
 import { InputField } from "../../ui/common/Input";
+import { toast } from "react-toastify";
 
 const forgotPasswordSchema = yup.object().shape({
   email: emailSchema,
@@ -24,7 +25,7 @@ function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
 
   // 2. set up send forget pass request
-  const { mutate, isPending, isError, error } = useForgotPassword();
+  const { mutate, isPending } = useForgotPassword();
 
   // 3. hanlde form submit
   function onSubmit(data: { email: string }) {
@@ -36,6 +37,9 @@ function ForgotPasswordForm() {
       {
         onSuccess: () => {
           setIsEmailSended(true);
+        },
+        onError: (error) => {
+          toast.error(error.message || "Something went wrong 😢");
         },
       }
     );
@@ -66,10 +70,6 @@ function ForgotPasswordForm() {
           label="*Email"
           placeholder="example@gmail.com"
         />
-
-        {isError && (
-          <p className="error-message w-[30rem]">*{(error as Error).message}</p>
-        )}
 
         <button
           disabled={isPending}

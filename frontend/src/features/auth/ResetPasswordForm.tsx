@@ -11,6 +11,7 @@ import {
 import { InputField } from "../../ui/common/Input";
 import SubmitBtn from "../../ui/common/SubmitBtn";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const resetPassSchema = yup.object().shape({
   password: passwordSchema,
@@ -32,7 +33,7 @@ function ResetPasswordForm() {
 
   // set up send request
   const { token } = useParams();
-  const { mutate, isPending, isError, error } = useResetPassword();
+  const { mutate, isPending } = useResetPassword();
   const navigate = useNavigate();
 
   //  handle submit form
@@ -43,6 +44,9 @@ function ResetPasswordForm() {
         onSuccess: () => {
           // redirect to login page
           navigate("/login");
+        },
+        onError: (error) => {
+          toast.error(error.message || "Something went wrong 😢");
         },
       }
     );
@@ -69,8 +73,6 @@ function ResetPasswordForm() {
         placeholder="Password confirm"
         type="password"
       />
-
-      {isError && <p className="error-message">*{(error as Error).message}</p>}
 
       <SubmitBtn btnTxt="Submit" isPending={isPending} />
     </form>

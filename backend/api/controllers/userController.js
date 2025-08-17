@@ -7,6 +7,7 @@ const catchAsync = require("../utils/catchAsync");
 const { changeUsersEmail, sendTokenEmail } = require("../utils/email");
 const signToken = require("../utils/signToken");
 const getToken = require("../utils/getToken");
+const { passwordConfirm } = require("../models/shared/userFields");
 
 exports.getMyInfor = catchAsync(async (req, res) => {
   res.status(200).json({
@@ -16,7 +17,7 @@ exports.getMyInfor = catchAsync(async (req, res) => {
 });
 
 // change email
-exports.updateMyEmailReq = catchAsync(async (req, res, next) => {
+exports.changeMyEmailReq = catchAsync(async (req, res, next) => {
   // create token
   const token = signToken({ email: req.body.email, id: req.user.id }, "10m");
 
@@ -39,7 +40,7 @@ exports.updateMyEmailReq = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.checkUpdateEmailReq = catchAsync(async (req, res, next) => {
+exports.checkChangeEmailReq = catchAsync(async (req, res, next) => {
   const { password, email } = req.body;
 
   // check if password sended
@@ -69,7 +70,7 @@ exports.checkUpdateEmailReq = catchAsync(async (req, res, next) => {
   next();
 });
 
-exports.updateMyEmail = catchAsync(async (req, res) => {
+exports.changeEmail = catchAsync(async (req, res) => {
   // 1 get user & new email
   const user = req.user;
   const newEmail = req.email;
@@ -82,5 +83,46 @@ exports.updateMyEmail = catchAsync(async (req, res) => {
   res.status(200).json({
     status: "success",
     user,
+  });
+});
+
+exports.changePassword = catchAsync(async (req, res, next) => {
+  const { currPassword, password, passwordConfirm } = req.body;
+
+  // check if data is sended
+  if (!currPassword || !password || !passwordConfirm)
+    return next(
+      new AppError(
+        "All currPassword, password and passwordConfirm are required",
+        401
+      )
+    );
+
+  // check if password correct
+  const user = await User.findById(
+    new mongoose.Types.ObjectId(req.user._id)
+  ).select("+password");
+
+  if (!(await user.comparePassword(currPassword, user.password)))
+    return next(new AppError("Incorrect password", 401));
+
+  // check if currPassword !== password
+  if (currPassword === password)
+    return next(
+      new AppError(
+        "The new password must be different from the current password",
+        401
+      )
+    );
+
+  // update password
+  user.password = password;
+  user.passwordConfirm = passwordConfirm;
+  await user.save();
+
+  // return res
+  res.status(200).json({
+    status: "success",
+    message: "Password updated!",
   });
 });
