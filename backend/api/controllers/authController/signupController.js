@@ -98,7 +98,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   const { email } = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   // check email
   const existsUser = await User.findOne({ email });
-  if (existsUser) return next(new AppError("Email already in use", 401));
+  if (existsUser) return next(new AppError("Email already in used", 401));
 
   // create user
   const newUser = await User.create({

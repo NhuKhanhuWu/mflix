@@ -9,6 +9,7 @@ import { useChangeEmailReq } from "../../hooks/user/changeEmail";
 import { useState } from "react";
 import EmailSendedMessage from "../EmailSendedMessage";
 import { SendOtpButton } from "../auth/SendOtpButton";
+import { toast } from "react-toastify";
 
 const formSchema = yup.object().shape({
   password: passwordSchema,
@@ -28,10 +29,13 @@ function ChangeEmailForm() {
   function onSubmit(data: { email: string; password: string }) {
     setEmail(data.email);
     mutate(
-      { email: data.email, password: data.password },
+      { ...data },
       {
         onSuccess: () => {
           setIsEmailSended(true);
+        },
+        onError: (error) => {
+          toast.error(error.message || "Something went wrong 😢");
         },
       }
     );
