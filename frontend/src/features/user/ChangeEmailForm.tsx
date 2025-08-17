@@ -20,9 +20,10 @@ function ChangeEmailForm() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({ resolver: yupResolver(formSchema) });
-  const { mutate, error, isError, isPending } = useChangeEmailReq();
+  const { mutate, isPending } = useChangeEmailReq();
   const [isEmailSended, setIsEmailSended] = useState(false);
   const [email, setEmail] = useState("");
 
@@ -33,6 +34,7 @@ function ChangeEmailForm() {
       {
         onSuccess: () => {
           setIsEmailSended(true);
+          reset();
         },
         onError: (error) => {
           toast.error(error.message || "Something went wrong 😢");
@@ -72,10 +74,6 @@ function ChangeEmailForm() {
       />
 
       <SubmitBtn btnTxt="Send request" isPending={isPending} />
-
-      {isError && (
-        <p className="error-message w-[30rem]">*{(error as Error).message}</p>
-      )}
     </form>
   );
 }
