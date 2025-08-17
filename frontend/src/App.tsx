@@ -28,6 +28,7 @@ const ProfileLayout = lazy(() => import("./ui/layouts/ProfileLayout.tsx"));
 const Profile = lazy(() => import("./pages/Profile"));
 const ChangeEmail = lazy(() => import("./pages/ChangeEmail.tsx"));
 const ChangeEmailResult = lazy(() => import("./pages/ChangeEmailResult.tsx"));
+const ChangePassword = lazy(() => import("./pages/ChangePassword.tsx"));
 
 const router = createBrowserRouter([
   {
@@ -59,6 +60,7 @@ const router = createBrowserRouter([
         children: [
           { path: "profile", element: <Profile /> },
           { path: "change-email", element: <ChangeEmail /> },
+          { path: "change-password", element: <ChangePassword /> },
         ],
       },
       {
@@ -83,7 +85,13 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ToastContainer />
+      <ToastContainer
+        toastStyle={{
+          background: "#303030",
+          color: "white",
+          border: "1px solid #868686",
+          fontFamily: "Parkinsans, sans-serif",
+        }}></ToastContainer>
       <ReactQueryDevtools initialIsOpen={false} />
       <Suspense fallback={<PageLoader />}>
         <RouterProvider router={router}></RouterProvider>

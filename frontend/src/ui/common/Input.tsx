@@ -33,7 +33,7 @@ const ShowPassBtn: React.FC<ShowPassBtnProps> = ({
   return (
     <button
       type="button"
-      className="link block text-xl"
+      className="link text-xl w-full flex justify-end"
       onClick={() => setIsShowPass(!isShowPass)}>
       {isShowPass ? "Hide password" : "Show password"}
     </button>

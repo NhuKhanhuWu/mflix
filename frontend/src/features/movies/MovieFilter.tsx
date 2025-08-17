@@ -9,7 +9,7 @@ import {
 } from "./MovieFilterComponents";
 
 import { useQuery } from "@tanstack/react-query";
-import { getGenres } from "../../api/getGenre";
+import { getGenres } from "../../api/genres/getGenre";
 import { MovieFilterProps } from "../../interfaces/movieFilterInterface";
 import { useMovieFilters } from "../../hooks/movie/useMovieFilter";
 import { useSelector } from "react-redux";

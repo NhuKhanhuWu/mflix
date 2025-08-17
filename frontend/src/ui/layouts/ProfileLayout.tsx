@@ -12,7 +12,6 @@ import { FaPowerOff, FaRegUserCircle } from "react-icons/fa";
 import { MdOutlineEmail, MdOutlinePassword } from "react-icons/md";
 import { AiOutlineProfile } from "react-icons/ai";
 import LogOut from "../../features/auth/LogOut";
-import { getNavLinkClass } from "../../utils/getNavLinkClass";
 
 const sectionMap = [
   {
@@ -72,7 +71,7 @@ function SideBar() {
             title={section.title}
             onClick={() => handleOpen(section.id)}>
             {section.items.map((item) => (
-              <NavLink to={item.to} className={getNavLinkClass}>
+              <NavLink to={item.to}>
                 <SidebarItem icon={item.icon} key={item.to}>
                   {item.label}
                 </SidebarItem>
