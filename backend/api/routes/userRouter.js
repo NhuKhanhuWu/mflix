@@ -50,8 +50,9 @@ router.post("/me", protectController.protect, userController.getMyInfor);
 router.post(
   "/changeEmail",
   protectController.protect,
-  userController.checkChangeEmailReq,
-  userController.changeMyEmailReq
+  userController.updateEmailLimiter,
+  userController.checkUpdateEmailReq,
+  userController.updateMyEmailReq
 );
 router.patch(
   "/changeEmailConfirm",
