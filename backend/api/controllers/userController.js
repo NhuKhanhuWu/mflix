@@ -6,8 +6,14 @@ const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const { changeUsersEmail, sendTokenEmail } = require("../utils/email");
 const signToken = require("../utils/signToken");
-const getToken = require("../utils/getToken");
-const { passwordConfirm } = require("../models/shared/userFields");
+const createLimiter = require("../utils/createLimiter");
+
+exports.updateEmailLimiter = createLimiter({
+  max: 1,
+  windowMs: 24 * 60 * 60 * 1000,
+  message: "You can only change email every 24 hours.",
+  keyGenerator: (req) => req.user._id.toString(),
+});
 
 exports.getMyInfor = catchAsync(async (req, res) => {
   res.status(200).json({

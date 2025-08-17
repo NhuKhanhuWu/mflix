@@ -51,6 +51,7 @@ router.post(
   "/changeEmail",
   protectController.protect,
   userController.checkChangeEmailReq,
+  userController.updateEmailLimiter,
   userController.changeMyEmailReq
 );
 router.patch(
