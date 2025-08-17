@@ -23,7 +23,7 @@ router.post("/signup", signupController.signup);
 // login
 router.post("/login", loginController.login);
 
-// change password
+// change password when forgot
 router.post(
   "/forgotPassword",
   forgotPasswordController.forgotPasswordOtpLimiterEmail,
@@ -34,6 +34,13 @@ router.patch(
   "/resetPassword",
   verifyUserToken,
   forgotPasswordController.resetPassword
+);
+
+// change password when logged in
+router.patch(
+  "/changePassword",
+  protectController.protect,
+  userController.changePassword
 );
 
 // get my infor
@@ -50,7 +57,7 @@ router.post(
 router.patch(
   "/changeEmailConfirm",
   verifyUserToken,
-  userController.updateMyEmail
+  userController.changeEmail
 );
 
 module.exports = router;

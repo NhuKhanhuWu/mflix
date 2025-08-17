@@ -7,7 +7,7 @@ import Space from "../ui/common/Space";
 import { ContentBlock } from "../ui/blocks/ContentBlock";
 
 import { getMovieList } from "../api/movie/getMovieList";
-import { getGenres } from "../api/getGenre";
+import { getGenres } from "../api/genres/getGenre";
 
 import MovieList from "../features/movies/MovieList";
 import PopularGernes from "../features/genres/PopularGenres";
