@@ -6,6 +6,7 @@ const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const { changeUsersEmail, sendTokenEmail } = require("../utils/email");
 const signToken = require("../utils/signToken");
+const createLimiter = require("../utils/createLimiter");
 
 exports.updateEmailLimiter = createLimiter({
   max: 1,
