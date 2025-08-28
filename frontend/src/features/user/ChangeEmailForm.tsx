@@ -20,6 +20,7 @@ function ChangeEmailForm() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({ resolver: yupResolver(formSchema) });
   const { mutate, error, isError, isPending } = useChangeEmailReq();
@@ -33,6 +34,7 @@ function ChangeEmailForm() {
       {
         onSuccess: () => {
           setIsEmailSended(true);
+          reset();
         },
         onError: (error) => {
           toast.error(error.message || "Something went wrong 😢");
