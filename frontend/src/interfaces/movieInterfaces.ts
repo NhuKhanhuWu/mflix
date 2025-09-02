@@ -21,11 +21,8 @@ export interface MovieSimplifyProps {
 }
 
 export interface MovieListProps {
-  // movies: MovieSimplify[];
-  // isLoading: boolean;
-  // isError?: boolean;
   header?: React.ReactNode;
-  cols?: number;
+  // cols?: number;
   queryKey: unknown[];
   queryFn: () => Promise<{
     movies: MovieSimplify[];

@@ -6,12 +6,12 @@ interface movieByGenresProps {
 }
 
 // movies
-export const get5PopularMovieQuery = "sort=popular&limit=5";
-export const get5BestMovieQuery = "limit=5&sort=-rating";
-export const get5LatestMovieQuery = "sort=-year&limit=5";
+export const get6PopularMovieQuery = "sort=popular&limit=6";
+export const get6BestMovieQuery = "limit=6&sort=-rating";
+export const get6LatestMovieQuery = "sort=-year&limit=6";
 export const getMovieByGenresQuery = ({
   genre,
-  limit = 5,
+  limit = 6,
   page = 1,
 }: movieByGenresProps) => `genres=${genre}&limit=${limit}&page=${page}`;
 

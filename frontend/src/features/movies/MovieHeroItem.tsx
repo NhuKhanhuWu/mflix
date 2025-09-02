@@ -21,7 +21,7 @@ const Img: React.FC<MovieSimplifyProps> = ({ movie }) => {
     <img
       src={movie.poster}
       alt={movie.title}
-      className="h-[40rem] min-w-[25rem] rounded-lg shadow-md z-10"
+      className="xs:mb-24 h-[40rem] min-w-[25rem] rounded-lg shadow-md z-10"
     />
   );
 };

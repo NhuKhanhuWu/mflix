@@ -92,7 +92,9 @@ function App() {
           border: "1px solid #868686",
           fontFamily: "Parkinsans, sans-serif",
         }}></ToastContainer>
-      <ReactQueryDevtools initialIsOpen={false} />
+
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+
       <Suspense fallback={<PageLoader />}>
         <RouterProvider router={router}></RouterProvider>
       </Suspense>

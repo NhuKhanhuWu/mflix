@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { GenreListProps } from "../../interfaces/genreInterface";
 import { ContentBlock } from "../../ui/blocks/ContentBlock";
 import LoadAndErr from "../../ui/common/Spinner";
+import { useBreakpoints } from "../../hooks/useBreakPoints";
 
 // Predefined column start values to center items in each row (7-column grid)
 const colStartClasses = [
@@ -29,11 +30,11 @@ const PopularGernes: React.FC<GenreListProps> = ({
   isLoading,
   isError,
 }) => {
+  const { isDesktop } = useBreakpoints();
+
   return (
     <ContentBlock title="popular genres">
-      <div
-        className="grid justify-center gap-2"
-        style={{ gridTemplateColumns: "repeat(7, min-content)" }}>
+      <div className="grid justify-center gap-2 lg:grid-cols-7 sm:grid-cols-3">
         {/* loading/err message */}
         {isError || isLoading ? (
           <LoadAndErr isLoading={isLoading} isError={isError} />
@@ -45,7 +46,9 @@ const PopularGernes: React.FC<GenreListProps> = ({
         {genres?.slice(0, 15).map((genre, index) => (
           <div
             key={genre._id}
-            className={`${colStartClasses[index]} flex justify-center`}>
+            className={`${
+              isDesktop && colStartClasses[index]
+            } flex justify-center`}>
             <Link
               to={`movies?genres=${genre._id}&page=1`}
               className="flex gap-3 secondary-btn btn">

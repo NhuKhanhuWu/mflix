@@ -13,9 +13,9 @@ import MovieList from "../features/movies/MovieList";
 import PopularGernes from "../features/genres/PopularGenres";
 
 import {
-  get5BestMovieQuery,
-  get5LatestMovieQuery,
-  get5PopularMovieQuery,
+  get6BestMovieQuery,
+  get6LatestMovieQuery,
+  get6PopularMovieQuery,
   getMovieByGenresQuery,
 } from "../constaint/queryString";
 import { Link } from "react-router-dom";
@@ -77,14 +77,14 @@ function Home() {
       <Space space="5rem"></Space>
       <HeroSection
         queryKey={["5PopularMovie"]}
-        queryFn={() => getMovieList(get5PopularMovieQuery)}
+        queryFn={() => getMovieList(get6PopularMovieQuery)}
       />
       <Summary />
 
       {/* best movies */}
       <MovieList
         header={<SectionHeader title="best rated" />}
-        queryFn={() => getMovieList(get5LatestMovieQuery)}
+        queryFn={() => getMovieList(get6LatestMovieQuery)}
         queryKey={["5LatestMovie"]}
       />
       <Space space="5rem"></Space>
@@ -93,7 +93,7 @@ function Home() {
       <MovieList
         header={<SectionHeader title="latest movie" />}
         queryKey={["5BestMovie"]}
-        queryFn={() => getMovieList(get5BestMovieQuery)}
+        queryFn={() => getMovieList(get6BestMovieQuery)}
       />
 
       {/* genres */}
@@ -108,9 +108,7 @@ function Home() {
         header={<SectionHeader title="short movies" />}
         queryKey={["5ShortMovie"]}
         queryFn={() =>
-          getMovieList(
-            getMovieByGenresQuery({ genre: "Short", limit: 5, page: 1 })
-          )
+          getMovieList(getMovieByGenresQuery({ genre: "Short", page: 1 }))
         }
       />
       <Space space="5rem"></Space>
@@ -120,9 +118,7 @@ function Home() {
         header={<SectionHeader title="romance movies" />}
         queryKey={["5RomanceMovie"]}
         queryFn={() =>
-          getMovieList(
-            getMovieByGenresQuery({ genre: "Romance", limit: 5, page: 1 })
-          )
+          getMovieList(getMovieByGenresQuery({ genre: "Romance", page: 1 }))
         }
       />
       <Space space="5rem"></Space>
@@ -132,9 +128,7 @@ function Home() {
         header={<SectionHeader title="musical movies" />}
         queryKey={["5MusicalMovie"]}
         queryFn={() =>
-          getMovieList(
-            getMovieByGenresQuery({ genre: "Musical", limit: 5, page: 1 })
-          )
+          getMovieList(getMovieByGenresQuery({ genre: "Musical", page: 1 }))
         }
       />
 

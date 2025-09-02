@@ -42,7 +42,7 @@ const Text: React.FC<MovieSimplifyProps> = ({ movie }) => {
 
 const MovieCard: React.FC<MovieSimplifyProps> = ({ movie }) => {
   return (
-    <div className="relative w-fit h-[30rem] overflow-hidden rounded-lg group">
+    <div className="relative w-fit max-w-[25rem] h-[30rem] overflow-hidden rounded-lg group">
       <Img movie={movie} />
       <Text movie={movie} />
     </div>
