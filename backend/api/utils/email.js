@@ -121,7 +121,13 @@ exports.sendEmail = async function (options) {
 
 // utils/emailHelper.js or similar file
 exports.sendTokenEmail = async (
-  { email, subject, htmlMessage = "", plainMessage = "" },
+  {
+    email,
+    subject,
+    htmlMessage = "",
+    plainMessage = "",
+    message = "Token sent to email!",
+  },
   res,
   next
 ) => {
@@ -134,9 +140,9 @@ exports.sendTokenEmail = async (
       html: htmlMessage,
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       status: "success",
-      message: "Token sent to email!",
+      message,
     });
   } catch (err) {
     console.error("EMAIL SEND ERROR:", err);
