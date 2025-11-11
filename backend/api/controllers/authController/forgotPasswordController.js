@@ -1,10 +1,8 @@
 /** @format */
 
 const User = require("../../models/userModel");
-
 const catchAsync = require("../../utils/catchAsync");
 const { resetPasswordEmail, sendTokenEmail } = require("../../utils/email");
-
 const createOtpLimiter = require("../../utils/createLimiter");
 const createSendToken = require("../../utils/createSendToken");
 const signToken = require("../../utils/signToken");

@@ -3,7 +3,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AppLayout from "./ui/layouts/AppLayout.tsx";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools/production";
 import { lazy, Suspense } from "react";
 import PageLoader from "./ui/common/PageLoader.tsx";
 import SignUp from "./pages/SignUp";

@@ -101,7 +101,7 @@ function MovieDetail() {
         />
         <MovieList
           header={<SectionHeader title="You may like" />}
-          cols={2}
+          // cols={2}
           queryKey={["Action"]}
           queryFn={() =>
             getMovieList(
