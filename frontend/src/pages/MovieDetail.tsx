@@ -2,14 +2,14 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import { getMovieDetail } from "../api/getMovieDetail";
+import { getMovieDetail } from "../api/movie/getMovieDetail";
 import {
   MovieHeroDetail,
   MovieHeroItem,
 } from "../features/movies/MovieHeroItem";
 import { MovieDetails } from "../interfaces/movieInterfaces";
-import LoadAndErr from "../ui/Spinner";
-import Space from "../ui/Space";
+import LoadAndErr from "../ui/common/Spinner";
+import Space from "../ui/common/Space";
 import {
   Awards,
   CastsAndCrew,
@@ -17,6 +17,10 @@ import {
   Production,
 } from "../features/movies/MovieDetailComponent";
 import MovieComment from "../features/comments/MovieComment";
+import MovieList from "../features/movies/MovieList";
+import { getMovieList } from "../api/movie/getMovieList";
+import { getMovieByGenresQuery } from "../constaint/queryString";
+import SectionHeader from "../ui/common/SectionHeader";
 
 const CONTENT_LIST = [
   "movie-plot",
@@ -90,8 +94,26 @@ function MovieDetail() {
 
       {/* comment */}
       <Space space="5rem" />
-      <MovieComment sectionId={CONTENT_LIST[4]} movieId={movieDetail?.id} />
-      <Space space="8rem" />
+      <div className="flex gap-5">
+        <MovieComment
+          sectionId={CONTENT_LIST[4]}
+          movieId={movieDetail?.id || ""}
+        />
+        <MovieList
+          header={<SectionHeader title="You may like" />}
+          cols={2}
+          queryKey={["Action"]}
+          queryFn={() =>
+            getMovieList(
+              getMovieByGenresQuery({
+                genre: movieDetail?.genres.join(","),
+                limit: 12,
+                page: 1,
+              })
+            )
+          }
+        />
+      </div>
     </>
   );
 }

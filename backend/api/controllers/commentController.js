@@ -1,57 +1,58 @@
 /** @format */
-const { CommentQuery } = require("../utils/commentQuery");
+const CommentQuery = require("../utils/commentQuery");
 const Comment = require("../models/commentModel");
-const User = require("../models/userModel");
 const Movie = require("../models/movieModel");
+const AppError = require("../utils/appError");
+
 const catchAsync = require("../utils/catchAsync");
+const mongoose = require("mongoose");
+const createLimiter = require("../utils/createLimiter");
 
+// REQUEST FROM USER
 // check if movie_id and account_id exists
-const validateMovieAndUser = async (movie_id, account_id) => {
+const checkMovieExists = async (movie_id) => {
+  // if id is invalid
+  if (!mongoose.Types.ObjectId.isValid(movie_id)) return false;
+
+  // if movie not exists
   const movieExists = await Movie.findById(movie_id);
-  if (!movieExists) return { valid: false, message: "Invalid movie ID" };
+  if (!movieExists) return false;
 
-  const userExists = await User.findById(account_id);
-  if (!userExists) return { valid: false, message: "Invalid account ID" };
-
-  return { valid: true };
+  return true;
 };
 
 // get comment of a movie (paginate, sorting)
 exports.getCommentsByMovie = catchAsync(async (req, res) => {
-  const queryInstance = new CommentQuery(
-    Comment.find({ movie_id: req.params.movie_id }).populate("user_id", "name"),
-    req.query
-  )
-    .limitField()
-    .sort();
+  const queryInstance = new CommentQuery(Comment, req.query);
 
-  await queryInstance.paginate();
+  await queryInstance
+    .matchMovie() // find cmt of certain movie
+    .prioritizeUser() // cmt of logged user (user_id) on top
+    .sort() // sort movie
+    .lookupUser() // look up user of cmt
+    .limitFields() // limit returned fields
+    .paginate(); // paginate (20 by default)
 
-  const comment = await queryInstance.query;
+  const comments = await queryInstance.exec();
 
   res.status(200).json({
     status: "success",
-    amount: comment.length,
+    amount: comments.length,
     totalResult: queryInstance.totalResult,
-    totalPages: Math.ceil(queryInstance.totalResult / comment.length),
-    data: comment,
+    totalPages: Math.ceil(queryInstance.totalResult / comments.length),
+    data: comments,
   });
 });
 
 // get comment of an account (paginate, sorting)
-exports.getCommentsByAccount = catchAsync(async (req, res) => {
+exports.getMyComments = catchAsync(async (req, res) => {
   // get comment
-  const queryInstance = new CommentQuery(
-    Comment.find({ user_id: req.params.user_id }).populate("user_id", "name"),
-    req.query
-  )
-    .limitField()
-    .sort();
+  const queryInstance = new CommentQuery(Comment, req.query, req.user._id);
 
-  await queryInstance.paginate();
+  await queryInstance.matchUser().lookupMovie().sort().limitFields().paginate();
 
   // return comment
-  const comment = await queryInstance.query;
+  const comment = await queryInstance.exec();
 
   res.status(200).json({
     status: "success",
@@ -62,21 +63,27 @@ exports.getCommentsByAccount = catchAsync(async (req, res) => {
 });
 
 // create comment
-exports.createComment = catchAsync(async (req, res) => {
-  req.body.movie_id = req.params.movie_id;
-  const { movie_id, user_id } = req.body;
+exports.newCommentLimiter = createLimiter({
+  max: 1,
+  windowMs: 30 * 1000,
+  keyGenerator: (req) => req.ip,
+  message: "Please wait before posting another comment.",
+});
+
+exports.createComment = catchAsync(async (req, res, next) => {
+  const { movie_id, text } = req.body;
 
   // Validate movie_id and account_id
-  const validation = await validateMovieAndUser(movie_id, user_id);
-  if (!validation.valid) {
-    return res.status(400).json({
-      status: "fail",
-      message: validation.message,
-    });
+  if (!(await checkMovieExists(movie_id))) {
+    return next(new AppError("Movie not exists", 400));
   }
 
   // create new comment
-  const newComment = await Comment.create(req.body);
+  const newComment = await Comment.create({
+    movie_id: movie_id,
+    text: text,
+    user_id: req.user._id,
+  });
 
   res.status(201).json({
     status: "success",
@@ -85,50 +92,53 @@ exports.createComment = catchAsync(async (req, res) => {
 });
 
 // update comment
-exports.updateComment = catchAsync(async (req, res) => {
-  // Validate movie_id and account_id
-  const validation = await validateMovieAndUser(
-    req.query.movie_id,
-    req.query.account_id
-  );
-  if (!validation.valid) {
-    return res.status(400).json({
-      status: "fail",
-      message: validation.message,
-    });
-  }
+exports.updateMyComment = catchAsync(async (req, res, next) => {
+  const currCmt = await Comment.findById(req.params.cmt_id);
 
+  // check if cmt exists
+  if (!currCmt) return next(new AppError("Comment not found!", 404));
+
+  // check if cmt belongs to logged user
+  if (currCmt.user_id.toString() !== req.user.id)
+    return next(
+      new AppError("This comment does not belong to your account!", 403)
+    );
+
+  // Update cmt
   const updatedComment = await Comment.findByIdAndUpdate(
-    req.params.id,
-    req.body,
+    req.params.cmt_id,
+    { text: req.body.text },
     {
       runValidators: true,
       new: true,
     }
   );
 
+  // send res
   res.status(200).json({
     status: "success",
     data: updatedComment,
   });
 });
 
-exports.deleteComment = catchAsync(async (req, res) => {
-  // Validate movie_id and account_id
-  const validation = await validateMovieAndUser(
-    req.query.movie_id,
-    req.query.account_id
-  );
-  if (!validation.valid) {
-    return res.status(400).json({
-      status: "fail",
-      message: validation.message,
-    });
-  }
+exports.deleteMyComment = catchAsync(async (req, res, next) => {
+  const currCmt = await Comment.findById(req.params.cmt_id);
 
-  await Comment.findByIdAndDelete(req.params.id);
+  // check if cmt exists
+  if (!currCmt) return next(new AppError("Comment not found!", 404));
+
+  // check if cmt belongs to logged user
+  if (currCmt.user_id.toString() !== req.user.id)
+    return next(
+      new AppError("This comment does not belong to your account!", 403)
+    );
+
+  await Comment.findByIdAndDelete(req.params.cmt_id);
+
   res.status(204).json({
     status: "success",
     data: null,
   });
 });
+
+// REQUEST FROM ADMIN

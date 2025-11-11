@@ -3,7 +3,7 @@
 import { UseFormReset } from "react-hook-form";
 import { GenreProps } from "../../interfaces/genreInterface";
 import { GenreListProps } from "../../interfaces/genreInterface";
-import Spinner from "../../ui/Spinner";
+import Spinner from "../../ui/common/Spinner";
 import {
   FilterFormProps,
   InputRegisterProps,
@@ -111,8 +111,8 @@ export const Sort: React.FC<InputRegisterProps> = ({ register }) => {
       <select className="input" {...register("sort")}>
         <option value="-year">Latests</option>
         <option value="-imdbScore">Hightest score</option>
-        <option value="-title">A-Z</option>
-        <option value="title">Z-A</option>
+        <option value="title">A-Z</option>
+        <option value="-title">Z-A</option>
       </select>
     </div>
   );

@@ -7,7 +7,7 @@
   --text-red: #df2143;
 }
 
-@layer utilities {
+@layer components {
   .text-brand-red {
     color: #df2143;
   }
@@ -17,9 +17,12 @@
     text-decoration: underline;
     cursor: pointer;
   }
-}
 
-@layer components {
+  .link-disable {
+    color: var(--color-gray-500);
+    cursor: not-allowed;
+  }
+
   .btn {
     border-radius: 9999px;
     display: flex;
@@ -32,6 +35,26 @@
 
   .big-movie-title {
     @apply text-5xl font-bold mb-2 uppercase;
+  }
+
+  .dots-menu-btn {
+    @apply inline-flex w-full justify-center items-center rounded-full p-4 text-3xl font-medium text-white hover:bg-gray-700 transition;
+  }
+
+  .dot-menu-items-container {
+    @apply absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-[rgb(48,48,48)] border border-[rgb(134,134,134)] shadow-lg focus:outline-none text-xl;
+  }
+
+  .dot-menu-item {
+    @apply w-full text-left px-4 py-3 flex gap-2 hover:bg-[rgb(134,134,134)];
+  }
+
+  .form-container {
+    @apply w-fit border-[var(--color-gray-600)] border-2 shadow-md rounded-2xl p-8 space-y-6;
+  }
+
+  .form-header {
+    @apply text-3xl text-center flex flex-col gap-4;
   }
 
   .medium-movie-title {
@@ -55,6 +78,11 @@
     background-color: var(--color-red-500);
   }
 
+  .primary-btn-disable {
+    background-color: var(--color-red-500);
+    cursor: not-allowed;
+  }
+
   .secondary-btn {
     background-color: var(--color-gray-900);
     border: 1px solid var(--color-gray-600);
@@ -63,6 +91,11 @@
 
   .secondary-btn:hover {
     background-color: var(--color-gray-700);
+  }
+
+  .secondary-btn-disable {
+    background-color: var(--color-gray-700);
+    cursor: not-allowed;
   }
 
   .input {
@@ -74,17 +107,30 @@
     transition: all 0.3s ease;
     outline: none;
     border: 1px solid transparent;
+    border-color: #df2143;
   }
 
   .input::placeholder {
     color: #d1d5db; /* placeholder-gray-300 */
   }
 
-  .input:focus {
-    border-color: #df2143;
+  .input-disable {
+    background-color: var(--color-gray-600);
+    color: var(--color-gray-800);
+    cursor: not-allowed;
   }
 
   .btn-circle-hover {
     @apply w-12 h-12 rounded-full cursor-pointer hover:bg-[var(--color-gray-600)] p-2;
+  }
+
+  .label {
+    @apply block text-xl font-medium;
+  }
+
+  .error-message {
+    color: var(--color-red-800);
+    font-style: italic;
+    font-size: 1.2rem;
   }
 }
