@@ -11,7 +11,7 @@ export function SearchBar() {
   const { register, handleSubmit } = form;
   const navigate = useNavigate();
 
-  function submit(data: FilterFormProps, e: BaseSyntheticEvent) {
+  function submit(data: FilterFormProps, e?: BaseSyntheticEvent) {
     applyFilters(data, e as BaseSyntheticEvent<object, any, any>); // apply filter
     navigate(`/movies?title=${data.title?.split(" ").join("+")}`);
   }
