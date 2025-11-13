@@ -1,9 +1,9 @@
 /** @format */
 
 import { useSelector } from "react-redux";
-import { CommentProps } from "../../interfaces/commentInterface";
+import { CmtByMovieProps } from "../../interfaces/commentInterface";
 import formatDate from "../../services/formatDate";
-import SmallAvartar from "../../ui/SmallAvartar";
+import SmallAvartar from "../../ui/common/SmallAvartar";
 import { RootState } from "../../redux/store";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import * as yup from "yup";
@@ -14,13 +14,14 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { TiPencil } from "react-icons/ti";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { TextAreaField } from "../../ui/Input";
-import SubmitBtn from "../../ui/SubmitBtn";
+import { TextAreaField } from "../../ui/common/Input";
+import SubmitBtn from "../../ui/common/SubmitBtn";
 import { useUpdateCmt } from "../../hooks/cmt/useUpdateCmt";
 import React, { ReactNode, useState } from "react";
-import Modal from "../../ui/Modal";
+import Modal from "../../ui/common/Modal";
 import { useDeleteCmt } from "../../hooks/cmt/useDeleteCmt";
-import LoadAndErr from "../../ui/Spinner";
+import LoadAndErr from "../../ui/common/Spinner";
+import { useLocation } from "react-router-dom";
 
 const token = Cookies.get("loginToken") || "";
 
@@ -121,7 +122,7 @@ const CmtMenu: React.FC<CmtMenuProps> = ({ editBtn, deleteBtn }) => {
   );
 };
 
-const CmtTxt: React.FC<CommentProps> = ({ comment }) => {
+const CmtTxt: React.FC<CmtByMovieProps> = ({ comment }) => {
   return (
     <div>
       <div className="mb-2 grow">
@@ -135,7 +136,7 @@ const CmtTxt: React.FC<CommentProps> = ({ comment }) => {
   );
 };
 
-const CmtEditForm: React.FC<CommentProps & SetStateProps> = ({
+const CmtEditForm: React.FC<CmtByMovieProps & SetStateProps> = ({
   comment,
   setIsEditing,
 }) => {
@@ -181,12 +182,20 @@ const CmtEditForm: React.FC<CommentProps & SetStateProps> = ({
   );
 };
 
-const CmtItem: React.FC<CommentProps> = ({ comment }) => {
+const CmtItem: React.FC<CmtByMovieProps> = ({ comment }) => {
   const logged_user = useSelector((state: RootState) => state.auth.id);
   const [isEditing, setIsEditing] = useState(false);
 
+  // highlight cmt if it's id in the url
+  const location = useLocation();
+  const urlCmt = location.hash.slice(1);
+
   return (
-    <div className="relative min-h-20 flex gap-6 justify-between grown">
+    <div
+      className={`relative min-h-20 flex gap-6 justify-between grown ${
+        comment._id === urlCmt && "bg-[#303030]"
+      }`}
+      id={comment._id}>
       {/* avatar and text */}
       <div className="flex gap-4 w-full">
         {/* avatar */}

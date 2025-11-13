@@ -5,7 +5,7 @@ import {
   MovieDetailsProps,
   MovieSimplifyProps,
 } from "../../interfaces/movieInterfaces";
-import RatingRuntime from "../../ui/RatingRuntime";
+import RatingRuntime from "../../ui/movies/RatingRuntime.tsx";
 
 import { FaCalendar } from "react-icons/fa";
 

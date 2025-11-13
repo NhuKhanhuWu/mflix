@@ -47,17 +47,12 @@ exports.getCommentsByMovie = catchAsync(async (req, res) => {
 // get comment of an account (paginate, sorting)
 exports.getMyComments = catchAsync(async (req, res) => {
   // get comment
-  const queryInstance = new CommentQuery(
-    Comment.find({ user_id: req.user._id }).populate("user_id", "name"),
-    req.query
-  )
-    .limitField()
-    .sort();
+  const queryInstance = new CommentQuery(Comment, req.query, req.user._id);
 
-  await queryInstance.paginate();
+  await queryInstance.matchUser().lookupMovie().sort().limitFields().paginate();
 
   // return comment
-  const comment = await queryInstance.query;
+  const comment = await queryInstance.exec();
 
   res.status(200).json({
     status: "success",

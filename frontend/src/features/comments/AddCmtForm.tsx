@@ -6,11 +6,11 @@ import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { TextAreaField } from "../../ui/Input";
-import SubmitBtn from "../../ui/SubmitBtn";
-import SmallAvartar from "../../ui/SmallAvartar";
+import { TextAreaField } from "../../ui/common/Input";
+import SubmitBtn from "../../ui/common/SubmitBtn";
+import SmallAvartar from "../../ui/common/SmallAvartar";
 import { useNewCmt } from "../../hooks/cmt/useNewCmt";
-import LoadAndErr from "../../ui/Spinner";
+import LoadAndErr from "../../ui/common/Spinner";
 import Cookies from "js-cookie";
 import { useState } from "react";
 

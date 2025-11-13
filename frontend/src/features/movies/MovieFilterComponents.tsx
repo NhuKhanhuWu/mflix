@@ -3,7 +3,7 @@
 import { UseFormReset } from "react-hook-form";
 import { GenreProps } from "../../interfaces/genreInterface";
 import { GenreListProps } from "../../interfaces/genreInterface";
-import Spinner from "../../ui/Spinner";
+import Spinner from "../../ui/common/Spinner";
 import {
   FilterFormProps,
   InputRegisterProps,

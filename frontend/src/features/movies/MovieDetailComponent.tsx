@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 import { MovieDetails, TomatosProps } from "../../interfaces/movieInterfaces";
-import SectionHeader from "../../ui/SectionHeader";
+import SectionHeader from "../../ui/common/SectionHeader";
 import formatDate from "../../services/formatDate";
 
 interface SectionInterface {

@@ -5,10 +5,11 @@ import { SetState } from "../../interfaces/general";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useSendOtpRequest } from "../../hooks/signupHooks";
+import { useSendOtpRequest } from "../../hooks/auth/signupHooks";
 import { Link } from "react-router-dom";
-import { InputField } from "../../ui/Input";
-import SubmitBtn from "../../ui/SubmitBtn";
+import { InputField } from "../../ui/common/Input";
+import SubmitBtn from "../../ui/common/SubmitBtn";
+import { toast } from "react-toastify";
 
 interface setStepFuncInterface {
   setStep: SetState<number>;
@@ -34,7 +35,7 @@ const RequestOtpForm: React.FC<setStepFuncInterface> = ({
   } = useForm({ resolver: yupResolver(requestOtpSchema) });
 
   //   2. send request
-  const { mutate, isPending, isError, error } = useSendOtpRequest();
+  const { mutate, isPending } = useSendOtpRequest();
 
   function onSubmit(data: { email: string }) {
     mutate(
@@ -46,6 +47,9 @@ const RequestOtpForm: React.FC<setStepFuncInterface> = ({
         onSuccess: () => {
           setEmail(data.email);
           setStep(2);
+        },
+        onError: (error) => {
+          toast.error(error.message || "Something went wrong 😢");
         },
       }
     );
@@ -63,9 +67,6 @@ const RequestOtpForm: React.FC<setStepFuncInterface> = ({
         type="text"
         placeholder="youremail@gmail.com"
       />
-
-      {/* err message */}
-      {isError && <p className="error-message">*{(error as Error).message}</p>}
 
       {/* link to log in */}
       <div className="text-xl text-center space-y-1">

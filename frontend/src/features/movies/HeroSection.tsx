@@ -2,8 +2,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { MovieListProps } from "../../interfaces/movieInterfaces";
-import CustomCarousel from "../../ui/CustomCarousel";
-import LoadAndErr from "../../ui/Spinner";
+import CustomCarousel from "../../ui/carousel/CustomCarousel";
+import LoadAndErr from "../../ui/common/Spinner";
 import { MovieHeroItem, MovieHeroSummary } from "./MovieHeroItem";
 
 const HeroSection: React.FC<MovieListProps> = ({ queryKey, queryFn }) => {

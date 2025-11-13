@@ -1,7 +1,7 @@
 /** @format */
 
 import axios from "axios";
-import { PaginationParams } from "../interfaces/general";
+import { PaginationParams } from "../../interfaces/general";
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
 interface getGenresProps extends PaginationParams {

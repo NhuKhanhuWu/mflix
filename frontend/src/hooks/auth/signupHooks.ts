@@ -1,9 +1,9 @@
 /** @format */
 
 import { useMutation } from "@tanstack/react-query";
-import { requestOtp } from "../api/auth/requestOtp";
-import { submitOtp } from "../api/auth/submitOtp";
-import { signup } from "../api/auth/signup";
+import { requestOtp } from "../../api/auth/requestOtp";
+import { submitOtp } from "../../api/auth/submitOtp";
+import { signup } from "../../api/auth/signup";
 
 export function useSendOtpRequest() {
   return useMutation({

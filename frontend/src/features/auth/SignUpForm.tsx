@@ -3,8 +3,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import { useSignUp } from "../../hooks/signupHooks";
-import { useLogin } from "../../hooks/useLogin";
+import { useSignUp } from "../../hooks/auth/signupHooks";
+import { useLogin } from "../../hooks/auth/useLogin";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/authSlide";
@@ -13,8 +13,9 @@ import {
   passwordConfirmSchema,
   passwordSchema,
 } from "../../constaint/formSchema";
-import { InputField } from "../../ui/Input";
-import SubmitBtn from "../../ui/SubmitBtn";
+import { InputField } from "../../ui/common/Input";
+import SubmitBtn from "../../ui/common/SubmitBtn";
+import { toast } from "react-toastify";
 
 // form schema
 const otpSchema = yup.object().shape({
@@ -42,7 +43,7 @@ const SignUpForm: React.FC<{ jwt: string; email: string }> = ({
   } = useForm({ resolver: yupResolver(otpSchema) });
 
   //   2. set up submit otp
-  const { mutate: signUpMutate, isPending, isError, error } = useSignUp();
+  const { mutate: signUpMutate, isPending } = useSignUp();
   const { mutate: loginMutate } = useLogin();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -79,6 +80,9 @@ const SignUpForm: React.FC<{ jwt: string; email: string }> = ({
               },
             }
           );
+        },
+        onError: (error) => {
+          toast.error(error.message || "Something went wrong 😢");
         },
       }
     );
@@ -118,8 +122,6 @@ const SignUpForm: React.FC<{ jwt: string; email: string }> = ({
         placeholder="Password confirm"
         type="password"
       />
-
-      {isError && <p className="error-message">*{(error as Error).message}</p>}
 
       <SubmitBtn btnTxt="Submit" isPending={isPending} />
     </form>

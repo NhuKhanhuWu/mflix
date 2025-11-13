@@ -4,10 +4,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { SetState } from "../../interfaces/general";
-import { useSendOtpRequest, useSubmitOtp } from "../../hooks/signupHooks";
+import { useSendOtpRequest, useSubmitOtp } from "../../hooks/auth/signupHooks";
 import { SendOtpButton } from "./SendOtpButton";
-import SubmitBtn from "../../ui/SubmitBtn";
-import { InputField } from "../../ui/Input";
+import SubmitBtn from "../../ui/common/SubmitBtn";
+import { InputField } from "../../ui/common/Input";
+import { toast } from "react-toastify";
 
 // move to next step func
 interface setStepFuncInterface {
@@ -37,7 +38,7 @@ const SubmitOtpForm: React.FC<setStepFuncInterface> = ({
   } = useForm({ resolver: yupResolver(otpSchema) });
 
   //  2. set up submit otp
-  const { mutate, isPending, isError, error } = useSubmitOtp();
+  const { mutate, isPending } = useSubmitOtp();
 
   function onSubmit(data: { otp: string }) {
     mutate(
@@ -53,6 +54,9 @@ const SubmitOtpForm: React.FC<setStepFuncInterface> = ({
 
           // move to next state
           setStep(3);
+        },
+        onError: (error) => {
+          toast.error(error.message || "Something went wrong 😢");
         },
       }
     );
@@ -72,11 +76,6 @@ const SubmitOtpForm: React.FC<setStepFuncInterface> = ({
           placeholder="your otp"
           type="text"
         />
-
-        {/* err mess */}
-        {isError && (
-          <p className="error-message">*{(error as Error).message}</p>
-        )}
 
         {/* submit btn */}
         <SubmitBtn btnTxt="Send OTP" isPending={isPending} />

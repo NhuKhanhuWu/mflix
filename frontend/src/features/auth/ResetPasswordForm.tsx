@@ -3,14 +3,15 @@
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { useResetPassword } from "../../hooks/changePasswordHooks";
+import { useResetPassword } from "../../hooks/auth/changePasswordHooks";
 import {
   passwordConfirmSchema,
   passwordSchema,
 } from "../../constaint/formSchema";
-import { InputField } from "../../ui/Input";
-import SubmitBtn from "../../ui/SubmitBtn";
+import { InputField } from "../../ui/common/Input";
+import SubmitBtn from "../../ui/common/SubmitBtn";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const resetPassSchema = yup.object().shape({
   password: passwordSchema,
@@ -32,7 +33,7 @@ function ResetPasswordForm() {
 
   // set up send request
   const { token } = useParams();
-  const { mutate, isPending, isError, error } = useResetPassword();
+  const { mutate, isPending } = useResetPassword();
   const navigate = useNavigate();
 
   //  handle submit form
@@ -43,6 +44,9 @@ function ResetPasswordForm() {
         onSuccess: () => {
           // redirect to login page
           navigate("/login");
+        },
+        onError: (error) => {
+          toast.error(error.message || "Something went wrong 😢");
         },
       }
     );
@@ -69,8 +73,6 @@ function ResetPasswordForm() {
         placeholder="Password confirm"
         type="password"
       />
-
-      {isError && <p className="error-message">*{(error as Error).message}</p>}
 
       <SubmitBtn btnTxt="Submit" isPending={isPending} />
     </form>

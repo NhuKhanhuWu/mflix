@@ -2,12 +2,12 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import SectionHeader from "../ui/SectionHeader";
-import Space from "../ui/Space";
-import { ContentBlock } from "../ui/ContentBlock";
+import SectionHeader from "../ui/common/SectionHeader";
+import Space from "../ui/common/Space";
+import { ContentBlock } from "../ui/blocks/ContentBlock";
 
-import { getMovieList } from "../api/getMovieList";
-import { getGenres } from "../api/getGenre";
+import { getMovieList } from "../api/movie/getMovieList";
+import { getGenres } from "../api/genres/getGenre";
 
 import MovieList from "../features/movies/MovieList";
 import PopularGernes from "../features/genres/PopularGenres";

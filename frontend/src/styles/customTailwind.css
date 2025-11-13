@@ -49,6 +49,14 @@
     @apply w-full text-left px-4 py-3 flex gap-2 hover:bg-[rgb(134,134,134)];
   }
 
+  .form-container {
+    @apply w-fit border-[var(--color-gray-600)] border-2 shadow-md rounded-2xl p-8 space-y-6;
+  }
+
+  .form-header {
+    @apply text-3xl text-center flex flex-col gap-4;
+  }
+
   .medium-movie-title {
     @apply text-2xl font-bold mb-2 uppercase;
   }
@@ -124,9 +132,5 @@
     color: var(--color-red-800);
     font-style: italic;
     font-size: 1.2rem;
-  }
-
-  .form-container {
-    @apply w-fit border-[var(--color-gray-600)] border-2 shadow-md rounded-2xl p-8 space-y-6;
   }
 }

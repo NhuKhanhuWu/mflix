@@ -7,6 +7,7 @@ const protectController = require("../controllers/authController/protectControll
 const forgotPasswordController = require("../controllers/authController/forgotPasswordController");
 
 const express = require("express");
+const { verifyUserToken } = require("../middleware/verifyToken");
 
 const router = express.Router();
 
@@ -22,7 +23,7 @@ router.post("/signup", signupController.signup);
 // login
 router.post("/login", loginController.login);
 
-// change password
+// change password when forgot
 router.post(
   "/forgotPassword",
   forgotPasswordController.forgotPasswordOtpLimiterEmail,
@@ -31,11 +32,32 @@ router.post(
 );
 router.patch(
   "/resetPassword",
-  forgotPasswordController.checkResetPasswordToken,
+  verifyUserToken,
   forgotPasswordController.resetPassword
+);
+
+// change password when logged in
+router.patch(
+  "/changePassword",
+  protectController.protect,
+  userController.changePassword
 );
 
 // get my infor
 router.post("/me", protectController.protect, userController.getMyInfor);
+
+// change email
+router.post(
+  "/changeEmail",
+  protectController.protect,
+  userController.checkChangeEmailReq,
+  userController.updateEmailLimiter,
+  userController.changeMyEmailReq
+);
+router.patch(
+  "/changeEmailConfirm",
+  verifyUserToken,
+  userController.changeEmail
+);
 
 module.exports = router;

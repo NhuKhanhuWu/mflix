@@ -4,15 +4,16 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useForm } from "react-hook-form";
-import { useLogin } from "../../hooks/useLogin";
+import { useLogin } from "../../hooks/auth/useLogin";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import Cookies from "js-cookie";
 import { loginSuccess } from "../../redux/authSlide";
 import { emailSchema, passwordSchema } from "../../constaint/formSchema";
-import { InputField } from "../../ui/Input";
-import SubmitBtn from "../../ui/SubmitBtn";
+import { InputField } from "../../ui/common/Input";
+import SubmitBtn from "../../ui/common/SubmitBtn";
+import { toast } from "react-toastify";
 
 const loginSchema = yup.object().shape({
   email: emailSchema,
@@ -28,7 +29,7 @@ const LoginForm: React.FC = () => {
   } = useForm({ resolver: yupResolver(loginSchema) });
 
   // 2. set up send login request
-  const { mutate, isPending, isError, error } = useLogin();
+  const { mutate, isPending } = useLogin();
 
   // 3. send login request
   const navigate = useNavigate(); // for navigate
@@ -53,6 +54,9 @@ const LoginForm: React.FC = () => {
 
           // 4. redirect to previous page
           navigate("/");
+        },
+        onError: (error) => {
+          toast.error(error.message || "Something went wrong 😢");
         },
       }
     );
@@ -81,8 +85,6 @@ const LoginForm: React.FC = () => {
         type="password"
         placeholder="Your password"
       />
-
-      {isError && <p className="error-message">*{(error as Error).message}</p>}
 
       <div className="flex justify-center">
         <SubmitBtn btnTxt="Login" isPending={isPending} />
