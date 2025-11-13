@@ -1,7 +1,6 @@
 /** @format */
 import {
   Genres,
-  Search,
   Runtime,
   Sort,
   SubmitBtn,
@@ -57,7 +56,7 @@ const DesktopFilter: React.FC<MovieFilterProps> = ({ setOpen }) => {
 
           <div className="flex flex-col gap-5">
             {/* title */}
-            <Search register={register} />
+            {/* <Search register={register} /> */}
             {/* Runtime */}
             <Runtime register={register} />
             {/* Sort By */}

@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import SmallAvartar from "./SmallAvartar";
+import { SearchBar } from "./SearchBar";
 
 interface NavItemProps {
   to: string;
@@ -51,7 +52,7 @@ function NavBar() {
 
       <div className="flex gap-2">
         {/* search bar */}
-        {/* <SearchBar></SearchBar> */}
+        <SearchBar></SearchBar>
 
         {/* login/signup */}
         {isLogin ? (

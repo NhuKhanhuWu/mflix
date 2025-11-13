@@ -110,6 +110,8 @@ export function useMovieFilters() {
 
     // update in movieFilter redux
     const decodedQuery = decodeURIComponent(newParams.toString());
+
+    // console.log(decodedQuery);
     dispatch(setQueryString(decodedQuery));
     dispatch(changePage(formData.page));
 
