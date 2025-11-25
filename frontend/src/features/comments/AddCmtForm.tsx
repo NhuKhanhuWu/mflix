@@ -11,7 +11,6 @@ import SubmitBtn from "../../ui/common/SubmitBtn";
 import SmallAvartar from "../../ui/common/SmallAvartar";
 import { useNewCmt } from "../../hooks/cmt/useNewCmt";
 import LoadAndErr from "../../ui/common/Spinner";
-import Cookies from "js-cookie";
 import { useState } from "react";
 
 const formSchema = yup.object().shape({
@@ -22,7 +21,6 @@ const AddCmtForm: React.FC<{ movieId?: string }> = ({ movieId = "" }) => {
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
   const avartar = useSelector((state: RootState) => state.auth.avartar);
   const [isFormFocus, setIsFormFocus] = useState(false);
-  const token = Cookies.get("loginToken") || "";
 
   // set up form
   const {
@@ -39,7 +37,6 @@ const AddCmtForm: React.FC<{ movieId?: string }> = ({ movieId = "" }) => {
     mutate({
       movie_id: movieId,
       text: data.text,
-      token,
     });
   }
 

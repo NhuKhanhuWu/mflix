@@ -6,7 +6,7 @@ const catchAsync = require("../../utils/catchAsync");
 const { resetPasswordEmail, sendTokenEmail } = require("../../utils/email");
 
 const createOtpLimiter = require("../../utils/createLimiter");
-const createSendToken = require("../../utils/createSendToken");
+const { createAccessToken } = require("../../utils/createToken");
 const signToken = require("../../utils/signToken");
 
 // rate limit
@@ -66,5 +66,5 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   user.passwordConfirm = req.body.passwordConfirm;
   await user.save();
 
-  createSendToken(user, 200, res);
+  createAccessToken(user, 200, res);
 });

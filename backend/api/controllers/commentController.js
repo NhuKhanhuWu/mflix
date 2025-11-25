@@ -59,6 +59,7 @@ exports.getMyComments = catchAsync(async (req, res) => {
     amount: comment.length,
     totalResult: queryInstance.totalResult,
     data: comment,
+    accessToken: req.accessToken,
   });
 });
 
@@ -88,6 +89,7 @@ exports.createComment = catchAsync(async (req, res, next) => {
   res.status(201).json({
     status: "success",
     data: newComment,
+    accessToken: req.accessToken,
   });
 });
 
@@ -118,6 +120,7 @@ exports.updateMyComment = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: updatedComment,
+    accessToken: req.accessToken,
   });
 });
 

@@ -5,7 +5,7 @@ import {
   passwordConfirmSchema,
   passwordSchema,
 } from "../../constaint/formSchema";
-import { useChangePassword } from "../../hooks/user/changePassword";
+import { useChangePassword } from "../../hooks/user/useChangePassword";
 import { InputField } from "../../ui/common/Input";
 import * as yup from "yup";
 import SubmitBtn from "../../ui/common/SubmitBtn";

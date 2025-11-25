@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
 export async function getMyInfor() {
-  const loginToken = Cookies.get("loginToken");
+  const loginToken = Cookies.get("accessToken");
 
   try {
     // Fetch data from API
@@ -14,8 +14,12 @@ export async function getMyInfor() {
       {},
       {
         headers: { Authorization: `Bearer ${loginToken}` },
+        withCredentials: true,
       }
     );
+    const accessToken = response.data.accessToken;
+
+    if (accessToken) Cookies.set("accessToken", accessToken);
 
     return response.data.user;
   } catch (err: unknown) {

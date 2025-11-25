@@ -19,6 +19,7 @@ exports.getMyInfor = catchAsync(async (req, res) => {
   res.status(200).json({
     status: "success",
     user: req.user,
+    accessToken: req.accessToken,
   });
 });
 
@@ -34,16 +35,12 @@ exports.changeMyEmailReq = catchAsync(async (req, res, next) => {
       email: req.body.email,
       subject: "Confirm change of Mflix account email (valid for 10 mins)",
       htmlMessage: email,
+      message: "Confirm link sended!",
     },
     res,
-    next
+    next,
+    req.accessToken
   );
-
-  // send res
-  res.status(200).json({
-    status: "success",
-    message: "Confirm link sended!",
-  });
 });
 
 exports.checkChangeEmailReq = catchAsync(async (req, res, next) => {
@@ -130,5 +127,6 @@ exports.changePassword = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     message: "Password updated!",
+    accessToken: req.accessToken,
   });
 });
