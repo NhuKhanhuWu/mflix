@@ -8,7 +8,7 @@ const { otpEmail, sendTokenEmail } = require("../../utils/email");
 const jwt = require("jsonwebtoken");
 
 const createOtpLimiter = require("../../utils/createLimiter");
-const createSendToken = require("../../utils/createSendToken");
+const { createAccessToken } = require("../../utils/createToken");
 const signToken = require("../../utils/signToken");
 const getToken = require("../../utils/getToken");
 const { promisify } = require("util");
@@ -47,20 +47,17 @@ exports.sendSignUpOtp = catchAsync(async (req, res, next) => {
   // 4. send email
   const emailMessage = otpEmail(otp);
 
+  // res is already in the send email helper
   await sendTokenEmail(
     {
       email: email,
       subject: "Your sign up OTP (valid for 10 mins)",
       htmlMessage: emailMessage,
+      message: "OTP sended!",
     },
     res,
     next
   );
-
-  res.status(200).json({
-    status: "success",
-    message: "OTP sended!",
-  });
 });
 
 exports.checkOtp = catchAsync(async (req, res, next) => {
@@ -112,6 +109,6 @@ exports.signup = catchAsync(async (req, res, next) => {
   // delete request in PendingUser
   await PendingEmails.findOneAndDelete({ email });
 
-  createSendToken(newUser, 200, res);
+  createAccessToken(newUser, 200, res);
 });
 // SIGN UP

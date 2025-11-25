@@ -1,13 +1,17 @@
 /** @format */
 
 import axios from "axios";
+import Cookies from "js-cookie";
 import errorHandler from "../errorHandler";
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
-export async function deleteCmt(cmt_id: string, token: string) {
+export async function deleteCmt(cmt_id: string) {
+  const token = Cookies.get("accessToken");
+
   try {
     // Fetch data from API
     const res = await axios.delete(`${BASE_URL}/comments/${cmt_id}`, {
+      withCredentials: true,
       headers: { Authorization: `Bearer ${token}` },
     });
 

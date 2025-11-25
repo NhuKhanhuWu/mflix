@@ -5,7 +5,7 @@ import { InputField } from "../../ui/common/Input";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SubmitBtn from "../../ui/common/SubmitBtn";
-import { useChangeEmailReq } from "../../hooks/user/changeEmail";
+import { useChangeEmailReq } from "../../hooks/user/useChangeEmail";
 import { useState } from "react";
 import EmailSendedMessage from "../EmailSendedMessage";
 import { SendOtpButton } from "../auth/SendOtpButton";

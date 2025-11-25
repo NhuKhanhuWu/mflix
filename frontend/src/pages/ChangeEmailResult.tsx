@@ -1,7 +1,7 @@
 /** @format */
 
 import { useParams } from "react-router-dom";
-import { useChangeEmail } from "../hooks/user/changeEmail";
+import { useChangeEmail } from "../hooks/user/useChangeEmail";
 import { useEffect } from "react";
 
 function ChangeEmailResult() {

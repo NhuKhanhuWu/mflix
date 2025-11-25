@@ -7,7 +7,6 @@ import SmallAvartar from "../../ui/common/SmallAvartar";
 import { RootState } from "../../redux/store";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import * as yup from "yup";
-import Cookies from "js-cookie";
 
 import { Menu } from "@headlessui/react";
 import { FaRegTrashAlt } from "react-icons/fa";
@@ -22,8 +21,6 @@ import Modal from "../../ui/common/Modal";
 import { useDeleteCmt } from "../../hooks/cmt/useDeleteCmt";
 import LoadAndErr from "../../ui/common/Spinner";
 import { useLocation } from "react-router-dom";
-
-const token = Cookies.get("loginToken") || "";
 
 interface SetStateProps {
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
@@ -56,7 +53,7 @@ const DeleteCmtBtn: React.FC<{ cmt_id: string }> = ({ cmt_id }) => {
   const { mutate, isPending, isError } = useDeleteCmt({ setIsDeleting });
 
   function onDelete() {
-    mutate({ cmt_id, token });
+    mutate({ cmt_id });
   }
 
   return (
@@ -153,7 +150,7 @@ const CmtEditForm: React.FC<CmtByMovieProps & SetStateProps> = ({
   });
 
   function onSubmit(data: { text: string }) {
-    mutate({ cmt_id: comment._id, text: data.text, token });
+    mutate({ cmt_id: comment._id, text: data.text });
   }
 
   return (

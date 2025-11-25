@@ -37,6 +37,7 @@ export const authSide = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUserInfo.fulfilled, (state, action) => {
+      state.isLogin = true;
       state.avartar = action.payload.avatar;
       state.id = action.payload._id;
     });

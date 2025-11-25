@@ -11,14 +11,12 @@ interface updateCmtProps {
 interface cmtProps {
   cmt_id: string;
   text: string;
-  token: string;
 }
 
 export function useUpdateCmt({ setIsEditing }: updateCmtProps) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ cmt_id, text, token }: cmtProps) =>
-      updateCmt(cmt_id, text, token),
+    mutationFn: ({ cmt_id, text }: cmtProps) => updateCmt(cmt_id, text),
     onSuccess: () => {
       setIsEditing(false);
       queryClient.invalidateQueries({

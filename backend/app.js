@@ -3,6 +3,7 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 
 const AppError = require("./api/utils/appError");
 const globalErrHandler = require("./api/controllers/errorController");
@@ -36,7 +37,8 @@ app.use(
   })
 );
 
-app.use(express.json());
+app.use(express.json()); // use json body
+app.use(cookieParser()); // cookie
 
 // Serve static files from React frontend in production
 // app.use(express.static(path.join(__dirname, "frontend", "dist")));
@@ -59,6 +61,6 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
-app.use(globalErrHandler);
+app.use(globalErrHandler); // handle error
 
 module.exports = app;

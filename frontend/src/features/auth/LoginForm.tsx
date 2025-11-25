@@ -40,11 +40,11 @@ const LoginForm: React.FC = () => {
       {
         onSuccess: (data) => {
           // 1. get token
-          const { token } = data;
+          const { accessToken } = data;
 
           // 2. save to cookie
-          Cookies.set("loginToken", token, {
-            expires: 90, // 90 day
+          Cookies.set("accessToken", accessToken, {
+            expires: 20, // 20 day
             secure: import.meta.env.NODE_ENV === "production",
             sameSite: "strict",
           });
