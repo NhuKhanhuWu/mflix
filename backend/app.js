@@ -18,8 +18,7 @@ const app = express();
 // allow frontend origin
 const allowed = [
   "http://localhost:5173",
-  "https://mflix-git-main-nhukhanhuwus-projects.vercel.app/",
-  "https://nhukhanhuwus-projects.vercel.app",
+  "https://mflix-git-main-nhukhanhuwus-projects.vercel.app",
 ];
 
 app.use(
