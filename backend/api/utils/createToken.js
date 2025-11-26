@@ -21,13 +21,15 @@ const createRefreshToken = catchAsync(async (user, req, res) => {
   req.refreshToken = refreshToken;
   // FOR TEST COOKIE IN PRODUCTION: END
 
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
-    maxAge: 20 * 24 * 60 * 60 * 1000,
-    path: "/",
-  });
+  // DISABLE DUE TO CROSS SITE, DO NOT DELETE
+  // res.cookie("refreshToken", refreshToken, {
+  //   httpOnly: true,
+  //   secure: process.env.NODE_ENV === "production",
+  //   sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+  //   maxAge: 20 * 24 * 60 * 60 * 1000,
+  //   path: "/",
+  // });
+  // DISABLE DUE TO CROSS SITE, DO NOT DELETE
 });
 
 const createAccessToken = (user, statusCode, req, res) => {
