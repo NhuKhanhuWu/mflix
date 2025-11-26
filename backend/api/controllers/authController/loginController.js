@@ -21,6 +21,6 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError("Incorrect email or password", 401));
 
   // if ok, send token
-  await createRefreshToken(user, res);
-  createAccessToken(user, 200, res);
+  await createRefreshToken(user, req, res);
+  createAccessToken(user, 200, req, res);
 });

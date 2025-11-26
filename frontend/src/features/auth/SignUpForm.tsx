@@ -63,10 +63,16 @@ const SignUpForm: React.FC<{ jwt: string; email: string }> = ({
             { email, password: data.password },
             {
               onSuccess: (data) => {
-                const { accessToken } = data;
+                const { accessToken, refreshToken } = data;
 
                 // Save token
                 Cookies.set("accessToken", accessToken, {
+                  expires: 20, //20 day
+                  secure: import.meta.env.NODE_ENV === "production",
+                  sameSite: "strict",
+                });
+
+                Cookies.set("refreshToken", refreshToken, {
                   expires: 20, //20 day
                   secure: import.meta.env.NODE_ENV === "production",
                   sameSite: "strict",
