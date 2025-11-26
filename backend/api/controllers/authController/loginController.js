@@ -1,7 +1,10 @@
 /** @format */
 const User = require("../../models/userModel");
 const AppError = require("../../utils/appError");
-const createSendToken = require("../../utils/createSendToken");
+const {
+  createAccessToken,
+  createRefreshToken,
+} = require("../../utils/createToken");
 const catchAsync = require("../../utils/catchAsync");
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -18,5 +21,6 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError("Incorrect email or password", 401));
 
   // if ok, send token
-  createSendToken(user, 200, res);
+  await createRefreshToken(user, res);
+  createAccessToken(user, 200, res);
 });

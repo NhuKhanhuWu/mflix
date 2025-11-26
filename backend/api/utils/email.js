@@ -100,6 +100,7 @@ exports.sendEmail = async function (options) {
   const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
+    secure: false,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASSWORD,
@@ -129,7 +130,8 @@ exports.sendTokenEmail = async (
     message = "Token sent to email!",
   },
   res,
-  next
+  next,
+  accessToken = null
 ) => {
   // console.log(email);
   try {
@@ -140,10 +142,14 @@ exports.sendTokenEmail = async (
       html: htmlMessage,
     });
 
-    return res.status(200).json({
+    const response = {
       status: "success",
       message,
-    });
+    };
+
+    if (accessToken) res.accessToken = accessToken;
+
+    return res.status(200).json(response);
   } catch (err) {
     console.error("EMAIL SEND ERROR:", err);
 

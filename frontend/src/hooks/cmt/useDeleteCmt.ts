@@ -10,13 +10,12 @@ interface deleteCmtProps {
 
 interface cmtProps {
   cmt_id: string;
-  token: string;
 }
 
 export function useDeleteCmt({ setIsDeleting }: deleteCmtProps) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ cmt_id, token }: cmtProps) => deleteCmt(cmt_id, token),
+    mutationFn: ({ cmt_id }: cmtProps) => deleteCmt(cmt_id),
     onSuccess: () => {
       setIsDeleting(false);
       queryClient.invalidateQueries({

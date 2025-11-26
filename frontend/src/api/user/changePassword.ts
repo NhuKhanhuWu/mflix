@@ -16,11 +16,11 @@ export async function changePassword({
   password,
   passwordConfirm,
 }: ChangePasswordArgs) {
-  const loginToken = Cookies.get("loginToken");
+  const loginToken = Cookies.get("accessToken");
 
   try {
     // Fetch data from API
-    const res = await axios.patch(
+    const response = await axios.patch(
       `${BASE_URL}/users/changePassword`,
       {
         currPassword,
@@ -28,11 +28,15 @@ export async function changePassword({
         passwordConfirm,
       },
       {
+        withCredentials: true,
         headers: { Authorization: `Bearer ${loginToken}` },
       }
     );
+    const accessToken = response.data.accessToken;
 
-    return res.data;
+    if (accessToken) Cookies.set("accessToken", accessToken);
+
+    return response.data;
   } catch (err: unknown) {
     errorHandler(err);
   }

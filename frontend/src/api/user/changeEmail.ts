@@ -7,22 +7,26 @@ const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
 // send change email request => send confirm link
 export async function changeEmailRequest(email: string, password: string) {
-  const loginToken = Cookies.get("loginToken");
+  const loginToken = Cookies.get("accessToken");
 
   try {
     // Fetch data from API
-    const res = await axios.post(
+    const response = await axios.post(
       `${BASE_URL}/users/changeEmail`,
       {
         email,
         password,
       },
       {
+        withCredentials: true,
         headers: { Authorization: `Bearer ${loginToken}` },
       }
     );
+    const accessToken = response.data.accessToken;
 
-    return res.data;
+    if (accessToken) Cookies.set("accessToken", accessToken);
+
+    return response.data;
   } catch (err: unknown) {
     errorHandler(err);
   }
@@ -36,6 +40,7 @@ export async function changeEmail(token?: string) {
       `${BASE_URL}/users/changeEmailConfirm`,
       {},
       {
+        withCredentials: true,
         headers: { Authorization: `Bearer ${token}` },
       }
     );

@@ -3,6 +3,7 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 
 const AppError = require("./api/utils/appError");
 const globalErrHandler = require("./api/controllers/errorController");
@@ -15,6 +16,12 @@ const commentRouter = require("./api/routes/commentRouter");
 const app = express();
 
 // allow frontend origin
+const allowed = [
+  "http://localhost:5173",
+  "https://your-frontend.onrender.com",
+  "https://nhukhanhuwus-projects.vercel.app",
+];
+
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -22,11 +29,7 @@ app.use(
       // - No origin (Postman)
       // - Localhost in dev
       // - Any domain of vercel's project `nhukhanhuwus-projects`
-      if (
-        !origin ||
-        origin === "http://localhost:5173" ||
-        origin.endsWith("nhukhanhuwus-projects.vercel.app")
-      ) {
+      if (!origin || allowed.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
@@ -36,7 +39,8 @@ app.use(
   })
 );
 
-app.use(express.json());
+app.use(express.json()); // use json body
+app.use(cookieParser()); // cookie
 
 // Serve static files from React frontend in production
 // app.use(express.static(path.join(__dirname, "frontend", "dist")));
@@ -59,6 +63,6 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
-app.use(globalErrHandler);
+app.use(globalErrHandler); // handle error
 
 module.exports = app;
