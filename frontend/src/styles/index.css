@@ -56,3 +56,8 @@ button {
 .carousel > div {
   flex: 1 0 100%;
 }
+
+.primary-btn-disable {
+  background-color: var(--color-red-500);
+  cursor: not-allowed;
+}
