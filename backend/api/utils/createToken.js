@@ -20,8 +20,9 @@ const createRefreshToken = catchAsync(async (user, res) => {
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
     maxAge: 20 * 24 * 60 * 60 * 1000,
+    path: "/",
   });
 });
 

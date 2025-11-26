@@ -8,6 +8,9 @@ const forgotPasswordController = require("../controllers/authController/forgotPa
 
 const express = require("express");
 const { verifyUserToken } = require("../middleware/verifyToken");
+const {
+  logOutController,
+} = require("../controllers/authController/logOutController");
 
 const router = express.Router();
 
@@ -22,6 +25,9 @@ router.post("/signup", signupController.signup);
 
 // login
 router.post("/login", loginController.login);
+
+// log out
+router.post("/logout", logOutController);
 
 // change password when forgot
 router.post(

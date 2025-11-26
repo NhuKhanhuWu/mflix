@@ -109,6 +109,11 @@ exports.signup = catchAsync(async (req, res, next) => {
   // delete request in PendingUser
   await PendingEmails.findOneAndDelete({ email });
 
-  createAccessToken(newUser, 200, res);
+  // response
+  res.status(201).json({
+    status: "success",
+    data: { user: newUser },
+  });
+  // createAccessToken(newUser, 200, res);
 });
 // SIGN UP
