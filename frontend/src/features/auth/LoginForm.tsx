@@ -40,10 +40,16 @@ const LoginForm: React.FC = () => {
       {
         onSuccess: (data) => {
           // 1. get token
-          const { accessToken } = data;
+          const { accessToken, refreshToken } = data;
 
           // 2. save to cookie
           Cookies.set("accessToken", accessToken, {
+            expires: 20, // 20 day
+            secure: import.meta.env.NODE_ENV === "production",
+            sameSite: "strict",
+          });
+
+          Cookies.set("refreshToken", refreshToken, {
             expires: 20, // 20 day
             secure: import.meta.env.NODE_ENV === "production",
             sameSite: "strict",

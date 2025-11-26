@@ -4,7 +4,7 @@ const signToken = require("./signToken");
 const catchAsync = require("./catchAsync");
 const RefreshToken = require("../models/refreshTokenModel");
 
-const createRefreshToken = catchAsync(async (user, res) => {
+const createRefreshToken = catchAsync(async (user, req, res) => {
   // create refresh token
   const refreshToken = signToken(
     { id: user._id },
@@ -17,24 +17,31 @@ const createRefreshToken = catchAsync(async (user, res) => {
     userId: user._id,
   });
 
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
-    maxAge: 20 * 24 * 60 * 60 * 1000,
-    path: "/",
-  });
+  // FOR TEST COOKIE IN PRODUCTION: START
+  req.refreshToken = refreshToken;
+  // FOR TEST COOKIE IN PRODUCTION: END
+
+  // DISABLE DUE TO CROSS SITE, DO NOT DELETE
+  // res.cookie("refreshToken", refreshToken, {
+  //   httpOnly: true,
+  //   secure: process.env.NODE_ENV === "production",
+  //   sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+  //   maxAge: 20 * 24 * 60 * 60 * 1000,
+  //   path: "/",
+  // });
+  // DISABLE DUE TO CROSS SITE, DO NOT DELETE
 });
 
-const createAccessToken = (user, statusCode, res) => {
+const createAccessToken = (user, statusCode, req, res) => {
   const accessToken = signToken({ id: user._id });
+  const refreshToken = req.refreshToken;
 
-  // remove password from output
-  user.password = undefined;
+  user.password = undefined; // remove password from output
 
   res.status(statusCode).json({
     status: "success",
     accessToken,
+    refreshToken,
     data: { user: user },
   });
 };
